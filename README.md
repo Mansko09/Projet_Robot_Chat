@@ -81,6 +81,10 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
    * Gestion des rôles (chat/souris)
    * Contrôle moteurs, capteurs et communication Bluetooth
 
+
+## Architecture générale 
+![Architecture générale](./Screenshots/Architecture_générale_Robot_Chat.jpg)
+
 ## Avancement du projet
 
 * [x] Choix des composants et architecture générale
