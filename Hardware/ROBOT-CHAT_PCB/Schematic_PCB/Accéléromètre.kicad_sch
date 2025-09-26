@@ -1092,7 +1092,7 @@
 	)
 	(hierarchical_label "INTacc1"
 		(shape input)
-		(at 186.69 97.79 0)
+		(at 186.69 100.33 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1114,7 +1114,7 @@
 	)
 	(hierarchical_label "INTacc2"
 		(shape input)
-		(at 186.69 100.33 0)
+		(at 186.69 97.79 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1293,7 +1293,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 181.61 74.93 0)
 			(effects
 				(font
@@ -1361,7 +1361,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 171.45 74.93 0)
 			(effects
 				(font
@@ -1431,7 +1431,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 144.78 86.36 0)
 			(effects
 				(font
@@ -1805,7 +1805,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 133.35 83.82 0)
 			(effects
 				(font
