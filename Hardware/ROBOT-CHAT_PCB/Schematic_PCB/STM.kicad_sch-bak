@@ -4433,7 +4433,7 @@
 	)
 	(wire
 		(pts
-			(xy 180.34 77.47) (xy 177.8 77.47)
+			(xy 186.69 77.47) (xy 177.8 77.47)
 		)
 		(stroke
 			(width 0)
@@ -4995,7 +4995,7 @@
 	)
 	(hierarchical_label "Encodeur_1B"
 		(shape input)
-		(at 180.34 77.47 0)
+		(at 186.69 77.47 0)
 		(effects
 			(font
 				(size 1.27 1.27)
