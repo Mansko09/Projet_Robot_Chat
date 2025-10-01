@@ -3942,7 +3942,7 @@
 	)
 	(wire
 		(pts
-			(xy 146.05 176.53) (xy 140.97 176.53)
+			(xy 148.59 176.53) (xy 140.97 176.53)
 		)
 		(stroke
 			(width 0)
@@ -4262,6 +4262,16 @@
 	)
 	(wire
 		(pts
+			(xy 140.97 179.07) (xy 140.97 180.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8677fa5f-90c8-4053-9550-63089188ca2a")
+	)
+	(wire
+		(pts
 			(xy 182.88 55.88) (xy 190.5 55.88)
 		)
 		(stroke
@@ -4319,6 +4329,16 @@
 			(type default)
 		)
 		(uuid "8bb41ef6-8540-4997-8d3b-07b11fcbab8f")
+	)
+	(wire
+		(pts
+			(xy 140.97 180.34) (xy 143.51 180.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8fdfd4df-8ac3-42b1-9d1f-fd716fddc6a9")
 	)
 	(wire
 		(pts
@@ -7353,73 +7373,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 140.97 179.07 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "9396946c-0ff9-4e67-b37a-ad7b33f6b5e6")
-		(property "Reference" "#PWR055"
-			(at 140.97 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 140.97 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 140.97 179.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 140.97 179.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 140.97 179.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "f47f2f89-798c-4f6d-b2c0-bb4cd0c12917")
-		)
-		(instances
-			(project "PCB_robot_chat"
-				(path "/3534a4da-1897-4a3c-809d-843e7f41fadb/6dd21f76-e181-4380-95ef-cbdd4cbc38f9"
-					(reference "#PWR055")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 146.05 176.53 0)
+		(at 148.59 176.53 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7428,7 +7382,7 @@
 		(fields_autoplaced yes)
 		(uuid "941bfd79-36b6-49be-85cd-1369d5522b77")
 		(property "Reference" "#PWR056"
-			(at 146.05 182.88 0)
+			(at 148.59 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7437,7 +7391,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 146.05 181.61 0)
+			(at 148.59 181.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7445,7 +7399,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 146.05 176.53 0)
+			(at 148.59 176.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7454,7 +7408,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 146.05 176.53 0)
+			(at 148.59 176.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7463,7 +7417,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 146.05 176.53 0)
+			(at 148.59 176.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8996,6 +8950,71 @@
 			(project ""
 				(path "/3534a4da-1897-4a3c-809d-843e7f41fadb/6dd21f76-e181-4380-95ef-cbdd4cbc38f9"
 					(reference "R4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 143.51 180.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e3e50f85-8863-405b-ac4a-fbc226e5ab2c")
+		(property "Reference" "#PWR0202"
+			(at 143.51 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3.3V"
+			(at 143.51 182.372 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 143.51 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 143.51 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
+			(at 143.51 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "085aad04-18b9-4e98-983b-267fc137c493")
+		)
+		(instances
+			(project ""
+				(path "/3534a4da-1897-4a3c-809d-843e7f41fadb/6dd21f76-e181-4380-95ef-cbdd4cbc38f9"
+					(reference "#PWR0202")
 					(unit 1)
 				)
 			)
