@@ -788,3 +788,147 @@
 2025-10-01 08:50:17,594 [INFO] ApiDb:448 - Save user favorites file C:\Users\mbeng/.stm32cubeide/favorites.mcus.txt: 0 item(s)
 2025-10-01 08:50:17,594 [INFO] ApiDb:452 - User favorites MCUs=[]
 2025-10-01 09:01:41,692 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-10-01 09:27:49,830 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 481166952 Bytes (1045430272)
+2025-10-01 09:27:52,559 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 506292704 Bytes (1045430272)
+2025-10-01 09:27:56,154 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 671483736 Bytes (1045430272)
+2025-10-01 09:27:56,533 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2025-10-01 09:27:56,533 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MEMORYMAP
+2025-10-01 09:27:56,534 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: TIM1_8WB5
+2025-10-01 09:27:56,534 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: TIM1_8WB5
+2025-10-01 09:27:56,534 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: TIM1_8WB5
+2025-10-01 09:27:56,534 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: TIM1_8WB5
+2025-10-01 09:27:56,534 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2025-10-01 09:27:56,534 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2025-10-01 09:27:56,535 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2025-10-01 09:27:56,536 [INFO] CodeGenerator:892 - code generatio: config db path: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\
+2025-10-01 09:27:56,683 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\license.tmp_save
+2025-10-01 09:27:56,931 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\license.tmp
+2025-10-01 09:27:56,988 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\gpio.tmp_save
+2025-10-01 09:27:57,091 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\gpio.tmp
+2025-10-01 09:27:57,098 [WARN] IPConfigManager:103 - WARNING: Missing Config File for MEMORYMAP ip!!
+2025-10-01 09:27:57,099 [WARN] IP:2250 - DefaultDataRegion not found: check if there is a RefParameter without a condition.
+2025-10-01 09:27:57,507 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\stm32wbxx_it.c_save
+2025-10-01 09:27:57,848 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\stm32wbxx_it.c
+2025-10-01 09:27:57,859 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\stm32wbxx_it.h_save
+2025-10-01 09:27:57,955 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\stm32wbxx_it.h
+2025-10-01 09:27:57,977 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\stm32wbxx_hal_msp.c_save
+2025-10-01 09:27:58,179 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\stm32wbxx_hal_msp.c
+2025-10-01 09:27:58,197 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\system.tmp_save
+2025-10-01 09:27:58,305 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\system.tmp
+2025-10-01 09:27:58,328 [INFO] CodeEngine:321 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\stm32wbxx_hal_conf.h_save
+2025-10-01 09:27:58,457 [INFO] CodeEngine:345 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\stm32wbxx_hal_conf.h
+2025-10-01 09:27:58,480 [WARN] IPConfigManager:3238 - Warning: the RefConfig RCC_PClockConfig is not available in your config.xml file
+2025-10-01 09:27:58,501 [INFO] ApiDbMcu:532 - Load IP Config File for TIM1
+2025-10-01 09:27:58,520 [INFO] ApiDbMcu:532 - Load IP Config File for TIM2
+2025-10-01 09:27:58,535 [INFO] ApiDbMcu:532 - Load IP Config File for TIM16
+2025-10-01 09:27:58,555 [INFO] ApiDbMcu:532 - Load IP Config File for TIM17
+2025-10-01 09:27:58,556 [WARN] IPConfigManager:3811 - IP not found : TIM
+2025-10-01 09:27:58,557 [WARN] CodeGenerator:4259 - IP not found : null
+2025-10-01 09:27:58,571 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\main.h_save
+2025-10-01 09:27:58,707 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\main.h
+2025-10-01 09:27:58,718 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\main.c_save
+2025-10-01 09:27:58,911 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\main.c
+2025-10-01 09:27:59,368 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 234mS.
+2025-10-01 09:27:59,373 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2025-10-01 09:27:59,497 [INFO] ConfigFileManager:1595 - The Die is : DIE495
+2025-10-01 09:28:01,197 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 1824mS.
+2025-10-01 09:28:01,198 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 1mS.
+2025-10-01 09:28:01,201 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2025-10-01 09:34:31,683 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 09:37:05,366 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 09:38:48,811 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 09:47:39,621 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 09:51:16,679 [INFO] Mcu:1682 - InternalPropertyChange: try BijectiveRequest:I2C
+2025-10-01 09:51:16,901 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 09:51:39,690 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 09:51:39,876 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 09:59:43,473 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:00:03,696 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:00:41,028 [INFO] Mcu:1682 - InternalPropertyChange: try BijectiveRequest:PWM Generation CH1 CH1N
+2025-10-01 10:00:52,119 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:00:56,737 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:15:12,218 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:15:14,435 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:15:29,246 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:15:37,975 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:15:48,580 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:15:48,710 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:16:13,637 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:16:13,755 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:39:54,548 [INFO] Mcu:1682 - InternalPropertyChange: try BijectiveRequest:PWM Generation CH3 CH3N
+2025-10-01 10:40:42,107 [INFO] Mcu:1682 - InternalPropertyChange: try BijectiveRequest:PWM Generation CH1 CH1N
+2025-10-01 10:49:17,517 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:49:22,069 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:49:35,150 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:49:35,287 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:50:03,271 [INFO] Mcu:1682 - InternalPropertyChange: try BijectiveRequest:PWM Generation CH2N
+2025-10-01 10:50:10,229 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:50:11,293 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 10:52:00,144 [WARN] IpParametersView:155 - Warning: This peripheral hasn't parameters
+2025-10-01 10:52:00,156 [WARN] MainPanel:289 - <html><b><center>Warning: This peripheral has no parameters to be configured<br></b></html>
+2025-10-01 10:52:00,199 [WARN] IpParametersView:155 - Warning: This peripheral hasn't parameters
+2025-10-01 10:52:00,203 [WARN] MainPanel:289 - <html><b><center>Warning: This peripheral has no parameters to be configured<br></b></html>
+2025-10-01 10:52:00,277 [WARN] IpParametersView:155 - Warning: This peripheral hasn't parameters
+2025-10-01 10:52:00,281 [WARN] MainPanel:289 - <html><b><center>Warning: This peripheral has no parameters to be configured<br></b></html>
+2025-10-01 10:52:26,711 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-10-01 10:52:40,694 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-10-01 10:52:52,667 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-10-01 10:57:12,685 [INFO] Mcu:1682 - InternalPropertyChange: try BijectiveRequest:Encoder Mode
+2025-10-01 10:57:44,132 [INFO] Mcu:1682 - InternalPropertyChange: try BijectiveRequest:Output Compare CH1 CH1N
+2025-10-01 10:59:35,115 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 11:01:23,765 [INFO] I2cTimingTraitement:330 - 0x00100D14
+2025-10-01 11:03:47,979 [INFO] Mcu:1682 - InternalPropertyChange: try BijectiveRequest:Output Compare CH3
+2025-10-01 11:05:08,402 [INFO] Mcu:1682 - InternalPropertyChange: try BijectiveRequest:PWM Generation CH2
+2025-10-01 11:05:55,025 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 728937240 Bytes (1073741824)
+2025-10-01 11:05:56,275 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 470077264 Bytes (1073741824)
+2025-10-01 11:05:58,468 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 503693664 Bytes (1073741824)
+2025-10-01 11:05:58,753 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPTIM
+2025-10-01 11:05:58,753 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2025-10-01 11:05:58,753 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USART
+2025-10-01 11:05:58,753 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MEMORYMAP
+2025-10-01 11:05:58,753 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: TIM1_8WB5
+2025-10-01 11:05:58,753 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: TIM1_8WB5
+2025-10-01 11:05:58,754 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2025-10-01 11:05:58,754 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2025-10-01 11:05:58,755 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2025-10-01 11:05:58,755 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-10-01 11:05:58,755 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPUART
+2025-10-01 11:05:58,755 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-10-01 11:05:58,757 [INFO] CodeGenerator:892 - code generatio: config db path: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\
+2025-10-01 11:05:58,943 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\license.tmp_save
+2025-10-01 11:05:59,216 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\license.tmp
+2025-10-01 11:05:59,285 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\gpio.tmp_save
+2025-10-01 11:05:59,418 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\gpio.tmp
+2025-10-01 11:05:59,917 [WARN] IPConfigManager:103 - WARNING: Missing Config File for MEMORYMAP ip!!
+2025-10-01 11:05:59,918 [WARN] IP:2250 - DefaultDataRegion not found: check if there is a RefParameter without a condition.
+2025-10-01 11:06:00,210 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\stm32wbxx_it.c_save
+2025-10-01 11:06:00,475 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\stm32wbxx_it.c
+2025-10-01 11:06:00,498 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\stm32wbxx_it.h_save
+2025-10-01 11:06:00,578 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\stm32wbxx_it.h
+2025-10-01 11:06:00,598 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\stm32wbxx_hal_msp.c_save
+2025-10-01 11:06:00,798 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\stm32wbxx_hal_msp.c
+2025-10-01 11:06:00,807 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\system.tmp_save
+2025-10-01 11:06:00,879 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\MXTmpFiles\system.tmp
+2025-10-01 11:06:00,898 [INFO] CodeEngine:321 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\stm32wbxx_hal_conf.h_save
+2025-10-01 11:06:00,986 [INFO] CodeEngine:345 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\stm32wbxx_hal_conf.h
+2025-10-01 11:06:01,001 [WARN] IPConfigManager:3238 - Warning: the RefConfig RCC_PClockConfig is not available in your config.xml file
+2025-10-01 11:06:01,010 [INFO] ApiDbMcu:532 - Load IP Config File for I2C1
+2025-10-01 11:06:01,013 [INFO] ApiDbMcu:532 - Load IP Config File for I2C3
+2025-10-01 11:06:01,017 [INFO] ApiDbMcu:532 - Load IP Config File for LPTIM1
+2025-10-01 11:06:01,030 [INFO] ApiDbMcu:532 - Load IP Config File for LPUART1
+2025-10-01 11:06:01,041 [INFO] ApiDbMcu:532 - Load IP Config File for USART1
+2025-10-01 11:06:01,044 [WARN] IPConfigManager:3811 - IP not found : TIM
+2025-10-01 11:06:01,045 [WARN] CodeGenerator:4259 - IP not found : null
+2025-10-01 11:06:01,059 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\main.h_save
+2025-10-01 11:06:01,165 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Inc\main.h
+2025-10-01 11:06:01,176 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\main.c_save
+2025-10-01 11:06:01,347 [INFO] CodeEngine:289 - Generated code: C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\Core\Src\main.c
+2025-10-01 11:06:01,876 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 295mS.
+2025-10-01 11:06:01,881 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2025-10-01 11:06:01,993 [INFO] ConfigFileManager:1595 - The Die is : DIE495
+2025-10-01 11:06:03,249 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 1368mS.
+2025-10-01 11:06:03,250 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 1mS.
+2025-10-01 11:06:03,253 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2025-10-01 13:47:05,444 [INFO] DmaTabbedPanel:205 - Cannot restore the selected Tab for DMA
+2025-10-01 13:47:06,423 [INFO] Gpio:278 - dependency for GPIO [I2C1, I2C3, LPTIM1, LPUART1, SYS, TIM1, TIM2, USART1]
+2025-10-01 13:47:08,135 [INFO] Gpio:278 - dependency for GPIO [I2C1, I2C3, LPTIM1, LPUART1, SYS, TIM1, TIM2, USART1]

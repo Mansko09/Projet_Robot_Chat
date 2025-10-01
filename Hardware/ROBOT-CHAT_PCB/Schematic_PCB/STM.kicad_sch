@@ -3825,8 +3825,8 @@
 		(uuid "7515cc71-f419-48a1-95e3-645d8da99b3a")
 	)
 	(no_connect
-		(at 177.8 130.81)
-		(uuid "b4a35ef1-faca-4714-8c4d-d9e60813ac59")
+		(at 177.8 90.17)
+		(uuid "87807a81-ed3a-4701-850d-6bd5cd1ba514")
 	)
 	(no_connect
 		(at 132.08 102.87)
@@ -4572,16 +4572,6 @@
 	)
 	(wire
 		(pts
-			(xy 180.34 77.47) (xy 177.8 77.47)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c4ed9075-6d4d-40e9-87bd-d28bcd84abc7")
-	)
-	(wire
-		(pts
 			(xy 189.23 62.23) (xy 189.23 63.5)
 		)
 		(stroke
@@ -4820,15 +4810,15 @@
 		)
 		(uuid "1421902f-fe16-4df7-85e9-98fd7b211d7c")
 	)
-	(label "VCP_RX"
-		(at 177.8 102.87 0)
+	(label "STATUS_LEDV"
+		(at 177.8 87.63 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left bottom)
 		)
-		(uuid "1dbd44ef-0960-47ea-a380-c52ef75c9eab")
+		(uuid "186df603-d265-43de-b96e-2329e860f44b")
 	)
 	(label "VCP_TX"
 		(at 265.43 104.14 0)
@@ -4850,15 +4840,35 @@
 		)
 		(uuid "45a3f7aa-4f2d-4354-a31e-e972c11455b1")
 	)
-	(label "VCP_TX"
-		(at 177.8 100.33 0)
+	(label "VCP_RX"
+		(at 177.8 82.55 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left bottom)
 		)
-		(uuid "503d54fe-e04b-4043-a765-dd4ad5a4e2f1")
+		(uuid "4c2f73b1-d1b8-424e-8539-af465685470b")
+	)
+	(label "VCP_TX"
+		(at 177.8 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4d0e9cd2-d2a9-4273-8db1-10b827cc764c")
+	)
+	(label "UART_TX"
+		(at 177.8 133.35 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "5b2006d7-8e9a-469a-8562-9f9e6d1e973b")
 	)
 	(label "NRST"
 		(at 265.43 78.74 0)
@@ -4970,40 +4980,9 @@
 		)
 		(uuid "ee91020e-0ebf-4ae6-986d-60ebb78cecf1")
 	)
-	(label "STATUS_LEDV"
-		(at 177.8 82.55 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "f53c91cd-d934-4f06-ac1e-50a69f91003e")
-	)
-	(label "UART_TX"
-		(at 177.8 80.01 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "f8c681df-fc98-4467-b821-ed93eebe32fc")
-	)
-	(hierarchical_label "FWD_2"
-		(shape input)
-		(at 177.8 92.71 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "05a18dbe-dd46-433c-8917-68ee361d06c9")
-	)
 	(hierarchical_label "Encodeur_1A"
 		(shape input)
-		(at 177.8 74.93 0)
+		(at 177.8 130.81 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5012,18 +4991,18 @@
 		)
 		(uuid "225c3e14-57a0-434c-8be1-281ae0de2299")
 	)
-	(hierarchical_label "REV_1"
+	(hierarchical_label "FWD_1"
 		(shape input)
-		(at 177.8 133.35 0)
+		(at 177.8 95.25 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left)
 		)
-		(uuid "2626553f-7a39-4b8a-99e6-afb06cf5aa36")
+		(uuid "36ad91fb-fd8d-4890-ab22-f24727dc46f2")
 	)
-	(hierarchical_label "Encodeur_2B"
+	(hierarchical_label "REV_1"
 		(shape input)
 		(at 177.8 97.79 0)
 		(effects
@@ -5032,18 +5011,7 @@
 			)
 			(justify left)
 		)
-		(uuid "3cdacc60-99b5-4e1c-b846-3d9a3f2bd78e")
-	)
-	(hierarchical_label "FWD_1"
-		(shape input)
-		(at 177.8 90.17 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "5e2eb6cf-0be7-4c38-b075-31fe53f9ee56")
+		(uuid "4b01993d-82c8-4d20-a271-d1dc2e154ffd")
 	)
 	(hierarchical_label "SDAacc"
 		(shape input)
@@ -5078,17 +5046,6 @@
 		)
 		(uuid "6cf86efb-48eb-4a21-b66d-51a8d06f0b27")
 	)
-	(hierarchical_label "Encodeur_2A"
-		(shape input)
-		(at 177.8 95.25 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "80b9b65a-bad1-4d79-8fda-17d151225047")
-	)
 	(hierarchical_label "SCLacc"
 		(shape input)
 		(at 177.8 138.43 0)
@@ -5099,17 +5056,6 @@
 			(justify left)
 		)
 		(uuid "a088ee58-fa61-415f-9c08-705ff9303980")
-	)
-	(hierarchical_label "REV_2"
-		(shape input)
-		(at 177.8 135.89 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "aa9911ce-ddab-4c01-846a-cfa6e2493a9f")
 	)
 	(hierarchical_label "INTacc1"
 		(shape input)
@@ -5124,7 +5070,7 @@
 	)
 	(hierarchical_label "Encodeur_1B"
 		(shape input)
-		(at 180.34 77.47 0)
+		(at 177.8 135.89 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5133,9 +5079,20 @@
 		)
 		(uuid "b4e8a332-215e-4193-be3c-9d0bdc685e2d")
 	)
+	(hierarchical_label "Encodeur_2B"
+		(shape input)
+		(at 177.8 77.47 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "b72fbfec-3792-4ce1-8385-f43b6c27c2d4")
+	)
 	(hierarchical_label "SCL"
 		(shape input)
-		(at 177.8 87.63 0)
+		(at 177.8 92.71 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5143,6 +5100,17 @@
 			(justify left)
 		)
 		(uuid "cf27f033-fd51-4ff7-bbd6-f3f7c0d3dae8")
+	)
+	(hierarchical_label "REV_2"
+		(shape input)
+		(at 177.8 102.87 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d55fa0fd-9e54-4963-b2b5-d0bc82ee0a86")
 	)
 	(hierarchical_label "SDA"
 		(shape input)
@@ -5154,6 +5122,28 @@
 			(justify left)
 		)
 		(uuid "d5bf7a57-d560-4b59-9af2-3bb582175397")
+	)
+	(hierarchical_label "Encodeur_2A"
+		(shape input)
+		(at 177.8 74.93 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e5d3e9b7-74e6-42f1-9dd8-ab3424b343e4")
+	)
+	(hierarchical_label "FWD_2"
+		(shape input)
+		(at 177.8 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e9baa84a-fc96-428c-9e4d-1b0146d4daf0")
 	)
 	(symbol
 		(lib_id "Device:Crystal_Small")
