@@ -23,11 +23,14 @@
 /* USER CODE BEGIN Includes */
 #include "ADXL.h"
 #include "i2c-mux.h"
+#include "i2c.h"
+#include "VL53L1X_api.h"
+#include "vl53l1_error_codes.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#define VL53L1X_DEFAULT_ADDRESS (0x29 << 1)
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/

@@ -28,6 +28,8 @@ C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.external
                               C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o (__libc_init_array)
 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-lock.o)
                               C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-findfp.o) (__retarget_lock_init_recursive)
+C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
+                              ./VL53L1X_ULD_API/platform/vl53l1_platform.o (memcpy)
 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-freer.o)
                               C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-reent.o) (_free_r)
 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mallocr.o)
@@ -38,6 +40,14 @@ C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.external
                               C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-findfp.o) (_fflush_r)
 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-sbrkr.o)
                               C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mallocr.o) (_sbrk_r)
+C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldf3.o)
+                              ./VL53L1X_ULD_API/core/VL53L1X_api.o (__aeabi_dmul)
+C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
+                              ./VL53L1X_ULD_API/core/VL53L1X_api.o (__aeabi_ui2d)
+C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
+                              ./VL53L1X_ULD_API/core/VL53L1X_api.o (__aeabi_ddiv)
+C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixunsdfsi.o)
+                              ./VL53L1X_ULD_API/core/VL53L1X_api.o (__aeabi_d2uiz)
 
 Discarded input sections
 
@@ -333,6 +343,47 @@ Discarded input sections
  .debug_frame   0x0000000000000000       0x7c ./Core/Src/i2c-mux.o
  .ARM.attributes
                 0x0000000000000000       0x34 ./Core/Src/i2c-mux.o
+ .group         0x0000000000000000        0xc ./Core/Src/i2c.o
+ .text          0x0000000000000000        0x0 ./Core/Src/i2c.o
+ .data          0x0000000000000000        0x0 ./Core/Src/i2c.o
+ .bss           0x0000000000000000        0x0 ./Core/Src/i2c.o
+ .debug_info    0x0000000000000000       0x22 ./Core/Src/i2c.o
+ .debug_abbrev  0x0000000000000000       0x12 ./Core/Src/i2c.o
+ .debug_aranges
+                0x0000000000000000       0x18 ./Core/Src/i2c.o
+ .debug_macro   0x0000000000000000       0x11 ./Core/Src/i2c.o
+ .debug_macro   0x0000000000000000      0xaa8 ./Core/Src/i2c.o
+ .debug_line    0x0000000000000000       0x32 ./Core/Src/i2c.o
+ .debug_str     0x0000000000000000     0x2dcf ./Core/Src/i2c.o
+ .comment       0x0000000000000000       0x44 ./Core/Src/i2c.o
+ .ARM.attributes
+                0x0000000000000000       0x34 ./Core/Src/i2c.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
+ .group         0x0000000000000000        0xc ./Core/Src/main.o
  .group         0x0000000000000000        0xc ./Core/Src/main.o
  .group         0x0000000000000000        0xc ./Core/Src/main.o
  .group         0x0000000000000000        0xc ./Core/Src/main.o
@@ -3360,6 +3411,472 @@ Discarded input sections
  .comment       0x0000000000000000       0x44 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_ll_rcc.o
  .ARM.attributes
                 0x0000000000000000       0x34 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_ll_rcc.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text          0x0000000000000000        0x0 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .data          0x0000000000000000        0x0 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .bss           0x0000000000000000        0x0 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .rodata.VL51L1X_DEFAULT_CONFIGURATION
+                0x0000000000000000       0x5b ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .rodata.status_rtn
+                0x0000000000000000       0x18 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetSWVersion
+                0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetI2CAddress
+                0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SensorInit
+                0x0000000000000000       0xb0 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_ClearInterrupt
+                0x0000000000000000       0x2a ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetInterruptPolarity
+                0x0000000000000000       0x64 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetInterruptPolarity
+                0x0000000000000000       0x4e ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_StartRanging
+                0x0000000000000000       0x2a ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_StopRanging
+                0x0000000000000000       0x2a ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_CheckForDataReady
+                0x0000000000000000       0x62 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetTimingBudgetInMs
+                0x0000000000000000      0x226 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetTimingBudgetInMs
+                0x0000000000000000      0x104 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetDistanceMode
+                0x0000000000000000      0x134 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetDistanceMode
+                0x0000000000000000       0x46 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetInterMeasurementInMs
+                0x0000000000000000       0x78 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetInterMeasurementInMs
+                0x0000000000000000       0xa0 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_BootState
+                0x0000000000000000       0x38 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetSensorId
+                0x0000000000000000       0x3a ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetDistance
+                0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetSignalPerSpad
+                0x0000000000000000       0x8c ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetAmbientPerSpad
+                0x0000000000000000       0x8c ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetSignalRate
+                0x0000000000000000       0x38 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetSpadNb
+                0x0000000000000000       0x38 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetAmbientRate
+                0x0000000000000000       0x38 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetRangeStatus
+                0x0000000000000000       0x54 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetResult
+                0x0000000000000000       0x94 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetOffset
+                0x0000000000000000       0x4c ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetOffset
+                0x0000000000000000       0x46 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetXtalk
+                0x0000000000000000       0x64 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetXtalk
+                0x0000000000000000       0x42 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetDistanceThreshold
+                0x0000000000000000       0xc2 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetDistanceThresholdWindow
+                0x0000000000000000       0x3c ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetDistanceThresholdLow
+                0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetDistanceThresholdHigh
+                0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetROICenter
+                0x0000000000000000       0x30 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetROICenter
+                0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetROI
+                0x0000000000000000       0x90 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetROI_XY
+                0x0000000000000000       0x52 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetSignalThreshold
+                0x0000000000000000       0x30 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetSignalThreshold
+                0x0000000000000000       0x38 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_SetSigmaThreshold
+                0x0000000000000000       0x40 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_GetSigmaThreshold
+                0x0000000000000000       0x38 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .text.VL53L1X_StartTemperatureUpdate
+                0x0000000000000000       0xa0 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_info    0x0000000000000000     0x10cc ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_abbrev  0x0000000000000000      0x19d ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_aranges
+                0x0000000000000000      0x168 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_rnglists
+                0x0000000000000000      0x114 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000      0x1c5 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000      0xaa8 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x22 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x8e ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x51 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000      0x103 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x6a ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000      0x1df ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000      0x174 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x61 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x2a ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x43 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x43 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x58 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x8e ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000      0x177 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000      0x369 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x35 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x20 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000      0x147 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000       0x29 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_macro   0x0000000000000000      0x112 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_line    0x0000000000000000      0xdcd ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_str     0x0000000000000000     0x86d5 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .comment       0x0000000000000000       0x44 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .debug_frame   0x0000000000000000      0x610 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .ARM.attributes
+                0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_api.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .text          0x0000000000000000        0x0 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .data          0x0000000000000000        0x0 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .bss           0x0000000000000000        0x0 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .text.VL53L1X_CalibrateOffset
+                0x0000000000000000      0x104 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .text.VL53L1X_CalibrateXtalk
+                0x0000000000000000      0x1c4 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_info    0x0000000000000000      0x338 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_abbrev  0x0000000000000000       0xe3 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_aranges
+                0x0000000000000000       0x28 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_rnglists
+                0x0000000000000000       0x1b ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000      0x1e1 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000      0xaa8 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x22 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x8e ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x51 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000      0x103 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x6a ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000      0x1df ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000      0x174 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x61 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x2a ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x43 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x43 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x58 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x8e ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000      0x177 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000      0x369 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x35 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x20 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000      0x147 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000       0x29 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_macro   0x0000000000000000      0x112 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_line    0x0000000000000000      0x766 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_str     0x0000000000000000     0x81c2 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .comment       0x0000000000000000       0x44 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .debug_frame   0x0000000000000000       0x58 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .ARM.attributes
+                0x0000000000000000       0x34 ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .group         0x0000000000000000        0xc ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text          0x0000000000000000        0x0 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .data          0x0000000000000000        0x0 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .bss           0x0000000000000000        0x0 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .bss._I2CBuffer
+                0x0000000000000000      0x100 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text._I2CWrite
+                0x0000000000000000       0x3c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text._I2CRead
+                0x0000000000000000       0x40 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text.VL53L1_WriteMulti
+                0x0000000000000000       0x70 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text.VL53L1_ReadMulti
+                0x0000000000000000       0x70 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text.VL53L1_WrByte
+                0x0000000000000000       0x58 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text.VL53L1_WrWord
+                0x0000000000000000       0x68 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text.VL53L1_WrDWord
+                0x0000000000000000       0x78 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text.VL53L1_RdByte
+                0x0000000000000000       0x70 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text.VL53L1_RdWord
+                0x0000000000000000       0x84 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text.VL53L1_RdDWord
+                0x0000000000000000       0x8c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .text.VL53L1_WaitMs
+                0x0000000000000000       0x1a ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_info    0x0000000000000000      0xc52 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_abbrev  0x0000000000000000      0x211 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_aranges
+                0x0000000000000000       0x70 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_rnglists
+                0x0000000000000000       0x51 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x454 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0xaa8 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x22 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x8e ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x51 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x103 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x6a ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x1df ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x174 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x61 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x2a ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x43 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x34 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x43 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x34 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x58 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x8e ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x177 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x369 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x35 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x20 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x147 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x29 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x126 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x12a ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x2e ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x2e ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x22 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0xfb ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000     0x1011 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x11f ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000    0x12adb ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x6c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000     0x34c5 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x56 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x3f5 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x286 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x30d ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x17e ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x43 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x236 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x24a ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x57b ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x2e ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x100 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x1ba ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x1cd ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x22c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x55 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0xa5 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x381 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x13d ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x141 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x4ff ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x874 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x259 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000     0x1bb1 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0xe4 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x5e7 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x557 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x433 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x16 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x52 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x22 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x10 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x52 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0xc1 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x1c ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x3d ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000       0x35 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_macro   0x0000000000000000      0x19b ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_line    0x0000000000000000      0xc83 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_str     0x0000000000000000    0xcfa7f ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .comment       0x0000000000000000       0x44 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .debug_frame   0x0000000000000000      0x1a0 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
+ .ARM.attributes
+                0x0000000000000000       0x34 ./VL53L1X_ULD_API/platform/vl53l1_platform.o
  .text          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-exit.o)
  .data          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-exit.o)
  .bss           0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-exit.o)
@@ -3524,6 +4041,13 @@ Discarded input sections
  .debug_frame   0x0000000000000000       0xb0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-lock.o)
  .ARM.attributes
                 0x0000000000000000       0x34 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-lock.o)
+ .text          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
+ .data          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
+ .bss           0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
+ .text.memcpy   0x0000000000000000       0x1c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
+ .debug_frame   0x0000000000000000       0x28 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
  .text          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-freer.o)
  .data          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-freer.o)
  .bss           0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-freer.o)
@@ -3573,6 +4097,30 @@ Discarded input sections
  .debug_frame   0x0000000000000000       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-sbrkr.o)
  .ARM.attributes
                 0x0000000000000000       0x34 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-sbrkr.o)
+ .text          0x0000000000000000      0x254 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldf3.o)
+ .data          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldf3.o)
+ .bss           0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldf3.o)
+ .debug_frame   0x0000000000000000       0x30 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldf3.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldf3.o)
+ .text          0x0000000000000000      0x378 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
+ .data          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
+ .bss           0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
+ .debug_frame   0x0000000000000000       0xac C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
+ .text          0x0000000000000000      0x424 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
+ .data          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
+ .bss           0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
+ .debug_frame   0x0000000000000000       0x50 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
+ .text          0x0000000000000000       0x40 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixunsdfsi.o)
+ .data          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixunsdfsi.o)
+ .bss           0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixunsdfsi.o)
+ .debug_frame   0x0000000000000000       0x24 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixunsdfsi.o)
+ .ARM.attributes
+                0x0000000000000000       0x1e C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixunsdfsi.o)
  .text          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtend.o
  .data          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtend.o
  .bss           0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtend.o
@@ -3600,6 +4148,7 @@ LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
 LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
 LOAD ./Core/Src/ADXL.o
 LOAD ./Core/Src/i2c-mux.o
+LOAD ./Core/Src/i2c.o
 LOAD ./Core/Src/main.o
 LOAD ./Core/Src/stm32wbxx_hal_msp.o
 LOAD ./Core/Src/stm32wbxx_it.o
@@ -3623,6 +4172,9 @@ LOAD ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr_ex.o
 LOAD ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
 LOAD ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
 LOAD ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_ll_rcc.o
+LOAD ./VL53L1X_ULD_API/core/VL53L1X_api.o
+LOAD ./VL53L1X_ULD_API/core/VL53L1X_calibration.o
+LOAD ./VL53L1X_ULD_API/platform/vl53l1_platform.o
 START GROUP
 LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a
 LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.1.202309131626/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a
@@ -4218,21 +4770,21 @@ LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .comment       0x0000000000000043       0x44 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
  .comment       0x0000000000000043       0x44 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
 
-.debug_info     0x0000000000000000     0xc27d
- .debug_info    0x0000000000000000     0x10f5 ./Core/Src/main.o
- .debug_info    0x00000000000010f5      0xe35 ./Core/Src/stm32wbxx_hal_msp.o
- .debug_info    0x0000000000001f2a      0x113 ./Core/Src/stm32wbxx_it.o
- .debug_info    0x000000000000203d      0x703 ./Core/Src/system_stm32wbxx.o
- .debug_info    0x0000000000002740       0x23 ./Core/Startup/startup_stm32wb55ccux.o
- .debug_info    0x0000000000002763     0x12ae ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
- .debug_info    0x0000000000003a11      0xc81 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_cortex.o
- .debug_info    0x0000000000004692      0x6aa ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_gpio.o
- .debug_info    0x0000000000004d3c     0x21b6 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c.o
- .debug_info    0x0000000000006ef2      0x90f ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c_ex.o
- .debug_info    0x0000000000007801      0x904 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr.o
- .debug_info    0x0000000000008105     0x105d ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr_ex.o
- .debug_info    0x0000000000009162     0x14db ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
- .debug_info    0x000000000000a63d     0x1c40 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
+.debug_info     0x0000000000000000     0xc285
+ .debug_info    0x0000000000000000     0x10fd ./Core/Src/main.o
+ .debug_info    0x00000000000010fd      0xe35 ./Core/Src/stm32wbxx_hal_msp.o
+ .debug_info    0x0000000000001f32      0x113 ./Core/Src/stm32wbxx_it.o
+ .debug_info    0x0000000000002045      0x703 ./Core/Src/system_stm32wbxx.o
+ .debug_info    0x0000000000002748       0x23 ./Core/Startup/startup_stm32wb55ccux.o
+ .debug_info    0x000000000000276b     0x12ae ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
+ .debug_info    0x0000000000003a19      0xc81 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_cortex.o
+ .debug_info    0x000000000000469a      0x6aa ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_gpio.o
+ .debug_info    0x0000000000004d44     0x21b6 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c.o
+ .debug_info    0x0000000000006efa      0x90f ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c_ex.o
+ .debug_info    0x0000000000007809      0x904 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr.o
+ .debug_info    0x000000000000810d     0x105d ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr_ex.o
+ .debug_info    0x000000000000916a     0x14db ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
+ .debug_info    0x000000000000a645     0x1c40 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
 
 .debug_abbrev   0x0000000000000000     0x1e9e
  .debug_abbrev  0x0000000000000000      0x282 ./Core/Src/main.o
@@ -4311,66 +4863,92 @@ LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_rnglists
                 0x0000000000000a7d      0x2b6 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
 
-.debug_macro    0x0000000000000000     0x1dad
- .debug_macro   0x0000000000000000      0x22f ./Core/Src/main.o
- .debug_macro   0x000000000000022f       0x3a ./Core/Src/main.o
- .debug_macro   0x0000000000000269      0x21d ./Core/Src/stm32wbxx_hal_msp.o
- .debug_macro   0x0000000000000486      0x227 ./Core/Src/stm32wbxx_it.o
- .debug_macro   0x00000000000006ad      0x213 ./Core/Src/system_stm32wbxx.o
- .debug_macro   0x00000000000008c0      0x237 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
- .debug_macro   0x0000000000000af7      0x213 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_cortex.o
- .debug_macro   0x0000000000000d0a      0x21a ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_gpio.o
- .debug_macro   0x0000000000000f24      0x2df ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c.o
- .debug_macro   0x0000000000001203      0x213 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c_ex.o
- .debug_macro   0x0000000000001416      0x285 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr.o
- .debug_macro   0x000000000000169b      0x225 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr_ex.o
- .debug_macro   0x00000000000018c0      0x285 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
- .debug_macro   0x0000000000001b45      0x268 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
+.debug_macro    0x0000000000000000     0x2b3f
+ .debug_macro   0x0000000000000000      0x3a9 ./Core/Src/main.o
+ .debug_macro   0x00000000000003a9       0x3a ./Core/Src/main.o
+ .debug_macro   0x00000000000003e3       0x61 ./Core/Src/main.o
+ .debug_macro   0x0000000000000444       0x2a ./Core/Src/main.o
+ .debug_macro   0x000000000000046e       0x43 ./Core/Src/main.o
+ .debug_macro   0x00000000000004b1       0x34 ./Core/Src/main.o
+ .debug_macro   0x00000000000004e5       0x16 ./Core/Src/main.o
+ .debug_macro   0x00000000000004fb       0x43 ./Core/Src/main.o
+ .debug_macro   0x000000000000053e       0x34 ./Core/Src/main.o
+ .debug_macro   0x0000000000000572       0x10 ./Core/Src/main.o
+ .debug_macro   0x0000000000000582       0x58 ./Core/Src/main.o
+ .debug_macro   0x00000000000005da       0x8e ./Core/Src/main.o
+ .debug_macro   0x0000000000000668       0x1c ./Core/Src/main.o
+ .debug_macro   0x0000000000000684      0x177 ./Core/Src/main.o
+ .debug_macro   0x00000000000007fb      0x369 ./Core/Src/main.o
+ .debug_macro   0x0000000000000b64       0x10 ./Core/Src/main.o
+ .debug_macro   0x0000000000000b74       0x35 ./Core/Src/main.o
+ .debug_macro   0x0000000000000ba9       0x20 ./Core/Src/main.o
+ .debug_macro   0x0000000000000bc9       0x1c ./Core/Src/main.o
+ .debug_macro   0x0000000000000be5       0x10 ./Core/Src/main.o
+ .debug_macro   0x0000000000000bf5       0x1c ./Core/Src/main.o
+ .debug_macro   0x0000000000000c11       0x16 ./Core/Src/main.o
+ .debug_macro   0x0000000000000c27      0x147 ./Core/Src/main.o
+ .debug_macro   0x0000000000000d6e       0x16 ./Core/Src/main.o
+ .debug_macro   0x0000000000000d84       0x16 ./Core/Src/main.o
+ .debug_macro   0x0000000000000d9a       0x29 ./Core/Src/main.o
+ .debug_macro   0x0000000000000dc3      0x112 ./Core/Src/main.o
+ .debug_macro   0x0000000000000ed5      0x126 ./Core/Src/main.o
+ .debug_macro   0x0000000000000ffb      0x21d ./Core/Src/stm32wbxx_hal_msp.o
+ .debug_macro   0x0000000000001218      0x227 ./Core/Src/stm32wbxx_it.o
+ .debug_macro   0x000000000000143f      0x213 ./Core/Src/system_stm32wbxx.o
+ .debug_macro   0x0000000000001652      0x237 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
+ .debug_macro   0x0000000000001889      0x213 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_cortex.o
+ .debug_macro   0x0000000000001a9c      0x21a ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_gpio.o
+ .debug_macro   0x0000000000001cb6      0x2df ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c.o
+ .debug_macro   0x0000000000001f95      0x213 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c_ex.o
+ .debug_macro   0x00000000000021a8      0x285 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr.o
+ .debug_macro   0x000000000000242d      0x225 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr_ex.o
+ .debug_macro   0x0000000000002652      0x285 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
+ .debug_macro   0x00000000000028d7      0x268 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
 
-.debug_line     0x0000000000000000     0xe12d
- .debug_line    0x0000000000000000      0x907 ./Core/Src/main.o
- .debug_line    0x0000000000000907      0x883 ./Core/Src/stm32wbxx_hal_msp.o
- .debug_line    0x000000000000118a      0x887 ./Core/Src/stm32wbxx_it.o
- .debug_line    0x0000000000001a11      0x865 ./Core/Src/system_stm32wbxx.o
- .debug_line    0x0000000000002276       0x83 ./Core/Startup/startup_stm32wb55ccux.o
- .debug_line    0x00000000000022f9     0x104a ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
- .debug_line    0x0000000000003343      0xd14 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_cortex.o
- .debug_line    0x0000000000004057      0xbf5 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_gpio.o
- .debug_line    0x0000000000004c4c     0x3991 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c.o
- .debug_line    0x00000000000085dd      0x9e0 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c_ex.o
- .debug_line    0x0000000000008fbd      0xa6f ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr.o
- .debug_line    0x0000000000009a2c     0x11b3 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr_ex.o
- .debug_line    0x000000000000abdf     0x1862 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
- .debug_line    0x000000000000c441     0x1cec ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
+.debug_line     0x0000000000000000     0xe361
+ .debug_line    0x0000000000000000      0xb3b ./Core/Src/main.o
+ .debug_line    0x0000000000000b3b      0x883 ./Core/Src/stm32wbxx_hal_msp.o
+ .debug_line    0x00000000000013be      0x887 ./Core/Src/stm32wbxx_it.o
+ .debug_line    0x0000000000001c45      0x865 ./Core/Src/system_stm32wbxx.o
+ .debug_line    0x00000000000024aa       0x83 ./Core/Startup/startup_stm32wb55ccux.o
+ .debug_line    0x000000000000252d     0x104a ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
+ .debug_line    0x0000000000003577      0xd14 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_cortex.o
+ .debug_line    0x000000000000428b      0xbf5 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_gpio.o
+ .debug_line    0x0000000000004e80     0x3991 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c.o
+ .debug_line    0x0000000000008811      0x9e0 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c_ex.o
+ .debug_line    0x00000000000091f1      0xa6f ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr.o
+ .debug_line    0x0000000000009c60     0x11b3 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr_ex.o
+ .debug_line    0x000000000000ae13     0x1862 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
+ .debug_line    0x000000000000c675     0x1cec ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
 
-.debug_str      0x0000000000000000    0xced67
- .debug_str     0x0000000000000000    0xca2ef ./Core/Src/main.o
-                                      0xcaf1a (size before relaxing)
- .debug_str     0x00000000000ca2ef      0x10c ./Core/Src/stm32wbxx_hal_msp.o
+.debug_str      0x0000000000000000    0xd36f1
+ .debug_str     0x0000000000000000    0xcec79 ./Core/Src/main.o
+                                      0xcf8c7 (size before relaxing)
+ .debug_str     0x00000000000cec79      0x10c ./Core/Src/stm32wbxx_hal_msp.o
                                       0xca8cf (size before relaxing)
- .debug_str     0x00000000000ca3fb       0xc9 ./Core/Src/stm32wbxx_it.o
+ .debug_str     0x00000000000ced85       0xc9 ./Core/Src/stm32wbxx_it.o
                                       0xc9e82 (size before relaxing)
- .debug_str     0x00000000000ca4c4      0x105 ./Core/Src/system_stm32wbxx.o
+ .debug_str     0x00000000000cee4e      0x105 ./Core/Src/system_stm32wbxx.o
                                       0xca0f8 (size before relaxing)
- .debug_str     0x00000000000ca5c9       0x34 ./Core/Startup/startup_stm32wb55ccux.o
+ .debug_str     0x00000000000cef53       0x34 ./Core/Startup/startup_stm32wb55ccux.o
                                          0x7f (size before relaxing)
- .debug_str     0x00000000000ca5fd      0xe55 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
+ .debug_str     0x00000000000cef87      0xe55 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal.o
                                       0xcafde (size before relaxing)
- .debug_str     0x00000000000cb452      0x331 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_cortex.o
+ .debug_str     0x00000000000cfddc      0x331 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_cortex.o
                                       0xca75e (size before relaxing)
- .debug_str     0x00000000000cb783      0x18d ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_gpio.o
+ .debug_str     0x00000000000d010d      0x18d ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_gpio.o
                                       0xca0d2 (size before relaxing)
- .debug_str     0x00000000000cb910      0xdea ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c.o
+ .debug_str     0x00000000000d029a      0xdea ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c.o
                                       0xcb323 (size before relaxing)
- .debug_str     0x00000000000cc6fa       0xb8 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c_ex.o
+ .debug_str     0x00000000000d1084       0xb8 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_i2c_ex.o
                                       0xca531 (size before relaxing)
- .debug_str     0x00000000000cc7b2      0x5d0 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr.o
+ .debug_str     0x00000000000d113c      0x5d0 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr.o
                                       0xca568 (size before relaxing)
- .debug_str     0x00000000000ccd82      0x826 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr_ex.o
+ .debug_str     0x00000000000d170c      0x826 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_pwr_ex.o
                                       0xcaa69 (size before relaxing)
- .debug_str     0x00000000000cd5a8      0xb3f ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
+ .debug_str     0x00000000000d1f32      0xb3f ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc.o
                                       0xcaf56 (size before relaxing)
- .debug_str     0x00000000000ce0e7      0xc80 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
+ .debug_str     0x00000000000d2a71      0xc80 ./Drivers/STM32WBxx_HAL_Driver/Src/stm32wbxx_hal_rcc_ex.o
                                       0xcb37f (size before relaxing)
 
 .debug_frame    0x0000000000000000     0x4838

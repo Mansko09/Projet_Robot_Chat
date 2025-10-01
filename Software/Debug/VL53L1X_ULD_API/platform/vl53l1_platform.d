@@ -1,5 +1,9 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
- ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal.h \
+VL53L1X_ULD_API/platform/vl53l1_platform.o: \
+ ../VL53L1X_ULD_API/platform/vl53l1_platform.c \
+ ../VL53L1X_ULD_API/platform/vl53l1_platform.h \
+ ../VL53L1X_ULD_API/platform/vl53l1_types.h \
+ ../VL53L1X_ULD_API/platform/vl53l1_error_codes.h ../Core/Inc/i2c.h \
+ ../Core/Inc/main.h ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal.h \
  ../Core/Inc/stm32wbxx_hal_conf.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_dma.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_def.h \
@@ -32,12 +36,11 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_bus.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_rcc_ex.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_crs.h \
- ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_system.h \
- ../Core/Inc/ADXL.h ../Core/Inc/i2c-mux.h ../Core/Inc/i2c.h \
- ../Core/Inc/main.h ../VL53L1X_ULD_API/core/VL53L1X_api.h \
- ../VL53L1X_ULD_API/platform/vl53l1_platform.h \
- ../VL53L1X_ULD_API/platform/vl53l1_types.h \
- ../VL53L1X_ULD_API/platform/vl53l1_error_codes.h
+ ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_system.h
+../VL53L1X_ULD_API/platform/vl53l1_platform.h:
+../VL53L1X_ULD_API/platform/vl53l1_types.h:
+../VL53L1X_ULD_API/platform/vl53l1_error_codes.h:
+../Core/Inc/i2c.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal.h:
 ../Core/Inc/stm32wbxx_hal_conf.h:
@@ -73,11 +76,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_rcc_ex.h:
 ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_crs.h:
 ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_system.h:
-../Core/Inc/ADXL.h:
-../Core/Inc/i2c-mux.h:
-../Core/Inc/i2c.h:
-../Core/Inc/main.h:
-../VL53L1X_ULD_API/core/VL53L1X_api.h:
-../VL53L1X_ULD_API/platform/vl53l1_platform.h:
-../VL53L1X_ULD_API/platform/vl53l1_types.h:
-../VL53L1X_ULD_API/platform/vl53l1_error_codes.h:
