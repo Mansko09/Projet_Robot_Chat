@@ -1,0 +1,46 @@
+Configuration	robot_chat_code
+STM32CubeMX 	6.9.2
+Date	09/23/2025
+MCU	STM32WB55CCUx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+PERIPHERALS	MODES	FUNCTIONS	PINS
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : robot_chat_code
+Project Folder : C:\Users\david\OneDrive\Bureau\Projet_ESE\Projet_Robot_Chat\Software
+Toolchain / IDE : STM32CubeIDE
+Firmware Package Name and Version : STM32Cube FW_WB V1.17.3
+
+
+Code Generation Settings : 
+STM32Cube MCU packages and embedded software packs : Copy only the necessary library files
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : 
+
+
+
+
+
