@@ -5036,7 +5036,7 @@
 	)
 	(hierarchical_label "FWD_1"
 		(shape input)
-		(at 177.8 135.89 0)
+		(at 177.8 90.17 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5102,7 +5102,7 @@
 	)
 	(hierarchical_label "REV_2"
 		(shape input)
-		(at 177.8 90.17 0)
+		(at 177.8 135.89 0)
 		(effects
 			(font
 				(size 1.27 1.27)
