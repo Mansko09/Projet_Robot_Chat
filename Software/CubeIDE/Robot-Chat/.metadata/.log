@@ -1,0 +1,48 @@
+!SESSION 2025-11-14 15:55:44.077 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=fr_FR
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-11-14 15:56:01.234
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-11-14 15:56:01.235
+!MESSAGE Log4j2 initialized with config file C:\Users\mbeng\Documents\ENSEA_3e_ESE\Projet_ESE\Projet_Robot_Chat\Software\CubeIDE\Robot-Chat\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-11-14 15:56:04.683
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.core.jobs 2 2 2025-11-14 15:56:14.017
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: org.eclipse.ui.internal.Workbench$39 RUNNING
+	 at com.teamdev.jxbrowser.deps.com.google.protobuf.Descriptors$MethodDescriptor.<init>(Descriptors.java:2239)
+	 at com.teamdev.jxbrowser.deps.com.google.protobuf.Descriptors$MethodDescriptor.<init>(Descriptors.java:2158)
+	 at com.teamdev.jxbrowser.deps.com.google.protobuf.Descriptors$ServiceDescriptor.<init>(Descriptors.java:2133)
+	 at com.teamdev.jxbrowser.deps.com.google.protobuf.Descriptors$ServiceDescriptor.<init>(Descriptors.java:2056)
+	 at com.teamdev.jxbrowser.deps.com.google.protobuf.Descriptors$FileDescriptor.<init>(Descriptors.java:564)
+	 at com.teamdev.jxbrowser.deps.com.google.protobuf.Descriptors$FileDescriptor.buildFrom(Descriptors.java:319)
+	 at com.teamdev.jxbrowser.deps.com.google.protobuf.Descriptors$FileDescriptor.internalBuildGeneratedFileFrom(Descriptors.java:426)
+	 at com.teamdev.jxbrowser.navigation.internal.rpc.NavigationProto.<clinit>(NavigationProto.java:297)
+	 at com.teamdev.jxbrowser.navigation.internal.rpc.NavigationStub.<clinit>(NavigationStub.java:31)
+	 at com.teamdev.jxbrowser.internal.rpc.ServiceConnectionImpl.<init>(ServiceConnectionImpl.java:47)
+	 at com.teamdev.jxbrowser.navigation.internal.NavigationImpl.<init>(NavigationImpl.java:47)
+	 at com.teamdev.jxbrowser.browser.internal.BrowserImpl.lambda$new$4(BrowserImpl.java:179)
+	 at com.teamdev.jxbrowser.internal.Lazy.get(Lazy.java:46)
+	 at com.teamdev.jxbrowser.browser.internal.BrowserImpl.navigation(BrowserImpl.java:317)
+	 at com.teamdev.jxbrowser.browser.internal.BrowserImpl.initializeMainFrame(BrowserImpl.java:400)
+	 at com.teamdev.jxbrowser.profile.internal.ProfileImpl.newBrowser(ProfileImpl.java:150)
+	 at com.st.microxplorer.plugins.userauth.WebApp.<init>(WebApp.java:174)
+	 at com.st.microxplorer.plugins.userauth.WebApp.getInstance(WebApp.java:779)
+	 at com.st.microxplorer.plugins.userauth.UserAuth.getBrowserView(UserAuth.java:489)
+	 at com.st.microxplorer.plugins.userauth.UserAuth.checkInfile(UserAuth.java:251)
+	 at com.st.microxplorer.plugins.userauth.UserAuth.activatePlugin(UserAuth.java:169)
+	 at com.st.stm32cube.common.mx.userauth.UserAuthAdapter.<init>(UserAuthAdapter.java:29)
+	 at com.st.stm32cube.common.mx.userauth.UserAuthProvider.getUserAuthAdapter(UserAuthProvider.java:16)
+	 at com.st.stm32cube.common.ecosystemintegration.ui.core.MCUEcoSystemIntegrationUiHelper.getUserAuth(MCUEcoSystemIntegrationUiHelper.java:100)
+	 at com.st.stm32cube.ide.mcu.userauth.UserAuthStartup.earlyStartup(UserAuthStartup.java:32)
+	 at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:79)
+	 at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:55)
+	 at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	 at org.eclipse.ui.internal.Workbench$39.run(Workbench.java:2733)
+	 at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
