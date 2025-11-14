@@ -88,8 +88,8 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
 ## Avancement du projet
 
 * [x] Choix des composants et architecture générale
-* [ ] Schéma et routage PCB
-* [ ] Impression 3D du robot
+* [x] Schéma et routage PCB
+* [x] Impression 3D du robot
 * [ ] Développement logiciel de base
 * [ ] Intégration LIDAR et logique “chat/souris”
 * [ ] Tests finaux et matchs entre robots 🎮
