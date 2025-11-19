@@ -1,0 +1,5 @@
+../Core/drivers/motors.c:22:6:Motor_Init	16	static
+../Core/drivers/motors.c:50:6:Motor_SetMode	24	static
+../Core/drivers/motors.c:100:6:Motor_SetSpeed_percent	32	static
+../Core/drivers/motors.c:109:6:Motor_Stop	16	static
+../Core/drivers/motors.c:121:6:Motor_UpdateSpeed	16	static
