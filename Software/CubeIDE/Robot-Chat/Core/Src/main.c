@@ -28,6 +28,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "../drivers/motors.h"
+#include "../drivers/TOFs.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -40,7 +41,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define STACK_SIZE 256
+#define TASK_PRIORITY_MOTOR 10
+#define TASK_PRIORITY_CONTROL 2
 
+#define TOF_TRESHHOLD 40
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,7 +56,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-h_Motor_t motors;
+h_Motor_t hMotors;
+h_tof_t hTof;
 char rx_line[64];
 int rx_index = 0;
 
@@ -137,13 +143,138 @@ void parse_cmd(int argc, char **argv, h_Motor_t *motors)
 }
 
 /* Helper pour régler un duty en pourcentage (0..100) */
-static void set_pwm_percent(TIM_HandleTypeDef *htim, uint32_t channel, float percent)
+//static void set_pwm_percent(TIM_HandleTypeDef *htim, uint32_t channel, float percent)
+//{
+//	if (percent < 0.0f) percent = 0.0f;
+//	if (percent > 100.0f) percent = 100.0f;
+//	uint32_t arr = htim->Init.Period;
+//	uint32_t ccr = (uint32_t)((percent/100.0f) * (float)arr);
+//	__HAL_TIM_SET_COMPARE(htim, channel, ccr);
+//}
+
+void task_Motors(void * unsused)
 {
-	if (percent < 0.0f) percent = 0.0f;
-	if (percent > 100.0f) percent = 100.0f;
-	uint32_t arr = htim->Init.Period;
-	uint32_t ccr = (uint32_t)((percent/100.0f) * (float)arr);
-	__HAL_TIM_SET_COMPARE(htim, channel, ccr);
+	printf("task_Motors\r\n");
+
+	while (1)
+	{
+		//get distance tofs
+		Motor_UpdateSpeed(&hMotors);
+		vTaskDelay(1);
+	}
+}
+
+
+void task_Control(void *unused)
+{
+    printf("task_Control\r\n");
+
+    while (1)
+    {
+        /* Print the 4 ToF distances */
+        printf(
+            "FL: %d mm, FC: %d mm, FR: %d mm, BC: %d mm\r\n",
+            hTof.distance_tof1,    // Front Left
+            hTof.distance_tof2,    // Front Center
+            hTof.distance_tof3,    // Front Right
+            hTof.distance_tof4     // Back Center
+        );
+
+        /* --------------------- Robot Obstacle Logic ----------------------
+         * We consider:
+         *  - distance_tof1 = front left
+         *  - distance_tof2 = front center
+         *  - distance_tof3 = front right
+         *  - distance_tof4 = back center
+         *
+         * Example strategy:
+         *  - If something in front → try to turn according to FL/FR
+         *  - If fully blocked → go backwards
+         *  - If back blocked → prevent reverse
+         *-----------------------------------------------------------------*/
+
+        int front_left   = (hTof.distance_tof1 <= TOF_TRESHHOLD);
+        int front_center = (hTof.distance_tof2 <= TOF_TRESHHOLD);
+        int front_right  = (hTof.distance_tof3 <= TOF_TRESHHOLD);
+        int back_center  = (hTof.distance_tof4 <= TOF_TRESHHOLD);
+
+        /* ---- CASE 1 : NO OBSTACLE IN FRONT → GO FORWARD ---- */
+        if (!front_left && !front_center && !front_right)
+        {
+            hMotors.mode_mot1 = FORWARD_MODE;
+            hMotors.mode_mot2 = FORWARD_MODE;
+        }
+
+        /* ---- CASE 2 : OBSTACLE IN FRONT CENTER ONLY → CHOOSE BEST SIDE ---- */
+        else if (front_center && !front_left && front_right)
+        {
+            // Turn LEFT (mot1 backward, mot2 forward)
+            hMotors.mode_mot1 = REVERSE_MODE;
+            hMotors.mode_mot2 = FORWARD_MODE;
+        }
+        else if (front_center && front_left && !front_right)
+        {
+            // Turn RIGHT
+            hMotors.mode_mot1 = FORWARD_MODE;
+            hMotors.mode_mot2 = REVERSE_MODE;
+        }
+
+        /* ---- CASE 3 : OBSTACLE ON LEFT ONLY → TURN RIGHT ---- */
+        else if (front_left && !front_center && !front_right)
+        {
+            hMotors.mode_mot1 = FORWARD_MODE;
+            hMotors.mode_mot2 = REVERSE_MODE;
+        }
+
+        /* ---- CASE 4 : OBSTACLE ON RIGHT ONLY → TURN LEFT ---- */
+        else if (!front_left && !front_center && front_right)
+        {
+            hMotors.mode_mot1 = REVERSE_MODE;
+            hMotors.mode_mot2 = FORWARD_MODE;
+        }
+
+        /* ---- CASE 5 : FULLY BLOCKED (ALL 3 FRONT) → GO BACK ---- */
+        else if (front_left && front_center && front_right)
+        {
+            // BUT check if back is free
+            if (!back_center)
+            {
+                hMotors.mode_mot1 = REVERSE_MODE;
+                hMotors.mode_mot2 = REVERSE_MODE;
+            }
+            else
+            {
+                // Stuck → stop motors to avoid crash
+                hMotors.mode_mot1 = BRAKE_MODE;
+                hMotors.mode_mot2 = BRAKE_MODE;
+            }
+        }
+
+        /* ---- Any other random case → safe backward ---- */
+        else
+        {
+            if (!back_center)
+            {
+                hMotors.mode_mot1 = REVERSE_MODE;
+                hMotors.mode_mot2 = REVERSE_MODE;
+            }
+            else
+            {
+                hMotors.mode_mot1 = BRAKE_MODE;
+                hMotors.mode_mot2 = BRAKE_MODE;
+            }
+        }
+
+        /* Apply motor commands */
+        Motor_SetMode(&hMotors);
+        Motor_SetSpeed_percent(&hMotors, 40, 40);
+
+        printf("Mot1 speed: %d, Mot2 speed: %d\r\n",
+               hMotors.current_speed1,
+               hMotors.current_speed2);
+
+        vTaskDelay(1);
+    }
 }
 
 /* USER CODE END 0 */
@@ -203,46 +334,44 @@ int main(void)
 	//	uint8_t c;
 	//	uint32_t last_update = HAL_GetTick();
 
-	printf("=== PWM Test Ready ===\r\n");
+	uint32_t arr = htim1.Init.Period;
+	arr *= 0.80f;   // 20% duty cycle SAFE
 
-	/* Start PWM channels */
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+	/* ------------------ M1 FWD ------------------ */
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, arr);   // M1 FWD
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);     // M1 REV OFF
+	printf("M1 FWD 20%%\r\n");
+	HAL_Delay(3000);
 
-	/* Force everything OFF at startup */
+	/* ------- STANDBY sécuritaire avant inversion ------- */
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
+	printf("M1 STANDBY\r\n");
+	HAL_Delay(1000);
+
+	/* ------------------ M1 REV ------------------ */
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, arr);   // M1 REV
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);     // M1 FWD OFF
+	printf("M1 REV 20%%\r\n");
+	HAL_Delay(3000);
+
+	/* ------------------ M2 FWD ------------------ */
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, arr);   // M2 FWD
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);     // M2 REV OFF
+	printf("M2 FWD 20%%\r\n");
+	HAL_Delay(3000);
+
+	/* ------- STANDBY sécuritaire avant inversion ------- */
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
+	printf("M2 STANDBY\r\n");
+	HAL_Delay(1000);
 
-	printf("PWM ZERO — connect oscilloscope now.\r\n");
-	HAL_Delay(2000);
-
-	/* Test 1 : M1 FWD -> CH1 = 20 % */
-	uint32_t arr = htim1.Init.Period;
-	arr *=  .8f;
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, arr);
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
-//
-//	printf("M1 FWD 20%% on CH1 %lu\r\n", arr);
-//	HAL_Delay(5000);
-//	HAL_receive(1);
-
-//	/* Test 2 : standby */
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
-//	printf("STANDBY\r\n");
-//	HAL_Delay(2000);
-//
-//	/* Test 3 : M1 REV -> CH2 = 20 % */
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, arr);
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
-
-	printf("M1 REV 20%% on CH2\r\n");
-	HAL_Delay(5000);
-
+	/* ------------------ M2 REV ------------------ */
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, arr);   // M2 REV
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);     // M2 FWD OFF
+	printf("M2 REV 20%%\r\n");
+	HAL_Delay(3000);
 
   /* USER CODE END 2 */
 
@@ -300,40 +429,6 @@ int main(void)
 		//			last_update = HAL_GetTick();
 		//		}
 
-				//TEST MOTEUR SIMPLE
-//				// --- Moteur 1 : tourne en sens reverse doucement ---
-//				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);    // FWD OFF
-//				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 300);  // REV ON
-//
-////				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);    // M2 FWD OFF
-////				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 300);  // M2 REV ON
-//
-//				    HAL_Delay(3000);
-//
-//				    // --- STANDBY pour les 2 moteurs ---
-//				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
-//				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
-////				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
-////				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
-//
-//				    HAL_Delay(500);
-//
-//				    // --- Moteur 1 : sens forward ---
-//				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
-//				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 300);
-//
-////				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
-////				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 300);
-//
-//				    HAL_Delay(3000);
-//
-//				    // --- Retour Standby ---
-//				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
-//				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
-////				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
-////				    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
-//
-//				    HAL_Delay(1000);
 	}
   /* USER CODE END 3 */
 }

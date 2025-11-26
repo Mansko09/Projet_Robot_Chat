@@ -57,7 +57,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
  ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/lptim.h \
  ../Core/Inc/usart.h ../Core/Inc/tim.h ../Core/Inc/gpio.h \
- ../Core/Src/../drivers/motors.h
+ ../Core/Src/../drivers/motors.h ../Core/Src/../drivers/TOFs.h
 ../Core/Inc/main.h:
 ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal.h:
 ../Core/Inc/stm32wbxx_hal_conf.h:
@@ -122,3 +122,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/tim.h:
 ../Core/Inc/gpio.h:
 ../Core/Src/../drivers/motors.h:
+../Core/Src/../drivers/TOFs.h:
