@@ -83,7 +83,7 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
 
 
 ## Architecture générale 
-![Architecture générale](./Screenshots/Architecture_generale_Robot_Chat.jpg)
+![Architecture générale](./Screenshots/Architecture_generale_Robot_Chat.png)
 
 ## Avancement du projet
 
