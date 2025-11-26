@@ -41,7 +41,7 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
 ## Composants principaux
 
 * **Microcontrôleur** : STM32WB55CEU6 (ARM Cortex-M4, BLE intégré)
-* **Quartz** : 16 MHz (Farnell : 2853935)
+* **Quartz** : 32 MHz 
 * **Connecteur SWD/STLink** : (Farnell : 3226055)
 * **Moteurs** : DFRobot FIT0520 ou FIT0521
 * **Alimentation** : Batterie NiMH 7.2 V 1.3 Ah (RS : 777-0377)
