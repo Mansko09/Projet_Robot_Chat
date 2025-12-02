@@ -27,8 +27,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "../drivers/motors.h"
-#include "../drivers/TOFs.h"
+#include "motors.h"
+#include "TOFs.h"
+#include "encodeur.h"
+#include "odometry.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,9 +43,13 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define STACK_SIZE 256
-#define TASK_PRIORITY_MOTOR 10
-#define TASK_PRIORITY_CONTROL 2
+#define STACK_SIZE_SMALL   256
+#define STACK_SIZE_MEDIUM  384
+
+#define PRIO_MOTOR   10
+#define PRIO_CTRL    5
+#define PRIO_TOF     4
+#define PRIO_ODOM    6
 
 #define TOF_TRESHHOLD 40
 /* USER CODE END PD */
@@ -58,11 +64,22 @@
 /* USER CODE BEGIN PV */
 h_Motor_t hMotors;
 h_tof_t hTof;
-char rx_line[64];
-int rx_index = 0;
-//task handle
-TaskHandle_t xMotors;
-TaskHandle_t xControl;
+
+//task handles
+TaskHandle_t xTaskMotorsHandle = NULL;
+TaskHandle_t xTaskControlHandle = NULL;
+TaskHandle_t xTaskToFHandle = NULL;
+TaskHandle_t xTaskOdomHandle = NULL;
+
+Encodeur_t enc;
+Odom_t odom;
+
+Odom_Params_t odom_params = {
+		.wheel_radius = 0.03f,    // 3 cm
+		.wheel_base   = 0.15f,    // 15 cm entre roues
+		.ticks_per_rev = 48.0f    // à vérifier pour les encodeurs
+};
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -154,7 +171,10 @@ void parse_cmd(int argc, char **argv, h_Motor_t *motors)
 //	__HAL_TIM_SET_COMPARE(htim, channel, ccr);
 //}
 
-void task_Motors(void * unsused)
+/* ============================= */
+/*        TASK   MOTORS          */
+/* ============================= */
+void Task_Motors(void * unsused)
 {
 	printf("task_Motors\r\n");
 
@@ -166,8 +186,10 @@ void task_Motors(void * unsused)
 	}
 }
 
-
-void task_Control(void *unused)
+/* ============================= */
+/*       TASK   CONTROL          */
+/* ============================= */
+void Task_Control(void *unused)
 {
 	printf("task_Control\r\n");
 
@@ -279,6 +301,40 @@ void task_Control(void *unused)
 	}
 }
 
+/* ============================= */
+/*       TASK   TOFs             */
+/* ============================= */
+void Task_ToFs(void *unused)
+{
+    printf("Task_ToFs started\r\n");
+
+    for(;;)
+    {
+
+        vTaskDelay(50);
+    }
+}
+
+
+/* ============================= */
+/*        TASK ODOM              */
+/* ============================= */
+void Task_Odom(void *unused)
+{
+    printf("Task_Odom started\r\n");
+
+    for(;;)
+    {
+        Encodeur_Read(&enc);
+        Odom_Update(&odom, &enc, &odom_params);
+
+        printf("x=%.2f  y=%.2f  th=%.1f°\r\n",
+                odom.x, odom.y, odom.theta * 180 / M_PI);
+
+        vTaskDelay(10);
+    }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -289,7 +345,6 @@ int main(void)
 {
 
 	/* USER CODE BEGIN 1 */
-	BaseType_t xReturned;
 	/* USER CODE END 1 */
 
 	/* MCU Configuration--------------------------------------------------------*/
@@ -321,96 +376,91 @@ int main(void)
 	MX_LPUART1_UART_Init();
 	MX_USART1_UART_Init();
 	/* USER CODE BEGIN 2 */
-	printf("\r\n================== TEST CONTROL MOTORs  ===============\r\n");
-	/* Init motors */
-	//	Motor_Init(&motors, &htim1);
-	//
-	//	motors.m1_forward_channel = TIM_CHANNEL_1;
-	//	motors.m1_reverse_channel = TIM_CHANNEL_2;
+	  /* ======================== INIT ========================= */
+	Motor_Init(&hMotors, &htim1);
+	hMotors.m1_forward_channel = TIM_CHANNEL_1;
+	hMotors.m1_reverse_channel = TIM_CHANNEL_2;
+	hMotors.m2_forward_channel = TIM_CHANNEL_4; //J'ai échangé 3 et 4 pour que quand on soit en mode fwd, les deux roues sont dans le mm sens
+	hMotors.m2_reverse_channel = TIM_CHANNEL_3;
 
-	//motors.m2_forward_channel = TIM_CHANNEL_3;
-	//motors.m2_reverse_channel = TIM_CHANNEL_4;
-	//
-	//	const char *msg = "Robot Motor Test Ready\r\n";
-	//	HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), 100);
-	//	uint8_t c;
-	//	uint32_t last_update = HAL_GetTick();
+	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
+	HAL_LPTIM_Encoder_Start(&hlptim1, 0xFFFF);
+	Encodeur_Init();
+	Odom_Init(&odom);
+    /* ======================== START PWM ========================== */
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+
+    /* ======================== CREATE TASKS ========================== */
+
+    xTaskCreate(Task_Motors, "Motors", STACK_SIZE_MEDIUM, NULL, PRIO_MOTOR, &xTaskMotorsHandle);
+    xTaskCreate(Task_Control, "Control", STACK_SIZE_MEDIUM, NULL, PRIO_CTRL, &xTaskControlHandle);
+    xTaskCreate(Task_ToFs,  "ToFs",    STACK_SIZE_SMALL,  NULL, PRIO_TOF, &xTaskToFHandle);
+    xTaskCreate(Task_Odom,  "Odom",    STACK_SIZE_SMALL,  NULL, PRIO_ODOM, &xTaskOdomHandle);
+
+
+
+	printf("\r\n================== TEST CONTROL MOTORs  ===============\r\n");
+	HAL_TIM_Base_Start(&htim1);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+
+
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);   // M1 FWD
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);     // M1 REV OFF
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);     // M1 REV OFF
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);     // M1 REV OFF
 
 	uint32_t arr = htim1.Init.Period;
 	arr *= 0.80f;   // 20% duty cycle SAFE
 
 	/* ------------------ M1 FWD ------------------ */
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, arr);   // M1 FWD
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);     // M1 REV OFF
-	printf("M1 FWD 20%%\r\n");
-	HAL_Delay(3000);
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, arr);   // M1 FWD
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);     // M1 REV OFF
+	//	printf("M1 FWD 80%%\r\n");
+	//	HAL_Delay(3000);
 
-	/* ------- STANDBY sécuritaire avant inversion ------- */
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
-	printf("M1 STANDBY\r\n");
-	HAL_Delay(1000);
+	//	/* ------- STANDBY sécuritaire avant inversion ------- */
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
+	//	printf("M1 STANDBY\r\n");
+	//	HAL_Delay(1000);
+	//
+	//	/* ------------------ M1 REV ------------------ */
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, arr);   // M1 REV
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);     // M1 FWD OFF
+	//	printf("M1 REV 20%%\r\n");
+	//	HAL_Delay(3000);
 
-	/* ------------------ M1 REV ------------------ */
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, arr);   // M1 REV
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);     // M1 FWD OFF
-	printf("M1 REV 20%%\r\n");
-	HAL_Delay(3000);
+	//	/* ------------------ M2 FWD ------------------ */
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, arr);   // M2 FWD
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);     // M2 REV OFF
+	//	printf("M2 FWD 80%%\r\n");
+	//	HAL_Delay(3000);
 
-	/* ------------------ M2 FWD ------------------ */
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, arr);   // M2 FWD
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);     // M2 REV OFF
-	printf("M2 FWD 20%%\r\n");
-	HAL_Delay(3000);
+	//	/* ------- STANDBY sécuritaire avant inversion ------- */
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
+	//	printf("M2 STANDBY\r\n");
+	//	HAL_Delay(1000);
+	//
+	//	/* ------------------ M2 REV ------------------ */
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, arr);   // M2 REV
+	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);     // M2 FWD OFF
+	//	printf("M2 REV 20%%\r\n");
+	//	HAL_Delay(3000);
 
-	/* ------- STANDBY sécuritaire avant inversion ------- */
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
-	printf("M2 STANDBY\r\n");
-	HAL_Delay(1000);
-
-	/* ------------------ M2 REV ------------------ */
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, arr);   // M2 REV
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);     // M2 FWD OFF
-	printf("M2 REV 20%%\r\n");
-	HAL_Delay(3000);
-
-
-
-	/* Motors task */
-	xReturned = xTaskCreate(
-	        task_Motors,          // Task function
-	        "task_Motors",        // Name
-	        STACK_SIZE,           // Stack size
-	        (void *)0,            // Parameter
-	        TASK_PRIORITY_MOTOR,  // Priority
-	        &xMotors              // Task handle
-	);
-
-	if (xReturned != pdPASS)
-	{
-	    Error_Handler();   // or your own task creation failure handler
-	}
-
-	/* Control task */
-	xReturned = xTaskCreate(
-	        task_Control,         // Task function
-	        "task_Control",       // Name
-	        STACK_SIZE,           // Stack size
-	        (void *)0,            // Parameter
-	        TASK_PRIORITY_CONTROL,// Priority
-	        &xControl             // Task handle
-	);
-
-	if (xReturned != pdPASS)
-	{
-	    Error_Handler();
-	}
+	//uint32_t last_update = HAL_GetTick();
 
 
+	vTaskStartScheduler();
 	/* USER CODE END 2 */
 
-	/* Call init function for freertos objects (in cmsis_os2.c) */
+	//	/* Call init function for freertos objects (in cmsis_os2.c) */
 	MX_FREERTOS_Init();
 
 	/* Start scheduler */
@@ -423,46 +473,7 @@ int main(void)
 	while (1)
 	{
 		/* USER CODE END WHILE */
-
 		/* USER CODE BEGIN 3 */
-		//		//To test in term write for ex : M1 50
-		//		if (HAL_UART_Receive(&huart1, &c, 1, 1) == HAL_OK)
-		//		{
-		//			// Élimination des CR/LF successifs
-		//			if (c == '\r' || c == '\n')
-		//			{
-		//				if (rx_index == 0)
-		//					continue;  // ignore les lignes vides
-		//
-		//				rx_line[rx_index] = '\0';
-		//
-		//				// Parsing
-		//				char *argv[8];
-		//				int argc = split(rx_line, argv);
-		//
-		//				parse_cmd(argc, argv, &motors);
-		//
-		//				// Reset clean du buffer !
-		//				memset(rx_line, 0, sizeof(rx_line));
-		//				rx_index = 0;
-		//			}
-		//			else
-		//			{
-		//				// Accumulation des caractères
-		//				if (rx_index < sizeof(rx_line) - 1)
-		//					rx_line[rx_index++] = c;
-		//
-		//				// Echo
-		//				HAL_UART_Transmit(&huart1, &c, 1, 10);
-		//			}
-		//		}
-		//
-		//		// Update moteur
-		//		if (HAL_GetTick() - last_update >= 10)
-		//		{
-		//			Motor_UpdateSpeed(&motors);
-		//			last_update = HAL_GetTick();
-		//		}
 
 	}
 	/* USER CODE END 3 */

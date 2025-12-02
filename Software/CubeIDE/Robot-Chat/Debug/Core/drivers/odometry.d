@@ -1,5 +1,6 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
- ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal.h \
+Core/drivers/odometry.o: ../Core/drivers/odometry.c \
+ ../Core/drivers/odometry.h ../Core/drivers/encodeur.h ../Core/Inc/tim.h \
+ ../Core/Inc/main.h ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal.h \
  ../Core/Inc/stm32wbxx_hal_conf.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_dma.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_def.h \
@@ -38,30 +39,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_uart.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_uart_ex.h \
  ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_system.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/lptim.h \
- ../Core/Inc/usart.h ../Core/Inc/tim.h ../Core/Inc/gpio.h \
- C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/motors.h \
- C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/TOFs.h \
- C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/encodeur.h \
- C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/odometry.h \
- C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/encodeur.h
+ ../Core/Inc/lptim.h
+../Core/drivers/odometry.h:
+../Core/drivers/encodeur.h:
+../Core/Inc/tim.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal.h:
 ../Core/Inc/stm32wbxx_hal_conf.h:
@@ -102,31 +83,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_uart.h:
 ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_hal_uart_ex.h:
 ../Drivers/STM32WBxx_HAL_Driver/Inc/stm32wbxx_ll_system.h:
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
-../Core/Inc/FreeRTOSConfig.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
-../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
-../Core/Inc/i2c.h:
-../Core/Inc/main.h:
 ../Core/Inc/lptim.h:
-../Core/Inc/usart.h:
-../Core/Inc/tim.h:
-../Core/Inc/gpio.h:
-C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/motors.h:
-C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/TOFs.h:
-C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/encodeur.h:
-C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/odometry.h:
-C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/encodeur.h:
