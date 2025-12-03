@@ -402,59 +402,6 @@ int main(void)
 
 
 
-	printf("\r\n================== TEST CONTROL MOTORs  ===============\r\n");
-	HAL_TIM_Base_Start(&htim1);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
-
-
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);   // M1 FWD
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);     // M1 REV OFF
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);     // M1 REV OFF
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);     // M1 REV OFF
-
-	uint32_t arr = htim1.Init.Period;
-	arr *= 0.80f;   // 20% duty cycle SAFE
-
-	/* ------------------ M1 FWD ------------------ */
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, arr);   // M1 FWD
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);     // M1 REV OFF
-	//	printf("M1 FWD 80%%\r\n");
-	//	HAL_Delay(3000);
-
-	//	/* ------- STANDBY sécuritaire avant inversion ------- */
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
-	//	printf("M1 STANDBY\r\n");
-	//	HAL_Delay(1000);
-	//
-	//	/* ------------------ M1 REV ------------------ */
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, arr);   // M1 REV
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);     // M1 FWD OFF
-	//	printf("M1 REV 20%%\r\n");
-	//	HAL_Delay(3000);
-
-	//	/* ------------------ M2 FWD ------------------ */
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, arr);   // M2 FWD
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);     // M2 REV OFF
-	//	printf("M2 FWD 80%%\r\n");
-	//	HAL_Delay(3000);
-
-	//	/* ------- STANDBY sécuritaire avant inversion ------- */
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
-	//	printf("M2 STANDBY\r\n");
-	//	HAL_Delay(1000);
-	//
-	//	/* ------------------ M2 REV ------------------ */
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, arr);   // M2 REV
-	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);     // M2 FWD OFF
-	//	printf("M2 REV 20%%\r\n");
-	//	HAL_Delay(3000);
-
-	//uint32_t last_update = HAL_GetTick();
 
 
 	vTaskStartScheduler();
