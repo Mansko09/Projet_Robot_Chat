@@ -34,7 +34,7 @@
 	float GAINY = 0.0f;
 	float GAINZ = 0.0f;
 
-int selectMode = 1;
+//int selectMode = 1;
 
 /** Writing ADXL Registers.
 * @address: 8-bit address of register

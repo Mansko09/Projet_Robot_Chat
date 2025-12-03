@@ -1,0 +1,3 @@
+../Core/Src/TOF_Control.c:23:6:configure_TOF	16	static
+../Core/Src/TOF_Control.c:43:5:TOF_Init	16	static
+../Core/Src/TOF_Control.c:98:5:data_read_TOF	16	static

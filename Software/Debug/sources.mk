@@ -25,6 +25,10 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32WBxx_HAL_Driver/Src \
-VL53L1X_ULD_API/core \
-VL53L1X_ULD_API/platform \
+Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
+Middlewares/Third_Party/FreeRTOS/Source \
+Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
+Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang \
+VL53L0X_API/core \
+VL53L0X_API/platform \
 

@@ -31,17 +31,17 @@ int i2c_mux_select(i2c_mux_t* mux, int ch) {
 }
 
 int i2c_mux_select_multi(i2c_mux_t* mux, uint8_t mask) {
-	if (mux->hi2c1 == NULL) return 1;
+	if (mux->hi2c == NULL) return 1;
 
 	// Transmit bitmask to multiplexer
 	uint8_t addr = (I2C_MUX_BASE_ADDR + mux->addr_offset) << 1;
 	HAL_StatusTypeDef res;
-	res = HAL_I2C_Master_Transmit(mux->hi2c1, addr, &mask, 1, I2C_MUX_TIMEOUT);
+	res = HAL_I2C_Master_Transmit(mux->hi2c, addr, &mask, 1, I2C_MUX_TIMEOUT);
 	if (res != HAL_OK) return 1;
 
 	// Read back bitmask from multiplexer to verify
 	uint8_t mask_check = 0;
-	res = HAL_I2C_Master_Receive(mux->hi2c1, addr, &mask_check, 1, I2C_MUX_TIMEOUT);
+	res = HAL_I2C_Master_Receive(mux->hi2c, addr, &mask_check, 1, I2C_MUX_TIMEOUT);
 	if (res != HAL_OK || mask_check != mask) return 1;
 	return 0;
 }

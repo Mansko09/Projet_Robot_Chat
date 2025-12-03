@@ -26,7 +26,7 @@
 
 
 typedef struct i2c_mux {
-	I2C_HandleTypeDef* hi2c1;	// I2C bus controller
+	I2C_HandleTypeDef* hi2c;	// I2C bus controller
 	GPIO_TypeDef* rst_port;		// Reset pin GPIO port (set NULL if unused)
 	uint16_t rst_pin;		// Reset pin bitmask
 	uint8_t addr_offset;		// Offset from base address (set using address pins)  (ici 0)
