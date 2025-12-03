@@ -85,6 +85,9 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
 ## Architecture générale 
 ![Architecture générale](./Screenshots/Architecture_generale_Robot_Chat.png)
 
+## Structure du Code
+<img width="805" height="550" alt="image" src="https://github.com/user-attachments/assets/20937b1e-2baa-4d7b-9609-9d910529d608" />
+
 ## Avancement du projet
 
 * [x] Choix des composants et architecture générale
