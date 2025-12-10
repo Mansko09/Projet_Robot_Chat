@@ -7,8 +7,8 @@
 
 #ifndef DRIVER_MOTOR_H
 #define DRIVER_MOTOR_H
-
 #include "main.h"
+
 
 // Mode de fonctionnement du moteur
 typedef enum {
@@ -48,6 +48,8 @@ typedef struct {
     uint32_t m2_reverse_channel;   // TIM_CHANNEL_4
 
 } h_Motor_t;
+
+
 
 // Prototypes
 void Motor_Init(h_Motor_t *hMotors, TIM_HandleTypeDef *htim);

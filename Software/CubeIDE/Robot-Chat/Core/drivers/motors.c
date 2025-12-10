@@ -9,13 +9,6 @@
 #include "tim.h"
 #include <stdio.h>
 
-#define DEBUG 0
-#if DEBUG
-#define DEBUG_PRINT(...) printf(__VA_ARGS__)
-#else
-#define DEBUG_PRINT(...)
-#endif
-
 // ---------------------------------------------------------------------------
 // INIT
 // ---------------------------------------------------------------------------

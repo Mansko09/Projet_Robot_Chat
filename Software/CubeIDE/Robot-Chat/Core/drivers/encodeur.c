@@ -19,32 +19,30 @@ void Encodeur_Init(void)
 
     // Reset hardware counters
     __HAL_TIM_SET_COUNTER(&htim2, 0);
-    HAL_LPTIM_Counter_Start(&hlptim1,0xFFFF); // si pas déjà lancé par CubeMX
+    HAL_LPTIM_Counter_Start(&hlptim1,0xFFFF);
 
     // Start encoder interfaces
-    HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
+    HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL); // c le Global Capture/compare channel identifier
 
-    // Mode X4 : lecture sur les 2 signaux
     HAL_LPTIM_Encoder_Start(&hlptim1, 0xFFFF);
 }
 
+
 void Encodeur_Read(Encodeur_t *enc)
 {
-    // Lire les 2 compteurs
-    int32_t now_left  = __HAL_TIM_GET_COUNTER(&htim2);
-    int32_t now_right = HAL_LPTIM_ReadCounter(&hlptim1);
+    uint16_t now_1 = (uint16_t)__HAL_TIM_GET_COUNTER(&htim2);
+    uint16_t now_2 = (uint16_t)HAL_LPTIM_ReadCounter(&hlptim1);
 
-    // Calculer les deltas (signed)
-    int16_t d_left  = (int16_t)(now_left  - last_tim2);
-    int16_t d_right = (int16_t)(now_right - last_lptim1);
+    int16_t d1 = (int16_t)(now_1 - last_tim2);   // SUB 16 bits → automatique modulo 65536
+    int16_t d2 = (int16_t)(now_2 - last_lptim1);
 
-    last_tim2   = now_left;
-    last_lptim1 = now_right;
+    last_tim2   = now_1;
+    last_lptim1 = now_2;
 
-    enc->delta_left  = d_left;
-    enc->delta_right = d_right;
+    enc->delta_1  = d1;
+    enc->delta_2 = -d2;      // inversion du signe car encodeur droit incrémente négativement
 
-    // Cumuls
-    enc->total_left  += d_left;
-    enc->total_right += d_right;
+    enc->total_1 += enc->delta_1;
+    enc->total_2 += enc->delta_2;
 }
+

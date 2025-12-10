@@ -57,9 +57,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
  ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/lptim.h \
  ../Core/Inc/usart.h ../Core/Inc/tim.h ../Core/Inc/gpio.h \
- C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/motors.h \
+ C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/control.h \
  C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/TOFs.h \
- C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/encodeur.h \
+ C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/motors.h \
  C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/odometry.h \
  C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/encodeur.h
 ../Core/Inc/main.h:
@@ -125,8 +125,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/usart.h:
 ../Core/Inc/tim.h:
 ../Core/Inc/gpio.h:
-C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/motors.h:
+C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/control.h:
 C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/TOFs.h:
-C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/encodeur.h:
+C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/motors.h:
 C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/odometry.h:
 C:/Users/mbeng/Documents/ENSEA_3e_ESE/Projet_ESE/Projet_Robot_Chat/Software/CubeIDE/Robot-Chat/Core/drivers/encodeur.h:

@@ -15,5 +15,6 @@ typedef struct {
     int distance_tof2;
     int distance_tof3;
     int distance_tof4;
+    int vide;
 } h_tof_t;
 #endif /* DRIVERS_TOFS_H_ */

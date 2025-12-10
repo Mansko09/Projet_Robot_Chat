@@ -14,10 +14,10 @@
 #include <stdint.h>
 
 typedef struct {
-    int16_t delta_left;      // ticks depuis dernière lecture
-    int16_t delta_right;     // ticks depuis dernière lecture
-    int32_t total_left;      // ticks cumulés
-    int32_t total_right;     // ticks cumulés
+    int16_t delta_1;      // ticks depuis dernière lecture, encodeur 1
+    int16_t delta_2;     // ticks depuis dernière lecture, encodeur 2
+    int32_t total_1;      // ticks cumulés, encodeur 1
+    int32_t total_2;     // ticks cumulés, encodeur 2
 } Encodeur_t;
 
 /**
