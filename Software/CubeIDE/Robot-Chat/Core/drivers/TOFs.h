@@ -9,12 +9,17 @@
 #define DRIVERS_TOFS_H_
 
 
-typedef struct {
+#include "../VL53L0X_API/core/vl53l0x_api.h"
+#include "I2C_mux.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-    int distance_tof1;
-    int distance_tof2;
-    int distance_tof3;
-    int distance_tof4;
-    int vide;
-} h_tof_t;
+#define VL53L0X_DEFAULT_ADDRESS 0x29
+extern I2C_HandleTypeDef hi2c3;
+
+
+
+void configure_TOF(uint8_t addr);
+int TOF_Init();
+int data_read_TOF(uint8_t addr,int ch);
 #endif /* DRIVERS_TOFS_H_ */

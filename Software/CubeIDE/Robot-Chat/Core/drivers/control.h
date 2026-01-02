@@ -8,17 +8,18 @@
 #ifndef DRIVERS_CONTROL_H_
 #define DRIVERS_CONTROL_H_
 #include "TOFs.h"
+#include "ADXL.h"
+#include "I2C_mux.h"
 #include "motors.h"
 #include "odometry.h"
 #include "pid.h"
-
+#include "ADXL.h" //accelero
 #define CTRL_PERIOD_MS  10
 #define CTRL_DT         0.01f   // 10 ms
 
 //Controle central FREERTOS
 typedef struct {
 	h_Motor_t hMotors;
-	h_tof_t hTof;
 	Odom_t odom;
 
     PID_t pid_left;
