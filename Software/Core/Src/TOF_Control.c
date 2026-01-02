@@ -21,12 +21,33 @@ i2c_mux_t mux ={
 };
 
 void configure_TOF(uint8_t addr){
+    VL53L0X_Error status;
 
-	VL53L0X_DataInit(&dev);                  // Initialize device
-	VL53L0X_StaticInit(&dev);                // Static initialization
-	VL53L0X_SetDeviceMode(&dev, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING);
-	VL53L0X_SetMeasurementTimingBudgetMicroSeconds(&dev, 200);  // 50 ms
-	VL53L0X_SetInterMeasurementPeriodMilliSeconds(&dev,200);
+    // Attendre que le capteur ait fini de booter
+    status = VL53L0X_WaitDeviceBooted(&dev);
+    if (status != VL53L0X_ERROR_NONE)
+    	printf("Error booting\r\n");
+
+    status = VL53L0X_DataInit(&dev);
+    if (status != VL53L0X_ERROR_NONE)
+    	printf("Error DataInit\r\n");
+
+    status = VL53L0X_StaticInit(&dev);
+    if (status != VL53L0X_ERROR_NONE)
+    	printf("Error StaticInit\r\n");
+
+    status = VL53L0X_SetDeviceMode(&dev, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING);
+    if (status != VL53L0X_ERROR_NONE)
+    	printf("Error setting Device\r\n");
+
+    // ⚠️ Minimum ~20 ms
+    status = VL53L0X_SetMeasurementTimingBudgetMicroSeconds(&dev, 20000);
+    if (status != VL53L0X_ERROR_NONE)
+    	printf("Error Timing Budget\r\n");
+
+    status = VL53L0X_SetInterMeasurementPeriodMilliSeconds(&dev, 20);
+    if (status != VL53L0X_ERROR_NONE)
+    	printf("Error Inter Measurement\r\n");
 	VL53L0X_SetLimitCheckEnable(&dev, VL53L0X_CHECKENABLE_SIGMA_FINAL_RANGE, 1);
 	VL53L0X_SetLimitCheckEnable(&dev, VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE, 1);
 	VL53L0X_SetLimitCheckValue(&dev,
@@ -48,15 +69,18 @@ int TOF_Init(){
 	dev.comms_speed_khz = 400;
 
 	i2c_mux_select_multi(&mux,CHANNEL_0);
+	HAL_Delay(5);
 	status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
 	if (status != VL53L0X_ERROR_NONE) {
 	    printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
 	    i2c_mux_select_multi(&mux, 0);
+
 	    return 0;
 	}
 	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
 
 	i2c_mux_select_multi(&mux,CHANNEL_1);
+	HAL_Delay(5);
 		status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
 		if (status != VL53L0X_ERROR_NONE) {
 		    printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
@@ -66,6 +90,7 @@ int TOF_Init(){
 	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
 
 	i2c_mux_select_multi(&mux,CHANNEL_2);
+	HAL_Delay(5);
 		status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
 		if (status != VL53L0X_ERROR_NONE) {
 			printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
@@ -75,6 +100,7 @@ int TOF_Init(){
 	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
 
 	i2c_mux_select_multi(&mux,CHANNEL_3);
+	HAL_Delay(5);
 		status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
 		if (status != VL53L0X_ERROR_NONE) {
 		    printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
@@ -101,7 +127,7 @@ int data_read_TOF(uint8_t addr,int ch){
 	HAL_Delay(2);
 
 	VL53L0X_GetRangingMeasurementData(&dev, &RangingData);
-	printf("Distance = %u mm on channel %d\r\n", RangingData.RangeMilliMeter,ch);
+	//printf("Distance = %u mm on channel %d\r\n", RangingData.RangeMilliMeter,ch);
 	if (RangingData.RangeMilliMeter > 300 || RangingData.RangeStatus != 0 || RangingData.SignalRateRtnMegaCps < (0.5 * 65536)){
 		printf("Void detected on channel %d\r\n",ch);
 	}

@@ -138,6 +138,7 @@ adxlStatus ADXL_Init(ADXL_InitTypeDef * adxl)
 
 }
 
+#elif defined(USE_ADXL_I2C)
 
 /** Reading Data
 * @retval : data				: array of accel.
@@ -149,6 +150,8 @@ adxlStatus ADXL_Init(ADXL_InitTypeDef * adxl)
 						ADXL_getAccel(acc,OUTPUT_SIGNED);
 						and so on...
 */
+
+
 void ADXL_getAccel(void *Data , uint8_t outputType)
 	{
 	uint8_t data[6]={0,0,0,0,0,0};
@@ -173,7 +176,7 @@ void ADXL_getAccel(void *Data , uint8_t outputType)
 						}
 	}
 
-#elif defined(USE_ADXL_I2C)
+
 
 static void writeRegister(uint8_t address,uint8_t value){
 		if (address > 63)
@@ -469,10 +472,8 @@ void ADXL_enableSingleTap(ADXL_IntOutput out, uint8_t axes, uint8_t Duration, ui
 	writeRegister(THRESH_TAP,Threshold);
 
 	//Setting the Axes
-	readRegister(TAP_AXES,&reg,1);
-	reg |= axes;
-
-	writeRegister(TAP_AXES,reg);
+	reg = axes & 0x07;
+	writeRegister(TAP_AXES, reg);
 
 	// Settings Int output
 	readRegister(INT_MAP,&reg,1);

@@ -21,6 +21,7 @@
 #include "cmsis_os.h"
 #include "dma.h"
 #include "i2c.h"
+#include "lptim.h"
 #include "usart.h"
 #include "memorymap.h"
 #include "tim.h"
@@ -45,6 +46,7 @@
 /* USER CODE BEGIN PD */
 
 SemaphoreHandle_t sem_TOF;
+SemaphoreHandle_t sem_ADXL;
 
 
 
@@ -53,8 +55,8 @@ ADXL_InitTypeDef adxl ={
 		.LPMode = LPMODE_NORMAL,
 		.Rate = BWRATE_100,
 		.Range = RANGE_4G,
-		.Resolution = RESOLUTION_FULL,
-		.Justify = JUSTIFY_MSB,
+		.Resolution = RESOLUTION_10BIT,
+		.Justify = JUSTIFY_SIGNED,
 		.AutoSleep = AUTOSLEEPOFF,
 		.LinkMode = LINKMODEOFF
 };
@@ -67,8 +69,42 @@ int __io_putchar(int chr){
 }
 
 
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	//printf("glapitouADXL\r\n");
+	if (GPIO_Pin == GPIO_PIN_0 || GPIO_Pin == GPIO_PIN_1){
+			ADXL_IntProto();
+			int16_t acc[3] = {0,0,0};
+			ADXL_getAccel(acc ,OUTPUT_SIGNED);
+			printf("x : %d, y : %d, z : %d\r\n",(int)acc[0],(int)acc[1],(int)acc[2]);
+			ADXL_disableSingleTap();
+	  		BaseType_t higher_priority_task_woken = pdFALSE;
+	  		xSemaphoreGiveFromISR(sem_ADXL, &higher_priority_task_woken);
+	  		portYIELD_FROM_ISR(higher_priority_task_woken);
+	  	}
+}
+
+
+void taskAccelDetection(void * unused){
+	ADXL_Init(&adxl);
+	sem_ADXL = xSemaphoreCreateBinary();
+	uint8_t mesured_axes = X_axes | Y_axes;
+	uint8_t duration_choc = 0x1B;
+	uint8_t threshold_choc = 0x21;
+	ADXL_SetOffset(2,0,-63);
+	ADXL_Measure(ON);
+	for (;;){
+		ADXL_enableSingleTap(INT2, mesured_axes,duration_choc, threshold_choc);
+		xSemaphoreTake(sem_ADXL,portMAX_DELAY);
+		printf("Ouille\r\n");
+		vTaskDelay(500);
+	}
+}
+
+
+
 void taskTOFDetection(void * unused){
-	printf("AHHAHAHAHuuuuuuuuu\r\n");
+	//printf("AHHAHAHAHuuuuuuuuu\r\n");
 	TOF_Init();
 	sem_TOF = xSemaphoreCreateBinary();
 	if(HAL_TIM_Base_Start_IT(&htim17) != HAL_OK){
@@ -152,11 +188,71 @@ int main(void)
   MX_MEMORYMAP_Init();
   MX_LPUART1_UART_Init();
   MX_TIM17_Init();
+  MX_LPTIM1_Init();
+  MX_TIM1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  if(xTaskCreate(taskTOFDetection,"Detection",512,NULL,1,NULL) != pdPASS){
+  if(xTaskCreate(taskTOFDetection,"Detection",512,NULL,2,NULL) != pdPASS){
 	  printf("Error creating task detection\r\n");
 	  Error_Handler();
   }
+
+  if(xTaskCreate(taskAccelDetection,"Detection Choc",512,NULL,1,NULL) != pdPASS){
+  	  printf("Error creating task detection choc\r\n");
+  	  Error_Handler();
+  }
+
+//  printf("\r\n================== TEST CONTROL MOTORs  ===============\r\n");
+//  	HAL_TIM_Base_Start(&htim1);
+//  	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+//  	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+//  	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+//  	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+//
+//
+//  	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);   // M1 FWD
+//  	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);     // M1 REV OFF
+//  	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);     // M1 REV OFF
+//  	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);     // M1 REV OFF
+//
+//  	uint32_t arr = htim1.Init.Period;
+//  	arr *= 0.80f;   // 20% duty cycle SAFE
+//
+//  	/* ------------------ M1 FWD ------------------ */
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, arr);   // M1 FWD
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);     // M1 REV OFF
+//  	//	printf("M1 FWD 80%%\r\n");
+//  	//	HAL_Delay(3000);
+//
+//  	//	/* ------- STANDBY sécuritaire avant inversion ------- */
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
+//  	//	printf("M1 STANDBY\r\n");
+//  	//	HAL_Delay(1000);
+//  	//
+//  	//	/* ------------------ M1 REV ------------------ */
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, arr);   // M1 REV
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);     // M1 FWD OFF
+//  	//	printf("M1 REV 20%%\r\n");
+//  	//	HAL_Delay(3000);
+//
+//  	//	/* ------------------ M2 FWD ------------------ */
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, arr);   // M2 FWD
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);     // M2 REV OFF
+//  	//	printf("M2 FWD 80%%\r\n");
+//  	//	HAL_Delay(3000);
+//
+//  	//	/* ------- STANDBY sécuritaire avant inversion ------- */
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
+//  	//	printf("M2 STANDBY\r\n");
+//  	//	HAL_Delay(1000);
+//  	//
+//  	//	/* ------------------ M2 REV ------------------ */
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, arr);   // M2 REV
+//  	//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);     // M2 FWD OFF
+//  	//	printf("M2 REV 20%%\r\n");
+//  	//	HAL_Delay(3000);
 
   vTaskStartScheduler();
   /* USER CODE END 2 */

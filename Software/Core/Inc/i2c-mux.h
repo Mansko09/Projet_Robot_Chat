@@ -15,7 +15,7 @@
 #define I2C_MUX_BASE_ADDR 112
 
 // All times are defined using milliseconds
-#define I2C_MUX_TIMEOUT 1		// Depends on bit rate. At 400kHz, 1ms should be fine
+#define I2C_MUX_TIMEOUT 10		// Depends on bit rate. At 400kHz, 1ms should be fine
 #define I2C_MUX_RESET_TIME_LOW 1	// Minimum 6ns reset pulse according to datasheet
 #define I2C_MUX_RESET_TIME_HIGH 0	// Start condition can begin immediately after reset
 
