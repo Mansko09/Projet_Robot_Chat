@@ -35,6 +35,7 @@ void Odom_Update(Odom_t *odom, const Encodeur_t *enc, const Odom_Params_t *p)
     else if (odom->theta < -M_PI) odom->theta += 2*M_PI;
 
     // Mise à jour position x,y
-    odom->x += d_center * cosf(odom->theta);
-    odom->y += d_center * sinf(odom->theta);
+    odom->x += d_center * cosf(odom->theta); //en mètres
+    odom->y += d_center * sinf(odom->theta); //en mètres
+
 }

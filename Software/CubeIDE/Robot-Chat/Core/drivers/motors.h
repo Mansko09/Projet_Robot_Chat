@@ -8,7 +8,9 @@
 #ifndef DRIVER_MOTOR_H
 #define DRIVER_MOTOR_H
 #include "main.h"
+#include "math.h"
 
+#define ROBOT_V_MAX   0.30f
 
 // Mode de fonctionnement du moteur
 typedef enum {
@@ -26,12 +28,12 @@ typedef struct {
     MotorMode mode_mot2;
 
     // Vitesse cible
-    int target_speed1;
-    int target_speed2;
+    float target_speed1;  // PWM cible
+    float target_speed2;
 
     // Vitesse courante
-    int current_speed1;
-    int current_speed2;
+    float current_speed1; // PWM courant (rampe)
+    float current_speed2;
 
     // Rampes
     int speed_ramp1;
@@ -44,8 +46,16 @@ typedef struct {
     uint32_t m1_forward_channel;   // TIM_CHANNEL_1
     uint32_t m1_reverse_channel;   // TIM_CHANNEL_2
 
-    uint32_t m2_forward_channel;   // TIM_CHANNEL_3
-    uint32_t m2_reverse_channel;   // TIM_CHANNEL_4
+    uint32_t m2_forward_channel;   // TIM_CHANNEL_4
+    uint32_t m2_reverse_channel;   // TIM_CHANNEL_3
+
+    //asservissement
+    float target_vel_left;     // m/s  // consigne physique
+    float target_vel_right;    // m/s
+
+    float measured_vel_left;   // m/s   // vitesse réelle (encodeurs)
+    float measured_vel_right;  // m/s
+
 
 } h_Motor_t;
 
@@ -57,5 +67,5 @@ void Motor_SetMode(h_Motor_t *hMotors);
 void Motor_SetSpeed_percent(h_Motor_t *hMotors, float m1_percent, float m2_percent);
 void Motor_Stop(h_Motor_t *hMotors);
 void Motor_UpdateSpeed(h_Motor_t *hMotors);
-
+void Motor_SetSpeed(h_Motor_t *hMotors, float speed);
 #endif /* DRIVERS_MOTORS_H_ */

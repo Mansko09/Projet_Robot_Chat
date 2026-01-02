@@ -20,10 +20,10 @@ void Motor_Init(h_Motor_t *hMotors, TIM_HandleTypeDef *htim)
     hMotors->speed_ramp1 = 20;
     hMotors->speed_ramp2 = 20;
 
-    hMotors->current_speed1 = 0;
-    hMotors->current_speed2 = 0;
-    hMotors->target_speed1  = 0;
-    hMotors->target_speed2  = 0;
+    hMotors->current_speed1 = 0.0f;
+    hMotors->current_speed2 = 0.0f;
+    hMotors->target_speed1  = 0.0f;
+    hMotors->target_speed2  = 0.0f;
 
     hMotors->mode_mot1 = STANDBY_MODE;
     hMotors->mode_mot2 = STANDBY_MODE;
@@ -94,9 +94,50 @@ void Motor_SetSpeed_percent(h_Motor_t *hMotors, float m1_percent, float m2_perce
 {
     uint16_t ARR = hMotors->htim_pwm->Init.Period;
 
-    hMotors->target_speed1 = (int)(ARR * (m1_percent / 100.0f));
-    hMotors->target_speed2 = (int)(ARR * (m2_percent / 100.0f));
+    hMotors->target_speed1 = (ARR * (m1_percent / 100.0f));
+    hMotors->target_speed2 = (ARR * (m2_percent / 100.0f));
 }
+
+void Motor_SetSpeed(h_Motor_t *hMotors, float speed){
+    /* ---------- Saturation physique ---------- */
+    if (speed >  ROBOT_V_MAX) speed =  ROBOT_V_MAX;
+    if (speed < -ROBOT_V_MAX) speed = -ROBOT_V_MAX;
+
+    /* ---------- Choix du sens ---------- */
+    if (speed > 0.0f)
+    {
+        hMotors->mode_mot1 = FORWARD_MODE;
+        hMotors->mode_mot2 = FORWARD_MODE;
+    }
+    else if (speed < 0.0f)
+    {
+        hMotors->mode_mot1 = REVERSE_MODE;
+        hMotors->mode_mot2 = REVERSE_MODE;
+    }
+    else
+    {
+        hMotors->mode_mot1 = STANDBY_MODE;
+        hMotors->mode_mot2 = STANDBY_MODE;
+    }
+
+    Motor_SetMode(hMotors);
+
+    /* ---------- Conversion m/s → PWM ---------- */
+    float speed_abs = fabsf(speed);
+    float duty_percent = (speed_abs / ROBOT_V_MAX) * 100.0f;
+
+    /* Sécurité */
+    if (duty_percent > 100.0f)
+        duty_percent = 100.0f;
+
+    Motor_SetSpeed_percent(hMotors, duty_percent, duty_percent);
+    hMotors->target_vel_left  = speed;
+    hMotors->target_vel_right = speed;
+    hMotors->current_speed1 = hMotors->target_speed1;
+    hMotors->current_speed2 = hMotors->target_speed2;
+    Motor_UpdateSpeed(hMotors); // applique la PWM immédiatement
+}
+
 
 // ---------------------------------------------------------------------------
 void Motor_Stop(h_Motor_t *hMotors)
@@ -104,8 +145,8 @@ void Motor_Stop(h_Motor_t *hMotors)
     hMotors->mode_mot1 = STANDBY_MODE;
     hMotors->mode_mot2 = STANDBY_MODE;
 
-    hMotors->target_speed1 = 0;
-    hMotors->target_speed2 = 0;
+    hMotors->target_speed1 =  0.0f;
+    hMotors->target_speed2 =  0.0f;
 
     Motor_SetMode(hMotors);
 }
@@ -142,3 +183,6 @@ void Motor_UpdateSpeed(h_Motor_t *hMotors)
                           hMotors->m2_reverse_channel,
                           hMotors->mode_mot2 == REVERSE_MODE ? hMotors->current_speed2 : 0);
 }
+
+
+
