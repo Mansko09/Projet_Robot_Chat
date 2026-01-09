@@ -61,7 +61,7 @@ void configure_TOF(uint8_t addr){
 
 int TOF_Init(){
     VL53L0X_Error status;
-	dev.I2cHandle = &hi2c3;                       // ton handle I2C
+	dev.I2cHandle = &hi2c3;
 	dev.I2cDevAddr = (uint8_t)(VL53L0X_DEFAULT_ADDRESS << 1); // HAL wants 8-bit addr
 	dev.comms_type = 1;
 	dev.comms_speed_khz = 400;
@@ -120,15 +120,17 @@ int TOF_Init(){
 
 
 int data_read_TOF(uint8_t addr,int ch){
+	printf("data read entered\r\n");
+    i2c_mux_select_multi(&mux, ch);
+    HAL_Delay(2);
+    int flag = 0;
 
-	i2c_mux_select_multi(&mux, ch);
-	HAL_Delay(2);
-
-	VL53L0X_GetRangingMeasurementData(&dev, &RangingData);
-	//printf("Distance = %u mm on channel %d\r\n", RangingData.RangeMilliMeter,ch);
-	if (RangingData.RangeMilliMeter > 300 || RangingData.RangeStatus != 0 || RangingData.SignalRateRtnMegaCps < (0.5 * 65536)){
-		printf("Void detected on channel %d\r\n",ch);
-	}
-	i2c_mux_select_multi(&mux, 0);
-	return 1;
+    VL53L0X_GetRangingMeasurementData(&dev, &RangingData);
+    //printf("Distance = %u mm on channel %d\r\n", RangingData.RangeMilliMeter,ch);
+    if (RangingData.RangeMilliMeter > 300 || RangingData.RangeStatus != 0 || RangingData.SignalRateRtnMegaCps < (0.5 * 65536)){
+        printf("Void detected on channel %d\r\n",ch);
+        flag = 1;
+    }
+    i2c_mux_select_multi(&mux, 0);
+    return flag;
 }

@@ -45,11 +45,11 @@
 #define STACK_SIZE_SMALL   256
 #define STACK_SIZE_MEDIUM  384
 
-#define PRIO_CTRL    5
-#define PRIO_TOF     4
-#define PRIO_ODOM_MOTOR    10
-#define PRIO_ACCEL   2
-#define PRIO_LIDAR 3
+#define PRIO_CTRL    4
+#define PRIO_TOF     3
+#define PRIO_ODOM_MOTOR 5
+#define PRIO_ACCEL   1
+#define PRIO_LIDAR 2
 
 #define TOF_TRESHHOLD 40
 
@@ -119,6 +119,12 @@ int __io_putchar(int ch)
 	return ch;
 }
 
+static void ControlData_Init(void)
+{
+    hControl.AccData = 0;
+    hControl.vide    = 0;
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	//printf("glapitouADXL\r\n");
@@ -134,12 +140,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	  	}
 }
 
+
+
 /* ============================= */
 /*       TASK   ACCELERO          */
 /* ============================= */
 void taskAccelDetection(void * unused){
 	ADXL_Init(&adxl);
-	sem_ADXL = xSemaphoreCreateBinary();
 	uint8_t mesured_axes = X_axes | Y_axes;
 	uint8_t duration_choc = 0x1B;
 	uint8_t threshold_choc = 0x21;
@@ -148,7 +155,20 @@ void taskAccelDetection(void * unused){
 	for (;;){
 		ADXL_enableSingleTap(INT2, mesured_axes,duration_choc, threshold_choc);
 		xSemaphoreTake(sem_ADXL,portMAX_DELAY);
-		printf("Ouille\r\n");
+		if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
+		        {
+		            hControl.AccData = 1;
+		            xSemaphoreGive(controlMutex);
+		        }
+
+		        vTaskDelay(pdMS_TO_TICKS(200));
+
+		        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
+		        {
+		            hControl.AccData = 0;
+		            xSemaphoreGive(controlMutex);
+		        }
+		printf("Choc \r\n");
 		vTaskDelay(500);
 	}
 }
@@ -156,286 +176,219 @@ void taskAccelDetection(void * unused){
 /* ============================= */
 /*       TASK   TOFS          */
 /* ============================= */
+void taskTOFDetection(void *unused)
+{
+    printf("[TOF] start\r\n");
+    TOF_Init();
 
-void taskTOFDetection(void * unused){
-	//printf("AHHAHAHAHuuuuuuuuu\r\n");
-	TOF_Init();
-	sem_TOF = xSemaphoreCreateBinary();
-	if(HAL_TIM_Base_Start_IT(&htim17) != HAL_OK){
-		printf("ca marche pas\r\n");
-	}
-	for(;;){
-		//printf("glapitou\r\n");
-		__HAL_TIM_GetCounter(&htim17);
-		xSemaphoreTake(sem_TOF,portMAX_DELAY);
-		//printf("glapitou1\r\n");
-		data_read_TOF(VL53L0X_DEFAULT_ADDRESS,CHANNEL_0);
-		vTaskDelay(100);
-		data_read_TOF(VL53L0X_DEFAULT_ADDRESS,CHANNEL_1);
-		vTaskDelay(100);
-		data_read_TOF(VL53L0X_DEFAULT_ADDRESS,CHANNEL_2);
-		vTaskDelay(100);
-		data_read_TOF(VL53L0X_DEFAULT_ADDRESS,CHANNEL_3);
-		vTaskDelay(100);
-	}
+    if (HAL_TIM_Base_Start_IT(&htim17) != HAL_OK)
+        printf("[TOF] Erreur Timer 17\r\n");
+
+    // Debug : débloque une première fois
+    xSemaphoreGive(sem_TOF);
+
+    for (;;)
+    {
+        if (xSemaphoreTake(sem_TOF, portMAX_DELAY) != pdTRUE)
+        {
+            printf("[TOF] timeout sem_TOF (timer?)\r\n");
+        }
+
+        int new_vide = 0;
+
+        if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_0) == 1) new_vide = 1;
+        if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_1) == 1) new_vide = 2;
+        if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_2) == 1) new_vide = 3;
+        if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_3) == 1) new_vide = 4;
+
+        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
+        {
+            hControl.vide = new_vide;
+            xSemaphoreGive(controlMutex);
+        }
+
+        printf("[TOF] vide=%d\r\n", new_vide);
+    }
 }
+
+/* ============================= */
+/*       TASK  MOTOR       */
+/* ============================= */
+void Task_Motor(void *argument)
+{
+    for(;;)
+    {
+        // copies locales
+        float t1, t2;
+        int m1, m2;
+
+        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(10)) == pdTRUE)
+        {
+            t1 = hControl.hMotors.target_speed1;
+            t2 = hControl.hMotors.target_speed2;
+            m1 = hControl.hMotors.mode_mot1;
+            m2 = hControl.hMotors.mode_mot2;
+            xSemaphoreGive(controlMutex);
+
+            // appliquer hors mutex
+            hControl.hMotors.mode_mot1 = m1;
+            hControl.hMotors.mode_mot2 = m2;
+            Motor_SetMode(&hControl.hMotors);
+
+            // si Motor_UpdateSpeed utilise target_speedX, assure-toi que t1/t2 sont déjà dans hControl.hMotors
+            Motor_UpdateSpeed(&hControl.hMotors);
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(20));
+    }
+}
+
 
 /* ============================= */
 /*       TASK   CONTROL          */
 /* ============================= */
 //void Task_Control(void *unused)
 //{
-//    printf("task_Control\r\n");
-//
+//    printf("[CTRL] start\r\n");
 //    for (;;)
 //    {
-//        int vide, acc;
+//        int vide = 0;
+//        int acc  = 0;
 //
-//        // Lire l’état partagé
-//        xSemaphoreTake(controlMutex, portMAX_DELAY);
-//        vide = hControl.vide;
-//        acc  = hControl.AccData;
-//        xSemaphoreGive(controlMutex);
-//
-//        /* --- PRIORITÉ 1 : CHOC ACCÉLÉROMÈTRE --- */
-//        if (acc == 1)
+//        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
 //        {
-//            xSemaphoreTake(controlMutex, portMAX_DELAY);
-//            hControl.hMotors.mode_mot1 = BRAKE_MODE;
-//            hControl.hMotors.mode_mot2 = BRAKE_MODE;
+//            vide = hControl.vide;
+//            acc  = hControl.AccData;
 //            xSemaphoreGive(controlMutex);
-//
-//            Motor_SetMode(&hControl.hMotors);
-//            Motor_SetSpeed_percent(&hControl.hMotors, 0, 0);
-//
-//            printf("[CONTROL] ACCEL SHOCK -> FULL STOP\n");
-//
-//            vTaskDelay(pdMS_TO_TICKS(20));
-//            continue;
+//			//process TOF
+//            if (vide != 0) {
+//				switch(vide){
+//				case 1:
+//					// Vide à gauche -> On tourne à droite
+//					 hControl.hMotors.mode_mot1 = FORWARD_MODE;
+//					 hControl.hMotors.mode_mot2 = REVERSE_MODE;
+//					 Motor_SetMode(&hControl.hMotors);
+//					 Motor_SetSpeed(&hControl.hMotors, 0.15f);
+//					 break;
+//				case 2:
+//					//vide devant -> on recule
+//					hControl.hMotors.mode_mot1 = REVERSE_MODE;
+//					hControl.hMotors.mode_mot2 = REVERSE_MODE;
+//					Motor_SetMode(&hControl.hMotors);
+//					Motor_SetSpeed(&hControl.hMotors, 0.15f);
+//					break;
+//				case 3:
+//					//vide à droite -> On tourne à gauche
+//					hControl.hMotors.mode_mot1 = REVERSE_MODE;
+//					hControl.hMotors.mode_mot2 = FORWARD_MODE;
+//					Motor_SetMode(&hControl.hMotors);
+//					Motor_SetSpeed(&hControl.hMotors, 0.15f);
+//					break;
+//				case 4:
+//					//vide derrière -> On avance
+//					hControl.hMotors.mode_mot1 = FORWARD_MODE;
+//					hControl.hMotors.mode_mot2 = FORWARD_MODE;
+//					Motor_SetMode(&hControl.hMotors);
+//					Motor_SetSpeed(&hControl.hMotors, 0.15f);
+//					break;
+//				}
+//            }
+//            else{
+//            	hControl.hMotors.mode_mot1 = FORWARD_MODE;
+//            	hControl.hMotors.mode_mot2 = FORWARD_MODE;
+//            	Motor_SetMode(&hControl.hMotors);
+//            	Motor_SetSpeed(&hControl.hMotors, 0.15f);
+//                //Process accelerometre : toujours forward (ou stop si choc)
+//                if (acc == 1)
+//                {
+//                	//traitement avec lidar, voir comment est valeur de retour
+//        //            hControl.hMotors.mode_mot1 = BRAKE_MODE;
+//        //            hControl.hMotors.mode_mot2 = BRAKE_MODE;
+//        //            Motor_SetMode(&hControl.hMotors);
+//        //            Motor_SetSpeed_percent(&hControl.hMotors, 0, 0);
+//                    printf("[CTRL] STOP (acc=1) vide=%d\r\n", vide);
+//                }
+//                else
+//                {
+//        //            hControl.hMotors.mode_mot1 = FORWARD_MODE;
+//        //            hControl.hMotors.mode_mot2 = FORWARD_MODE;
+//        //            Motor_SetMode(&hControl.hMotors);
+//        //            Motor_SetSpeed_percent(&hControl.hMotors, 40, 40);
+//                    printf("[CTRL] FWD vide=%d acc=%d\r\n", vide, acc);
+//                }
+//            }
 //        }
-//
-//        /* --- PRIORITÉ 2 : OBSTACLES LIDAR/ToF --- */
-//
-//        xSemaphoreTake(controlMutex, portMAX_DELAY);
-//
-//        switch (vide)
-//        {
-//        case 2: // Front → recule
-//            hControl.hMotors.mode_mot1 = REVERSE_MODE;
-//            hControl.hMotors.mode_mot2 = REVERSE_MODE;
-//            break;
-//
-//        case 1: // Obstacle gauche → tourne à droite
-//            hControl.hMotors.mode_mot1 = FORWARD_MODE;
-//            hControl.hMotors.mode_mot2 = REVERSE_MODE;
-//            break;
-//
-//        case 3: // Obstacle droite → tourne à gauche
-//            hControl.hMotors.mode_mot1 = REVERSE_MODE;
-//            hControl.hMotors.mode_mot2 = FORWARD_MODE;
-//            break;
-//
-//        case 4: // Obstacle arrière → avance
-//            hControl.hMotors.mode_mot1 = FORWARD_MODE;
-//            hControl.hMotors.mode_mot2 = FORWARD_MODE;
-//            break;
-//
-//        case 0: // Aucun obstacle
-//            hControl.hMotors.mode_mot1 = FORWARD_MODE;
-//            hControl.hMotors.mode_mot2 = FORWARD_MODE;
-//            break;
-//
-//        default:
-//            hControl.hMotors.mode_mot1 = BRAKE_MODE;
-//            hControl.hMotors.mode_mot2 = BRAKE_MODE;
-//            break;
-//        }
-//
-//        xSemaphoreGive(controlMutex);
-//
-//        /* Envoie de la commande moteur */
-//        Motor_SetMode(&hControl.hMotors);
-//        Motor_SetSpeed_percent(&hControl.hMotors, 40, 40);
-//
-//        // Debug
-//        printf("[CONTROL] vide=%d mot1=%d mot2=%d\n",
-//               vide,
-//               hControl.hMotors.mode_mot1,
-//               hControl.hMotors.mode_mot2);
-//
-//        vTaskDelay(pdMS_TO_TICKS(10));
-//    }
-//}
-//
-///* ============================= */
-///*       TASK   TOFs             */
-///* ============================= */
-//void Task_ToFs(void *unused)
-//{
-//    for(;;)
-//    {
-//        int vide_detecte = 0;
-//
-//// logique tofs de David
-//
-//        xSemaphoreTake(controlMutex, portMAX_DELAY);
-//        hControl.vide = vide_detecte;
-//        xSemaphoreGive(controlMutex);
-//
-//        vTaskDelay(20);
-//    }
-//}
-//
-///* ============================= */
-///*        TASK ODOM et Moteurs (toutes les 10ms)             */
-///* ============================= */
-//void Task_OdomMotor(void *unused)
-//{
-
-//    for (;;)
-//    {
-//        Encodeur_Read(&enc);
-//
-//        xSemaphoreTake(controlMutex, portMAX_DELAY);
-//
-//        // Mise à jour odométrie
-//        Odom_Update(&hControl.odom, &enc, &odom_params);
-//		  Control_UpdateSpeed(&hControl, &enc, &odom_params, dt);
-//		  Control_RunPID(&hControl, dt);
-//
-//        // Mise à jour interne des contrôleurs moteurs
-//        Motor_UpdateSpeed(&hControl.hMotors);
-
-
-//        xSemaphoreGive(controlMutex);
-//
-//        // Debug (lecture sans modifier)
-//        printf("x=%.2f y=%.2f th=%.1f°\n",
-//               hControl.odom.x,
-//               hControl.odom.y,
-//               hControl.odom.theta * 180.0f / M_PI);
-//
-//        vTaskDelay(10);
+//        vTaskDelay(pdMS_TO_TICKS(20));
 //    }
 //}
 
+void Task_Control(void *unused)
+{
+    printf("[CTRL] start\r\n");
 
-//TASK TEST POUR MOTEURS ET ODOMETRIE
-//void Task_TestMotors(void *unused)
-//{
-//	printf("=== TEST MOTORS START ===\r\n");
-//
-//	// ---------- RESET ODOM ----------
-//	memset(&hControl.odom, 0, sizeof(hControl.odom));
-//
-//	// ---------- INITIALISATION MOTEURS ----------
-//	xSemaphoreTake(controlMutex, portMAX_DELAY);
-//	hControl.hMotors.mode_mot1 = FORWARD_MODE;
-//	hControl.hMotors.mode_mot2 = FORWARD_MODE;
-//	Motor_SetMode(&hControl.hMotors);
-//
-//	Motor_SetSpeed_percent(&hControl.hMotors, 40, 40);
-//	hControl.hMotors.current_speed1 = hControl.hMotors.target_speed1;
-//	hControl.hMotors.current_speed2 = hControl.hMotors.target_speed2;
-//	xSemaphoreGive(controlMutex);
-//
-//	// ---------- PARAMÈTRES ----------
-//	const TickType_t updatePeriod = pdMS_TO_TICKS(100); // 100 ms
-//	const TickType_t printPeriod  = pdMS_TO_TICKS(1000); // 1 s
-//	const int totalDurationMs = 10000; // 10 s
-//	int elapsedMs = 0;
-//	TickType_t lastPrintTick = xTaskGetTickCount();
-//
-//	// ---------- BOUCLE DE TEST ----------
-//	while (elapsedMs < totalDurationMs)
-//	{
-//		xSemaphoreTake(controlMutex, portMAX_DELAY);
-//
-//		// Mise à jour moteurs
-//		Motor_UpdateSpeed(&hControl.hMotors);
-//
-//		// Lecture encodeurs + odométrie
-//		Encodeur_Read(&enc);
-//		Odom_Update(&hControl.odom, &enc, &odom_params);
-//
-//		// Capture valeurs localement
-//		float x = hControl.odom.x;
-//		float y = hControl.odom.y;
-//		float th = hControl.odom.theta;
-//
-//		xSemaphoreGive(controlMutex);
-//
-//		// Affichage toutes les 1 seconde
-//		if ((xTaskGetTickCount() - lastPrintTick) >= printPeriod)
-//		{
-//			printf("[TEST] Hold 40%%\r\n");
-//			printf("x=%.2f y=%.2f th=%.1f degres \r\n",
-//					x, y, th * 180.0f / M_PI);
-//			//printf("dL=%d dR=%d\n", enc.delta_1, enc.delta_2);
-//
-//
-//			lastPrintTick = xTaskGetTickCount();
-//		}
-//
-//		vTaskDelay(updatePeriod);
-//		elapsedMs += updatePeriod * portTICK_PERIOD_MS;
-//
-//	}
-//
-//	// ---------- ARRET DES MOTEURS ----------
-//	xSemaphoreTake(controlMutex, portMAX_DELAY);
-//	Motor_SetSpeed_percent(&hControl.hMotors, 0, 0);
-//	hControl.hMotors.mode_mot1 = BRAKE_MODE;
-//	hControl.hMotors.mode_mot2 = BRAKE_MODE;
-//	Motor_SetMode(&hControl.hMotors);
-//	xSemaphoreGive(controlMutex);
-//
-//	printf("=== TEST MOTORS STOP ===\r\n");
-//
-//	vTaskDelete(NULL);
-//}
-//
+    for (;;)
+    {
+        int vide, acc;
 
-//				----- TEST ASSERVISSEMENT ----
+        xSemaphoreTake(controlMutex, portMAX_DELAY);
+        vide = hControl.vide;
+        acc  = hControl.AccData;
 
-//void Task_TestMotors(void *p)
-//{
-//    const float dt = 0.01f; // 10 ms
-//    // ---------------------------
-//    // Consigne de test (10 cm/s en avant)
-//    // ---------------------------
-//
-//
-//    // ---------------------------
-//    // Boucle périodique FreeRTOS
-//    // ---------------------------
-//    for (;;)
-//    {
-//        // 1. Lecture encodeurs et calcul des vitesses mesurées
-//        Encodeur_Read(&enc);  // met à jour enc.delta_1 / enc.delta_2
-//        Control_UpdateSpeed(&hControl, &enc, &odom_params, dt);
-//
-//        // 2. Calcul PID et commande moteurs
-//        Control_RunPID(&hControl, dt, odom_params.wheel_base);
-//
-//        // 3. Mise à jour PWM / rampes
-//        Motor_UpdateSpeed(&hControl.hMotors);
-//
-//        // 4. Affichage pour debug
-//        printf("Target v: %.3f m/s, w: %.3f rad/s | "
-//               "Measured v_left: %.3f m/s, v_right: %.3f m/s | "
-//               "PWM left: %.1f, PWM right: %.1f\r\n",
-//               hControl.v_ref,
-//               hControl.w_ref,
-//               hControl.v_left_meas,
-//               hControl.v_right_meas,
-//               hControl.hMotors.current_speed1,
-//               hControl.hMotors.current_speed2);
-//
-//        // 5. Attente périodique
-//        vTaskDelay(pdMS_TO_TICKS(100));
-//    }
-//}
+        if (acc == 1)
+        {
+            hControl.hMotors.mode_mot1 = BRAKE_MODE;
+            hControl.hMotors.mode_mot2 = BRAKE_MODE;
+            Motor_SetMode(&hControl.hMotors);
+            Motor_SetSpeed_percent(&hControl.hMotors, 0, 0);
+            printf("[CTRL] STOP choc\r\n");
+        }
+        else if (vide == 1)
+        {
+            hControl.hMotors.mode_mot1 = FORWARD_MODE;
+            hControl.hMotors.mode_mot2 = REVERSE_MODE;
+            Motor_SetMode(&hControl.hMotors);
+            Motor_SetSpeed(&hControl.hMotors, 0.15f);
+            //printf("[CTRL] vide=1 -> droite\r\n");
+        }
+        else if (vide == 2)
+        {
+            hControl.hMotors.mode_mot1 = REVERSE_MODE;
+            hControl.hMotors.mode_mot2 = REVERSE_MODE;
+            Motor_SetMode(&hControl.hMotors);
+            Motor_SetSpeed(&hControl.hMotors, 0.15f);
+            //printf("[CTRL] vide=2 -> recule\r\n");
+        }
+        else if (vide == 3)
+        {
+            hControl.hMotors.mode_mot1 = REVERSE_MODE;
+            hControl.hMotors.mode_mot2 = FORWARD_MODE;
+            Motor_SetMode(&hControl.hMotors);
+            Motor_SetSpeed(&hControl.hMotors, 0.15f);
+            //printf("[CTRL] vide=3 -> gauche\r\n");
+        }
+        else if (vide == 4)
+        {
+            hControl.hMotors.mode_mot1 = FORWARD_MODE;
+            hControl.hMotors.mode_mot2 = FORWARD_MODE;
+            Motor_SetMode(&hControl.hMotors);
+            Motor_SetSpeed(&hControl.hMotors, 0.15f);
+            //printf("[CTRL] vide=4 -> avance\r\n");
+        }
+        else
+        {
+            // CAS NORMAL: avance
+            hControl.hMotors.mode_mot1 = FORWARD_MODE;
+            hControl.hMotors.mode_mot2 = FORWARD_MODE;
+            Motor_SetMode(&hControl.hMotors);
+            Motor_SetSpeed(&hControl.hMotors, 0.15f);
+            //printf("[CTRL] avance\r\n");
+        }
+
+        xSemaphoreGive(controlMutex);
+
+        vTaskDelay(pdMS_TO_TICKS(50));
+    }
+}
 
 
 
@@ -486,30 +439,31 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	printf(" ------ FELIX READY ------\r\n ");
 	/* ======================== INIT ========================= */
+
 	controlMutex = xSemaphoreCreateMutex();
+	sem_TOF  = xSemaphoreCreateBinary();
+	sem_ADXL = xSemaphoreCreateBinary();
+
+	//initialisation lidar
+
 	//Initialisation moteurs
 	hControl.hMotors.m1_forward_channel = TIM_CHANNEL_1;
 	hControl.hMotors.m1_reverse_channel = TIM_CHANNEL_2;
-	hControl.hMotors.m2_forward_channel = TIM_CHANNEL_4; //J'ai échangé 3 et 4 pour que quand on veuille être en mode fwd, on met les deux roues sont dans le mm sens
+	hControl.hMotors.m2_forward_channel = TIM_CHANNEL_4; //J'ai échangé 3 et 4 pour que quand on veuille être en mode fwd, les deux roues sont dans le mm sens
 	hControl.hMotors.m2_reverse_channel = TIM_CHANNEL_3;
 	Motor_Init(&hControl.hMotors, &htim1);
-	Motor_SetSpeed(&hControl.hMotors,0.15f);
 
-
-//	hControl.hMotors.current_speed1 = hControl.hMotors.target_speed1; // directement pour le test
-//	hControl.hMotors.current_speed2 = hControl.hMotors.target_speed2;
-//	Motor_UpdateSpeed(&hControl.hMotors);
-//ici controle de la vitesse
-
-	//	hControl.hMotors.mode_mot1 = FORWARD_MODE;
-	//	hControl.hMotors.mode_mot2 = FORWARD_MODE;
-	//	Motor_SetMode(&hControl.hMotors);
-	//	Motor_SetSpeed_percent(&hControl.hMotors, 40, 40);
-	//	hControl.hMotors.current_speed1 = hControl.hMotors.target_speed1; // directement pour le test
-	//	hControl.hMotors.current_speed2 = hControl.hMotors.target_speed2;
-	//	Motor_UpdateSpeed(&hControl.hMotors);
+	//lancement mode fwd
+//		hControl.hMotors.mode_mot1 = FORWARD_MODE;
+//		hControl.hMotors.mode_mot2 = FORWARD_MODE;
+//		Motor_SetMode(&hControl.hMotors);
+//		Motor_SetSpeed(&hControl.hMotors,0.15f);
+//		hControl.hMotors.current_speed1 = hControl.hMotors.target_speed1; // directement pour le test
+//		hControl.hMotors.current_speed2 = hControl.hMotors.target_speed2;
+//		Motor_UpdateSpeed(&hControl.hMotors);
 
 	//initialisation encodeurs - odométrie
+	ControlData_Init();
 	Encodeur_Init();
 	Odom_Init(&hControl.odom);
 	//initialisation asservissement
@@ -526,27 +480,26 @@ int main(void)
 	         100.0f);
 
 
-	//initialisation carac vide pour les tofs
-	//initialisation lidar
-	//initialisation accelero
+
 
 	/* ======================== CREATION TACHES ========================== */
-	//  xTaskCreate(Task_OdomMotor,  "Odom et Moteurs",    STACK_SIZE_SMALL,  NULL, PRIO_ODOM_MOTOR, &xTaskOdomMotorHandle); //tâche odom motor
-	if(xTaskCreate(taskTOFDetection,"Detection",512,NULL,PRIO_TOF,NULL) != pdPASS){
-		  printf("Error creating task detection\r\n");
+	if(xTaskCreate(taskTOFDetection,   "TOF",  1024, NULL, 4, NULL) != pdPASS){
+				  printf("Error creating task detection\r\n");
+				  Error_Handler();
+	}
+	if(xTaskCreate(taskAccelDetection, "ACC",   512, NULL, 1, NULL)!= pdPASS){
+		  printf("Error creating task accel\r\n");
 		  Error_Handler();
-	  }
+}
 
-	  if(xTaskCreate(taskAccelDetection,"Detection Choc",512,NULL,PRIO_ACCEL,NULL) != pdPASS){
-	  	  printf("Error creating task detection choc\r\n");
-	  	  Error_Handler();
-	  }
-	//    xTaskCreate(Task_Control, "Control", STACK_SIZE_MEDIUM, NULL, PRIO_CTRL, &xTaskControlHandle); //Tâche Controle central
-
-
-	//tâches tests
-	//xTaskCreate(Task_TestMotors,  "Test moteurs et asservissement ",    STACK_SIZE_SMALL,  NULL, PRIO_ODOM_MOTOR, &xTaskTestHandle);
-
+	if(xTaskCreate(Task_Control, "CTRL", 1024, NULL, 3, NULL)!= pdPASS){
+		  printf("Error creating task ctrl\r\n");
+		  Error_Handler();
+}
+//	if(xTaskCreate(Task_Motor, "Task_Motor", 1024, NULL, 4, NULL)!= pdPASS){
+//		  printf("Error creating task motor\r\n");
+//		  Error_Handler();
+//}
 
 
 	vTaskStartScheduler();

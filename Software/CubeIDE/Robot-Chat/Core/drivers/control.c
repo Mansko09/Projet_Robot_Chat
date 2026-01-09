@@ -8,6 +8,7 @@
 #include "control.h"
 
 
+
 void Control_UpdateSpeed(h_control_t *c, const Encodeur_t *enc, const Odom_Params_t *p, float dt)
 {
     // distance roue gauche / droite (m)
