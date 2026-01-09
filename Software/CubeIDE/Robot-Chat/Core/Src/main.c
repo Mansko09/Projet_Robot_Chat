@@ -146,12 +146,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 /*       TASK   ACCELERO          */
 /* ============================= */
 void taskAccelDetection(void * unused){
-	ADXL_Init(&adxl);
+	printf("[ACC] Start \r\n");
 	uint8_t mesured_axes = X_axes | Y_axes;
 	uint8_t duration_choc = 0x1B;
 	uint8_t threshold_choc = 0x21;
-	ADXL_SetOffset(2,0,-63);
-	ADXL_Measure(ON);
 	for (;;){
 		ADXL_enableSingleTap(INT2, mesured_axes,duration_choc, threshold_choc);
 		xSemaphoreTake(sem_ADXL,portMAX_DELAY);
@@ -207,7 +205,7 @@ void taskTOFDetection(void *unused)
             xSemaphoreGive(controlMutex);
         }
 
-        printf("[TOF] vide=%d\r\n", new_vide);
+        //printf("[TOF] vide=%d\r\n", new_vide);
     }
 }
 
@@ -333,16 +331,11 @@ void Task_Control(void *unused)
         xSemaphoreTake(controlMutex, portMAX_DELAY);
         vide = hControl.vide;
         acc  = hControl.AccData;
-
-        if (acc == 1)
-        {
-            hControl.hMotors.mode_mot1 = BRAKE_MODE;
-            hControl.hMotors.mode_mot2 = BRAKE_MODE;
-            Motor_SetMode(&hControl.hMotors);
-            Motor_SetSpeed_percent(&hControl.hMotors, 0, 0);
-            printf("[CTRL] STOP choc\r\n");
-        }
-        else if (vide == 1)
+		if (acc == 1)
+		   {
+			   printf("[CTRL] STOP choc\r\n");
+		  }
+		else if (vide == 1)
         {
             hControl.hMotors.mode_mot1 = FORWARD_MODE;
             hControl.hMotors.mode_mot2 = REVERSE_MODE;
@@ -374,7 +367,7 @@ void Task_Control(void *unused)
             Motor_SetSpeed(&hControl.hMotors, 0.15f);
             //printf("[CTRL] vide=4 -> avance\r\n");
         }
-        else
+        else if(vide==0)
         {
             // CAS NORMAL: avance
             hControl.hMotors.mode_mot1 = FORWARD_MODE;
@@ -382,6 +375,7 @@ void Task_Control(void *unused)
             Motor_SetMode(&hControl.hMotors);
             Motor_SetSpeed(&hControl.hMotors, 0.15f);
             //printf("[CTRL] avance\r\n");
+
         }
 
         xSemaphoreGive(controlMutex);
@@ -465,6 +459,10 @@ int main(void)
 	//initialisation encodeurs - odométrie
 	ControlData_Init();
 	Encodeur_Init();
+	//initialisation accelero
+	ADXL_Init(&adxl);
+	ADXL_SetOffset(2,0,-63);
+	ADXL_Measure(ON);
 	Odom_Init(&hControl.odom);
 	//initialisation asservissement
 	PID_Init(&pid_left,
@@ -483,7 +481,7 @@ int main(void)
 
 
 	/* ======================== CREATION TACHES ========================== */
-	if(xTaskCreate(taskTOFDetection,   "TOF",  1024, NULL, 4, NULL) != pdPASS){
+	if(xTaskCreate(taskTOFDetection,   "TOF",  1024, NULL, 2, NULL) != pdPASS){
 				  printf("Error creating task detection\r\n");
 				  Error_Handler();
 	}
@@ -496,10 +494,10 @@ int main(void)
 		  printf("Error creating task ctrl\r\n");
 		  Error_Handler();
 }
-//	if(xTaskCreate(Task_Motor, "Task_Motor", 1024, NULL, 4, NULL)!= pdPASS){
-//		  printf("Error creating task motor\r\n");
-//		  Error_Handler();
-//}
+	if(xTaskCreate(Task_Motor, "Task_Motor", 1024, NULL, 4, NULL)!= pdPASS){
+		  printf("Error creating task motor\r\n");
+		  Error_Handler();
+}
 
 
 	vTaskStartScheduler();
@@ -619,7 +617,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-
+  else if (htim->Instance == TIM17)
+   {
+     if (sem_TOF != NULL)
+     {
+       BaseType_t hpw = pdFALSE;
+       xSemaphoreGiveFromISR(sem_TOF, &hpw);
+       portYIELD_FROM_ISR(hpw);
+     }
+   }
   /* USER CODE END Callback 1 */
 }
 

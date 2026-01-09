@@ -69,10 +69,10 @@ int TOF_Init(){
 	i2c_mux_select_multi(&mux,CHANNEL_0);
 	HAL_Delay(5);
 	status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
-	if (status != VL53L0X_ERROR_NONE) {
+	while (status != VL53L0X_ERROR_NONE) {
 	    printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
 	    i2c_mux_select_multi(&mux, 0);
-
+	    vTaskDelay(50);
 	    return 0;
 	}
 	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
@@ -80,9 +80,10 @@ int TOF_Init(){
 	i2c_mux_select_multi(&mux,CHANNEL_1);
 	HAL_Delay(5);
 		status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
-		if (status != VL53L0X_ERROR_NONE) {
+		while (status != VL53L0X_ERROR_NONE) {
 		    printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
 		    i2c_mux_select_multi(&mux, 0);
+		    vTaskDelay(50);
 		    return 0;
 	}
 	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
@@ -90,9 +91,10 @@ int TOF_Init(){
 	i2c_mux_select_multi(&mux,CHANNEL_2);
 	HAL_Delay(5);
 		status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
-		if (status != VL53L0X_ERROR_NONE) {
+		while (status != VL53L0X_ERROR_NONE) {
 			printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
 			i2c_mux_select_multi(&mux, 0);
+			vTaskDelay(50);
 			return 0;
 	}
 	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
@@ -100,9 +102,10 @@ int TOF_Init(){
 	i2c_mux_select_multi(&mux,CHANNEL_3);
 	HAL_Delay(5);
 		status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
-		if (status != VL53L0X_ERROR_NONE) {
+		while (status != VL53L0X_ERROR_NONE) {
 		    printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
 		    i2c_mux_select_multi(&mux, 0);
+		    vTaskDelay(50);
 		    return 0;
 	}
 	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
@@ -120,7 +123,6 @@ int TOF_Init(){
 
 
 int data_read_TOF(uint8_t addr,int ch){
-	printf("data read entered\r\n");
     i2c_mux_select_multi(&mux, ch);
     HAL_Delay(2);
     int flag = 0;
