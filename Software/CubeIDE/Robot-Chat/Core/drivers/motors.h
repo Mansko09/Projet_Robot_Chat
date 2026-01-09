@@ -68,4 +68,5 @@ void Motor_SetSpeed_percent(h_Motor_t *hMotors, float m1_percent, float m2_perce
 void Motor_Stop(h_Motor_t *hMotors);
 void Motor_UpdateSpeed(h_Motor_t *hMotors);
 void Motor_SetSpeed(h_Motor_t *hMotors, float speed);
+void Motor_CommandVelLR(h_Motor_t *m, float v_left, float v_right);
 #endif /* DRIVERS_MOTORS_H_ */

@@ -121,23 +121,23 @@ int __io_putchar(int ch)
 
 static void ControlData_Init(void)
 {
-    hControl.AccData = 0;
-    hControl.vide    = 0;
+	hControl.AccData = 0;
+	hControl.vide    = 0;
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	//printf("glapitouADXL\r\n");
 	if (GPIO_Pin == GPIO_PIN_0 || GPIO_Pin == GPIO_PIN_1){
-			ADXL_IntProto();
-			int16_t acc[3] = {0,0,0};
-			ADXL_getAccel(acc ,OUTPUT_SIGNED);
-			printf("x : %d, y : %d, z : %d\r\n",(int)acc[0],(int)acc[1],(int)acc[2]);
-			ADXL_disableSingleTap();
-	  		BaseType_t higher_priority_task_woken = pdFALSE;
-	  		xSemaphoreGiveFromISR(sem_ADXL, &higher_priority_task_woken);
-	  		portYIELD_FROM_ISR(higher_priority_task_woken);
-	  	}
+		ADXL_IntProto();
+		int16_t acc[3] = {0,0,0};
+		ADXL_getAccel(acc ,OUTPUT_SIGNED);
+		printf("x : %d, y : %d, z : %d\r\n",(int)acc[0],(int)acc[1],(int)acc[2]);
+		ADXL_disableSingleTap();
+		BaseType_t higher_priority_task_woken = pdFALSE;
+		xSemaphoreGiveFromISR(sem_ADXL, &higher_priority_task_woken);
+		portYIELD_FROM_ISR(higher_priority_task_woken);
+	}
 }
 
 
@@ -154,18 +154,18 @@ void taskAccelDetection(void * unused){
 		ADXL_enableSingleTap(INT2, mesured_axes,duration_choc, threshold_choc);
 		xSemaphoreTake(sem_ADXL,portMAX_DELAY);
 		if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
-		        {
-		            hControl.AccData = 1;
-		            xSemaphoreGive(controlMutex);
-		        }
+		{
+			hControl.AccData = 1;
+			xSemaphoreGive(controlMutex);
+		}
 
-		        vTaskDelay(pdMS_TO_TICKS(200));
+		vTaskDelay(pdMS_TO_TICKS(200));
 
-		        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
-		        {
-		            hControl.AccData = 0;
-		            xSemaphoreGive(controlMutex);
-		        }
+		if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
+		{
+			hControl.AccData = 0;
+			xSemaphoreGive(controlMutex);
+		}
 		printf("Choc \r\n");
 		vTaskDelay(500);
 	}
@@ -176,37 +176,37 @@ void taskAccelDetection(void * unused){
 /* ============================= */
 void taskTOFDetection(void *unused)
 {
-    printf("[TOF] start\r\n");
-    TOF_Init();
+	printf("[TOF] start\r\n");
+	TOF_Init();
 
-    if (HAL_TIM_Base_Start_IT(&htim17) != HAL_OK)
-        printf("[TOF] Erreur Timer 17\r\n");
+	if (HAL_TIM_Base_Start_IT(&htim17) != HAL_OK)
+		printf("[TOF] Erreur Timer 17\r\n");
 
-    // Debug : débloque une première fois
-    xSemaphoreGive(sem_TOF);
+	// Debug : débloque une première fois
+	xSemaphoreGive(sem_TOF);
 
-    for (;;)
-    {
-        if (xSemaphoreTake(sem_TOF, portMAX_DELAY) != pdTRUE)
-        {
-            printf("[TOF] timeout sem_TOF (timer?)\r\n");
-        }
+	for (;;)
+	{
+		if (xSemaphoreTake(sem_TOF, portMAX_DELAY) != pdTRUE)
+		{
+			printf("[TOF] timeout sem_TOF (timer?)\r\n");
+		}
 
-        int new_vide = 0;
+		int new_vide = 0;
 
-        if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_0) == 1) new_vide = 1;
-        if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_1) == 1) new_vide = 2;
-        if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_2) == 1) new_vide = 3;
-        if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_3) == 1) new_vide = 4;
+		if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_0) == 1) new_vide = 1;
+		if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_1) == 1) new_vide = 2;
+		if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_2) == 1) new_vide = 3;
+		if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_3) == 1) new_vide = 4;
 
-        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
-        {
-            hControl.vide = new_vide;
-            xSemaphoreGive(controlMutex);
-        }
+		if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
+		{
+			hControl.vide = new_vide;
+			xSemaphoreGive(controlMutex);
+		}
 
-        //printf("[TOF] vide=%d\r\n", new_vide);
-    }
+		//printf("[TOF] vide=%d\r\n", new_vide);
+	}
 }
 
 /* ============================= */
@@ -214,170 +214,81 @@ void taskTOFDetection(void *unused)
 /* ============================= */
 void Task_Motor(void *argument)
 {
-    for(;;)
-    {
-        // copies locales
-        float t1, t2;
-        int m1, m2;
-
-        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(10)) == pdTRUE)
-        {
-            t1 = hControl.hMotors.target_speed1;
-            t2 = hControl.hMotors.target_speed2;
-            m1 = hControl.hMotors.mode_mot1;
-            m2 = hControl.hMotors.mode_mot2;
-            xSemaphoreGive(controlMutex);
-
-            // appliquer hors mutex
-            hControl.hMotors.mode_mot1 = m1;
-            hControl.hMotors.mode_mot2 = m2;
-            Motor_SetMode(&hControl.hMotors);
-
-            // si Motor_UpdateSpeed utilise target_speedX, assure-toi que t1/t2 sont déjà dans hControl.hMotors
-            Motor_UpdateSpeed(&hControl.hMotors);
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(20));
-    }
+	for(;;)
+	{
+		Motor_UpdateSpeed(&hControl.hMotors);
+		vTaskDelay(pdMS_TO_TICKS(20));
+	}
 }
 
 
 /* ============================= */
 /*       TASK   CONTROL          */
 /* ============================= */
-//void Task_Control(void *unused)
-//{
-//    printf("[CTRL] start\r\n");
-//    for (;;)
-//    {
-//        int vide = 0;
-//        int acc  = 0;
-//
-//        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
-//        {
-//            vide = hControl.vide;
-//            acc  = hControl.AccData;
-//            xSemaphoreGive(controlMutex);
-//			//process TOF
-//            if (vide != 0) {
-//				switch(vide){
-//				case 1:
-//					// Vide à gauche -> On tourne à droite
-//					 hControl.hMotors.mode_mot1 = FORWARD_MODE;
-//					 hControl.hMotors.mode_mot2 = REVERSE_MODE;
-//					 Motor_SetMode(&hControl.hMotors);
-//					 Motor_SetSpeed(&hControl.hMotors, 0.15f);
-//					 break;
-//				case 2:
-//					//vide devant -> on recule
-//					hControl.hMotors.mode_mot1 = REVERSE_MODE;
-//					hControl.hMotors.mode_mot2 = REVERSE_MODE;
-//					Motor_SetMode(&hControl.hMotors);
-//					Motor_SetSpeed(&hControl.hMotors, 0.15f);
-//					break;
-//				case 3:
-//					//vide à droite -> On tourne à gauche
-//					hControl.hMotors.mode_mot1 = REVERSE_MODE;
-//					hControl.hMotors.mode_mot2 = FORWARD_MODE;
-//					Motor_SetMode(&hControl.hMotors);
-//					Motor_SetSpeed(&hControl.hMotors, 0.15f);
-//					break;
-//				case 4:
-//					//vide derrière -> On avance
-//					hControl.hMotors.mode_mot1 = FORWARD_MODE;
-//					hControl.hMotors.mode_mot2 = FORWARD_MODE;
-//					Motor_SetMode(&hControl.hMotors);
-//					Motor_SetSpeed(&hControl.hMotors, 0.15f);
-//					break;
-//				}
-//            }
-//            else{
-//            	hControl.hMotors.mode_mot1 = FORWARD_MODE;
-//            	hControl.hMotors.mode_mot2 = FORWARD_MODE;
-//            	Motor_SetMode(&hControl.hMotors);
-//            	Motor_SetSpeed(&hControl.hMotors, 0.15f);
-//                //Process accelerometre : toujours forward (ou stop si choc)
-//                if (acc == 1)
-//                {
-//                	//traitement avec lidar, voir comment est valeur de retour
-//        //            hControl.hMotors.mode_mot1 = BRAKE_MODE;
-//        //            hControl.hMotors.mode_mot2 = BRAKE_MODE;
-//        //            Motor_SetMode(&hControl.hMotors);
-//        //            Motor_SetSpeed_percent(&hControl.hMotors, 0, 0);
-//                    printf("[CTRL] STOP (acc=1) vide=%d\r\n", vide);
-//                }
-//                else
-//                {
-//        //            hControl.hMotors.mode_mot1 = FORWARD_MODE;
-//        //            hControl.hMotors.mode_mot2 = FORWARD_MODE;
-//        //            Motor_SetMode(&hControl.hMotors);
-//        //            Motor_SetSpeed_percent(&hControl.hMotors, 40, 40);
-//                    printf("[CTRL] FWD vide=%d acc=%d\r\n", vide, acc);
-//                }
-//            }
-//        }
-//        vTaskDelay(pdMS_TO_TICKS(20));
-//    }
-//}
-
 void Task_Control(void *unused)
 {
     printf("[CTRL] start\r\n");
+
+    // Vitesses de consigne (m/s)
+    const float V_FWD  = 0.15f;   // avance normale
+    const float V_REV  = -0.12f;  // recule
+    const float V_TURN = 0.12f;   // pivot sur place
 
     for (;;)
     {
         int vide, acc;
 
+        // Lire les états partagés
         xSemaphoreTake(controlMutex, portMAX_DELAY);
         vide = hControl.vide;
         acc  = hControl.AccData;
-		if (acc == 1)
-		   {
-			   printf("[CTRL] STOP choc\r\n");
-		  }
-		else if (vide == 1)
-        {
-            hControl.hMotors.mode_mot1 = FORWARD_MODE;
-            hControl.hMotors.mode_mot2 = REVERSE_MODE;
-            Motor_SetMode(&hControl.hMotors);
-            Motor_SetSpeed(&hControl.hMotors, 0.15f);
-            //printf("[CTRL] vide=1 -> droite\r\n");
-        }
-        else if (vide == 2)
-        {
-            hControl.hMotors.mode_mot1 = REVERSE_MODE;
-            hControl.hMotors.mode_mot2 = REVERSE_MODE;
-            Motor_SetMode(&hControl.hMotors);
-            Motor_SetSpeed(&hControl.hMotors, 0.15f);
-            //printf("[CTRL] vide=2 -> recule\r\n");
-        }
-        else if (vide == 3)
-        {
-            hControl.hMotors.mode_mot1 = REVERSE_MODE;
-            hControl.hMotors.mode_mot2 = FORWARD_MODE;
-            Motor_SetMode(&hControl.hMotors);
-            Motor_SetSpeed(&hControl.hMotors, 0.15f);
-            //printf("[CTRL] vide=3 -> gauche\r\n");
-        }
-        else if (vide == 4)
-        {
-            hControl.hMotors.mode_mot1 = FORWARD_MODE;
-            hControl.hMotors.mode_mot2 = FORWARD_MODE;
-            Motor_SetMode(&hControl.hMotors);
-            Motor_SetSpeed(&hControl.hMotors, 0.15f);
-            //printf("[CTRL] vide=4 -> avance\r\n");
-        }
-        else if(vide==0)
-        {
-            // CAS NORMAL: avance
-            hControl.hMotors.mode_mot1 = FORWARD_MODE;
-            hControl.hMotors.mode_mot2 = FORWARD_MODE;
-            Motor_SetMode(&hControl.hMotors);
-            Motor_SetSpeed(&hControl.hMotors, 0.15f);
-            //printf("[CTRL] avance\r\n");
+        xSemaphoreGive(controlMutex);
 
+        // Pour l'instant: si choc reçu -> on log seulement (pas d'arrêt)
+        if (acc == 1)
+        {
+            printf("[CTRL] choc recu\r\n");
         }
 
+        float vL = 0.0f;
+        float vR = 0.0f;
+
+        switch (vide)
+        {
+            case 0: // aucun vide -> avance
+                vL = V_FWD;
+                vR = V_FWD;
+                break;
+
+            case 1: // vide à gauche -> tourner à droite (pivot)
+                vL = +V_TURN;
+                vR = -V_TURN;
+                break;
+
+            case 2: // vide devant -> recule
+                vL = V_REV;
+                vR = V_REV;
+                break;
+
+            case 3: // vide à droite -> tourner à gauche (pivot)
+                vL = -V_TURN;
+                vR = +V_TURN;
+                break;
+
+            case 4: // vide arrière -> avance
+                vL = V_FWD;
+                vR = V_FWD;
+                break;
+
+            default:
+                vL = 0.0f;
+                vR = 0.0f;
+                break;
+        }
+
+        // Appliquer la consigne via la commande "rampe + inversion douce"
+        xSemaphoreTake(controlMutex, portMAX_DELAY);
+        Motor_CommandVelLR(&hControl.hMotors, vL, vR);
         xSemaphoreGive(controlMutex);
 
         vTaskDelay(pdMS_TO_TICKS(50));
@@ -386,51 +297,48 @@ void Task_Control(void *unused)
 
 
 
-
-
-
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
-  /* USER CODE END 1 */
+	/* USER CODE BEGIN 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* Configure the peripherals common clocks */
-  PeriphCommonClock_Config();
+	/* Configure the peripherals common clocks */
+	PeriphCommonClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_TIM1_Init();
-  MX_TIM2_Init();
-  MX_I2C1_Init();
-  MX_I2C3_Init();
-  MX_LPTIM1_Init();
-  MX_LPUART1_UART_Init();
-  MX_USART1_UART_Init();
-  MX_TIM17_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_TIM1_Init();
+	MX_TIM2_Init();
+	MX_I2C1_Init();
+	MX_I2C3_Init();
+	MX_LPTIM1_Init();
+	MX_LPUART1_UART_Init();
+	MX_USART1_UART_Init();
+	MX_TIM17_Init();
+	/* USER CODE BEGIN 2 */
 	printf(" ------ FELIX READY ------\r\n ");
 	/* ======================== INIT ========================= */
 
@@ -448,13 +356,13 @@ int main(void)
 	Motor_Init(&hControl.hMotors, &htim1);
 
 	//lancement mode fwd
-//		hControl.hMotors.mode_mot1 = FORWARD_MODE;
-//		hControl.hMotors.mode_mot2 = FORWARD_MODE;
-//		Motor_SetMode(&hControl.hMotors);
-//		Motor_SetSpeed(&hControl.hMotors,0.15f);
-//		hControl.hMotors.current_speed1 = hControl.hMotors.target_speed1; // directement pour le test
-//		hControl.hMotors.current_speed2 = hControl.hMotors.target_speed2;
-//		Motor_UpdateSpeed(&hControl.hMotors);
+	//		hControl.hMotors.mode_mot1 = FORWARD_MODE;
+	//		hControl.hMotors.mode_mot2 = FORWARD_MODE;
+	//		Motor_SetMode(&hControl.hMotors);
+	//		Motor_SetSpeed(&hControl.hMotors,0.15f);
+	//		hControl.hMotors.current_speed1 = hControl.hMotors.target_speed1; // directement pour le test
+	//		hControl.hMotors.current_speed2 = hControl.hMotors.target_speed2;
+	//		Motor_UpdateSpeed(&hControl.hMotors);
 
 	//initialisation encodeurs - odométrie
 	ControlData_Init();
@@ -466,133 +374,133 @@ int main(void)
 	Odom_Init(&hControl.odom);
 	//initialisation asservissement
 	PID_Init(&pid_left,
-	         0.0f,     // Kp
-	         0.0f,     // Ki
-	         -100.0f,
-	         100.0f);
+			0.0f,     // Kp
+			0.0f,     // Ki
+			-100.0f,
+			100.0f);
 
 	PID_Init(&pid_right,
-	         0.0f,
-	         0.0f,
-	         -100.0f,
-	         100.0f);
+			0.0f,
+			0.0f,
+			-100.0f,
+			100.0f);
 
 
 
 
 	/* ======================== CREATION TACHES ========================== */
-	if(xTaskCreate(taskTOFDetection,   "TOF",  1024, NULL, 2, NULL) != pdPASS){
-				  printf("Error creating task detection\r\n");
-				  Error_Handler();
-	}
-	if(xTaskCreate(taskAccelDetection, "ACC",   512, NULL, 1, NULL)!= pdPASS){
-		  printf("Error creating task accel\r\n");
-		  Error_Handler();
-}
-
-	if(xTaskCreate(Task_Control, "CTRL", 1024, NULL, 3, NULL)!= pdPASS){
-		  printf("Error creating task ctrl\r\n");
-		  Error_Handler();
-}
-	if(xTaskCreate(Task_Motor, "Task_Motor", 1024, NULL, 4, NULL)!= pdPASS){
-		  printf("Error creating task motor\r\n");
-		  Error_Handler();
-}
+//		if(xTaskCreate(taskTOFDetection,   "TOF",  1024, NULL, 2, NULL) != pdPASS){
+//					  printf("Error creating task detection\r\n");
+//					  Error_Handler();
+//		}
+//		if(xTaskCreate(taskAccelDetection, "ACC",   512, NULL, 1, NULL)!= pdPASS){
+//			  printf("Error creating task accel\r\n");
+//			  Error_Handler();
+//	}
+//
+//		if(xTaskCreate(Task_Control, "CTRL", 1024, NULL, 3, NULL)!= pdPASS){
+//			  printf("Error creating task ctrl\r\n");
+//			  Error_Handler();
+//	}
+//		if(xTaskCreate(Task_Motor, "Task_Motor", 1024, NULL, 4, NULL)!= pdPASS){
+//			  printf("Error creating task motor\r\n");
+//			  Error_Handler();
+//	}
 
 
 	vTaskStartScheduler();
-  /* USER CODE END 2 */
+	/* USER CODE END 2 */
 
-  /* Call init function for freertos objects (in cmsis_os2.c) */
-  MX_FREERTOS_Init();
+	/* Call init function for freertos objects (in cmsis_os2.c) */
+	MX_FREERTOS_Init();
 
-  /* Start scheduler */
-  osKernelStart();
+	/* Start scheduler */
+	osKernelStart();
 
-  /* We should never get here as control is now taken by the scheduler */
+	/* We should never get here as control is now taken by the scheduler */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-    /* USER CODE END WHILE */
+		/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+		/* USER CODE BEGIN 3 */
 
 	}
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
-  */
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+	/** Configure the main internal regulator output voltage
+	 */
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
-  RCC_OscInitStruct.PLL.PLLN = 8;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/** Initializes the RCC Oscillators according to the specified parameters
+	 * in the RCC_OscInitTypeDef structure.
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+	RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
+	RCC_OscInitStruct.PLL.PLLN = 8;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}
 
-  /** Configure the SYSCLKSource, HCLK, PCLK1 and PCLK2 clocks dividers
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK4|RCC_CLOCKTYPE_HCLK2
-                              |RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.AHBCLK2Divider = RCC_SYSCLK_DIV2;
-  RCC_ClkInitStruct.AHBCLK4Divider = RCC_SYSCLK_DIV1;
+	/** Configure the SYSCLKSource, HCLK, PCLK1 and PCLK2 clocks dividers
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK4|RCC_CLOCKTYPE_HCLK2
+			|RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+			|RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+	RCC_ClkInitStruct.AHBCLK2Divider = RCC_SYSCLK_DIV2;
+	RCC_ClkInitStruct.AHBCLK4Divider = RCC_SYSCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
+	{
+		Error_Handler();
+	}
 }
 
 /**
-  * @brief Peripherals Common Clock Configuration
-  * @retval None
-  */
+ * @brief Peripherals Common Clock Configuration
+ * @retval None
+ */
 void PeriphCommonClock_Config(void)
 {
-  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
-  /** Initializes the peripherals clock
-  */
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS;
-  PeriphClkInitStruct.SmpsClockSelection = RCC_SMPSCLKSOURCE_HSI;
-  PeriphClkInitStruct.SmpsDivSelection = RCC_SMPSCLKDIV_RANGE1;
+	/** Initializes the peripherals clock
+	 */
+	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS;
+	PeriphClkInitStruct.SmpsClockSelection = RCC_SMPSCLKSOURCE_HSI;
+	PeriphClkInitStruct.SmpsDivSelection = RCC_SMPSCLKDIV_RANGE1;
 
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN Smps */
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/* USER CODE BEGIN Smps */
 
-  /* USER CODE END Smps */
+	/* USER CODE END Smps */
 }
 
 /* USER CODE BEGIN 4 */
@@ -600,62 +508,62 @@ void PeriphCommonClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM16 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
+ * @brief  Period elapsed callback in non blocking mode
+ * @note   This function is called  when TIM16 interrupt took place, inside
+ * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ * a global variable "uwTick" used as application time base.
+ * @param  htim : TIM handle
+ * @retval None
+ */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  /* USER CODE BEGIN Callback 0 */
+	/* USER CODE BEGIN Callback 0 */
 
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM16)
-  {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-  else if (htim->Instance == TIM17)
-   {
-     if (sem_TOF != NULL)
-     {
-       BaseType_t hpw = pdFALSE;
-       xSemaphoreGiveFromISR(sem_TOF, &hpw);
-       portYIELD_FROM_ISR(hpw);
-     }
-   }
-  /* USER CODE END Callback 1 */
+	/* USER CODE END Callback 0 */
+	if (htim->Instance == TIM16)
+	{
+		HAL_IncTick();
+	}
+	/* USER CODE BEGIN Callback 1 */
+	else if (htim->Instance == TIM17)
+	{
+		if (sem_TOF != NULL)
+		{
+			BaseType_t hpw = pdFALSE;
+			xSemaphoreGiveFromISR(sem_TOF, &hpw);
+			portYIELD_FROM_ISR(hpw);
+		}
+	}
+	/* USER CODE END Callback 1 */
 }
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1)
 	{
 	}
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* USER CODE BEGIN 6 */
+	/* USER CODE BEGIN 6 */
 	/* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+	/* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
