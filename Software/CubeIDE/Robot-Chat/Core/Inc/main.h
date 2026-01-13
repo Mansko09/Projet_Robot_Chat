@@ -57,6 +57,32 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SCL_Acc_Pin GPIO_PIN_8
+#define SCL_Acc_GPIO_Port GPIOB
+#define SDA_Acc_Pin GPIO_PIN_9
+#define SDA_Acc_GPIO_Port GPIOB
+#define Enc2A_Pin GPIO_PIN_0
+#define Enc2A_GPIO_Port GPIOA
+#define Enc2B_Pin GPIO_PIN_1
+#define Enc2B_GPIO_Port GPIOA
+#define M1_FWD_Pin GPIO_PIN_8
+#define M1_FWD_GPIO_Port GPIOA
+#define M1_REV_Pin GPIO_PIN_9
+#define M1_REV_GPIO_Port GPIOA
+#define INT_ACC1_Pin GPIO_PIN_0
+#define INT_ACC1_GPIO_Port GPIOB
+#define INT_ACC1_EXTI_IRQn EXTI0_IRQn
+#define INT_ACC2_Pin GPIO_PIN_1
+#define INT_ACC2_GPIO_Port GPIOB
+#define INT_ACC2_EXTI_IRQn EXTI1_IRQn
+#define M2_FWD_Pin GPIO_PIN_10
+#define M2_FWD_GPIO_Port GPIOA
+#define M2_REV_Pin GPIO_PIN_11
+#define M2_REV_GPIO_Port GPIOA
+#define Enc1A_Pin GPIO_PIN_5
+#define Enc1A_GPIO_Port GPIOB
+#define Enc1B_Pin GPIO_PIN_7
+#define Enc1B_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

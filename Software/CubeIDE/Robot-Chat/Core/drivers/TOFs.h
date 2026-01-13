@@ -15,9 +15,8 @@
 #include <stdlib.h>
 
 #define VL53L0X_DEFAULT_ADDRESS 0x29
+
 extern I2C_HandleTypeDef hi2c3;
-
-
 
 void configure_TOF(uint8_t addr);
 int TOF_Init();

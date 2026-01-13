@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include <stdio.h>
 #include "control.h"
 #include "semphr.h"
@@ -150,6 +151,7 @@ void taskAccelDetection(void * unused){
 	uint8_t mesured_axes = X_axes | Y_axes;
 	uint8_t duration_choc = 0x1B;
 	uint8_t threshold_choc = 0x21;
+
 	for (;;){
 		ADXL_enableSingleTap(INT2, mesured_axes,duration_choc, threshold_choc);
 		xSemaphoreTake(sem_ADXL,portMAX_DELAY);
@@ -177,7 +179,18 @@ void taskAccelDetection(void * unused){
 void taskTOFDetection(void *unused)
 {
 	printf("[TOF] start\r\n");
-	TOF_Init();
+
+    if (TOF_Init() != 1) {
+        printf("[TOF] INIT FAIL -> forcing vide=0\r\n");
+        for (;;) {
+            if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE) {
+                hControl.vide = 0;
+                xSemaphoreGive(controlMutex);
+            }
+            vTaskDelay(pdMS_TO_TICKS(100));
+        }
+    }
+
 
 	if (HAL_TIM_Base_Start_IT(&htim17) != HAL_OK)
 		printf("[TOF] Erreur Timer 17\r\n");
@@ -190,6 +203,7 @@ void taskTOFDetection(void *unused)
 		if (xSemaphoreTake(sem_TOF, portMAX_DELAY) != pdTRUE)
 		{
 			printf("[TOF] timeout sem_TOF (timer?)\r\n");
+			continue;
 		}
 
 		int new_vide = 0;
@@ -198,6 +212,7 @@ void taskTOFDetection(void *unused)
 		if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_1) == 1) new_vide = 2;
 		if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_2) == 1) new_vide = 3;
 		if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_3) == 1) new_vide = 4;
+		// Dans taskTOFDetection, juste après les 4 data_read_TOF
 
 		if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
 		{
@@ -210,83 +225,136 @@ void taskTOFDetection(void *unused)
 }
 
 /* ============================= */
-/*       TASK  MOTOR       */
+/*       TASK  MOTOR et odométrie      */
 /* ============================= */
 void Task_Motor(void *argument)
 {
+	Odom_t odom_local;
+	xSemaphoreTake(controlMutex,portMAX_DELAY);
+	odom_local=hControl.odom;
+	xSemaphoreGive(controlMutex);
 	for(;;)
 	{
+		Encodeur_Read(&enc);//lecture encodeurs
+		Odom_Update(&odom_local,&enc,&odom_params);//mise à jour odométrie
+		xSemaphoreTake(controlMutex,portMAX_DELAY);//copie dans la structure partagée
+		hControl.odom=odom_local;
+		//printf("Position : x=%f,y=%f, theta=%f degres \r\n",hControl.odom.x,hControl.odom.y, hControl.odom.theta * 180.0f / M_PI);
 		Motor_UpdateSpeed(&hControl.hMotors);
+		xSemaphoreGive(controlMutex);
 		vTaskDelay(pdMS_TO_TICKS(20));
 	}
 }
 
 
-/* ============================= */
-/*       TASK   CONTROL          */
-/* ============================= */
+//void Task_Control(void *unused)
+//{
+//    printf("[CTRL] start\r\n");
+//
+//    const float V_FWD  = 0.15f;
+//    const float V_TURN = 0.12f;
+//
+//    // Timer pour forcer la rotation pendant un certain temps (en cycles de 50ms)
+//    // 10 cycles * 50ms = 500ms de rotation minimum
+//    int escape_ticks = 0;
+//    int last_vide = 0;
+//
+//    for (;;)
+//    {
+//        int vide;
+//        float vL = 0.0f;
+//        float vR = 0.0f;
+//
+//        xSemaphoreTake(controlMutex, portMAX_DELAY);
+//        vide = hControl.vide;
+//        xSemaphoreGive(controlMutex);
+//
+//        // Si on détecte un vide, on réinitialise le timer de "fuite"
+//        if (vide != 0) {
+//            escape_ticks = 15; // On va tourner pendant 750ms
+//            last_vide = vide;  // On mémorise quel côté a vu le vide
+//        }
+//
+//        if (escape_ticks > 0) {
+//            // --- LOGIQUE D'ÉVITEMENT (ESCAPE) ---
+//            // On utilise last_vide pour savoir dans quel sens tourner
+//            switch (last_vide) {
+//                case 1: // Vide à gauche -> pivote à droite
+//                	vL=V_TURN; vR=-V_TURN;
+//                	break;
+//                case 2: // Vide devant -> pivote à droite
+//                    vL = V_TURN;  vR = -V_TURN;
+//                    break;
+//                case 3: // Vide à droite -> pivote à gauche
+//                    vL = -V_TURN; vR = V_TURN;
+//                    break;
+//                case 4: // Vide arrière -> avance
+//                    vL = V_FWD;   vR = V_FWD;
+//                    break;
+//            }
+//            escape_ticks--;
+//        }
+//        else {
+//            // --- LOGIQUE NORMALE (AUCUN VIDE) ---
+//            vL = V_FWD;
+//            vR = V_FWD;
+//        }
+//
+//        xSemaphoreTake(controlMutex, portMAX_DELAY);
+//        Motor_CommandVelLR(&hControl.hMotors, vL, vR);
+//        xSemaphoreGive(controlMutex);
+//
+//        vTaskDelay(pdMS_TO_TICKS(50));
+//    }
+//}
+
 void Task_Control(void *unused)
 {
     printf("[CTRL] start\r\n");
+    const float V_FWD  = 0.15f;
+    const float V_TURN = 0.12f;
 
-    // Vitesses de consigne (m/s)
-    const float V_FWD  = 0.15f;   // avance normale
-    const float V_REV  = -0.12f;  // recule
-    const float V_TURN = 0.12f;   // pivot sur place
+    int escape_ticks = 0;
+    int last_vide = 0;
+    int prev_vide_sent = -1; // Pour n'afficher que lors d'un changement
 
     for (;;)
     {
-        int vide, acc;
-
-        // Lire les états partagés
-        xSemaphoreTake(controlMutex, portMAX_DELAY);
-        vide = hControl.vide;
-        acc  = hControl.AccData;
-        xSemaphoreGive(controlMutex);
-
-        // Pour l'instant: si choc reçu -> on log seulement (pas d'arrêt)
-        if (acc == 1)
-        {
-            printf("[CTRL] choc recu\r\n");
-        }
-
+        int vide;
         float vL = 0.0f;
         float vR = 0.0f;
 
-        switch (vide)
-        {
-            case 0: // aucun vide -> avance
-                vL = V_FWD;
-                vR = V_FWD;
-                break;
+        xSemaphoreTake(controlMutex, portMAX_DELAY);
+        vide = hControl.vide;
+        xSemaphoreGive(controlMutex);
 
-            case 1: // vide à gauche -> tourner à droite (pivot)
-                vL = +V_TURN;
-                vR = -V_TURN;
-                break;
-
-            case 2: // vide devant -> recule
-                vL = V_REV;
-                vR = V_REV;
-                break;
-
-            case 3: // vide à droite -> tourner à gauche (pivot)
-                vL = -V_TURN;
-                vR = +V_TURN;
-                break;
-
-            case 4: // vide arrière -> avance
-                vL = V_FWD;
-                vR = V_FWD;
-                break;
-
-            default:
-                vL = 0.0f;
-                vR = 0.0f;
-                break;
+        // --- DEBUG : Affiche seulement si le vide change ---
+        if (vide != prev_vide_sent) {
+            printf("[CTRL] Etat vide : %d\r\n", vide);
+            prev_vide_sent = vide;
         }
 
-        // Appliquer la consigne via la commande "rampe + inversion douce"
+        if (vide != 0) {
+            escape_ticks = 20; // On augmente un peu le temps de réaction (1 seconde)
+            last_vide = vide;
+        }
+
+        if (escape_ticks > 0) {
+            // Force la manoeuvre d'évitement
+            if (last_vide == 1 || last_vide == 2) { // Gauche ou Devant
+                vL = V_TURN;  vR = -V_TURN;
+            } else if (last_vide == 3) { // Droite
+                vL = -V_TURN; vR = V_TURN;
+            } else if (last_vide == 4) { // Arrière (si CHANNEL_3 est l'arrière)
+                vL = V_FWD; vR = V_FWD;
+            }
+            escape_ticks--;
+        }
+        else {
+            vL = V_FWD;
+            vR = V_FWD;
+        }
+
         xSemaphoreTake(controlMutex, portMAX_DELAY);
         Motor_CommandVelLR(&hControl.hMotors, vL, vR);
         xSemaphoreGive(controlMutex);
@@ -294,51 +362,48 @@ void Task_Control(void *unused)
         vTaskDelay(pdMS_TO_TICKS(50));
     }
 }
-
-
-
 /* USER CODE END 0 */
 
 /**
- * @brief  The application entry point.
- * @retval int
- */
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
 
-	/* USER CODE BEGIN 1 */
-	/* USER CODE END 1 */
+  /* USER CODE BEGIN 1 */
+  /* USER CODE END 1 */
 
-	/* MCU Configuration--------------------------------------------------------*/
+  /* MCU Configuration--------------------------------------------------------*/
 
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
 
-	/* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-	/* USER CODE END Init */
+  /* USER CODE END Init */
 
-	/* Configure the system clock */
-	SystemClock_Config();
+  /* Configure the system clock */
+  SystemClock_Config();
 
-	/* Configure the peripherals common clocks */
-	PeriphCommonClock_Config();
+  /* Configure the peripherals common clocks */
+  PeriphCommonClock_Config();
 
-	/* USER CODE BEGIN SysInit */
+  /* USER CODE BEGIN SysInit */
 
-	/* USER CODE END SysInit */
+  /* USER CODE END SysInit */
 
-	/* Initialize all configured peripherals */
-	MX_GPIO_Init();
-	MX_TIM1_Init();
-	MX_TIM2_Init();
-	MX_I2C1_Init();
-	MX_I2C3_Init();
-	MX_LPTIM1_Init();
-	MX_LPUART1_UART_Init();
-	MX_USART1_UART_Init();
-	MX_TIM17_Init();
-	/* USER CODE BEGIN 2 */
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_TIM1_Init();
+  MX_TIM2_Init();
+  MX_I2C1_Init();
+  MX_I2C3_Init();
+  MX_LPTIM1_Init();
+  MX_LPUART1_UART_Init();
+  MX_USART1_UART_Init();
+  MX_TIM17_Init();
+  /* USER CODE BEGIN 2 */
 	printf(" ------ FELIX READY ------\r\n ");
 	/* ======================== INIT ========================= */
 
@@ -355,15 +420,6 @@ int main(void)
 	hControl.hMotors.m2_reverse_channel = TIM_CHANNEL_3;
 	Motor_Init(&hControl.hMotors, &htim1);
 
-	//lancement mode fwd
-	//		hControl.hMotors.mode_mot1 = FORWARD_MODE;
-	//		hControl.hMotors.mode_mot2 = FORWARD_MODE;
-	//		Motor_SetMode(&hControl.hMotors);
-	//		Motor_SetSpeed(&hControl.hMotors,0.15f);
-	//		hControl.hMotors.current_speed1 = hControl.hMotors.target_speed1; // directement pour le test
-	//		hControl.hMotors.current_speed2 = hControl.hMotors.target_speed2;
-	//		Motor_UpdateSpeed(&hControl.hMotors);
-
 	//initialisation encodeurs - odométrie
 	ControlData_Init();
 	Encodeur_Init();
@@ -371,6 +427,7 @@ int main(void)
 	ADXL_Init(&adxl);
 	ADXL_SetOffset(2,0,-63);
 	ADXL_Measure(ON);
+
 	Odom_Init(&hControl.odom);
 	//initialisation asservissement
 	PID_Init(&pid_left,
@@ -385,7 +442,15 @@ int main(void)
 			-100.0f,
 			100.0f);
 
+	/* ======================== CONFIGURATION INITIALE MOUVEMENT ========================= */
 
+	hControl.hMotors.target_speed1 = 0;
+	hControl.hMotors.target_speed2 = 0;
+	hControl.hMotors.current_speed1 = 0;
+	hControl.hMotors.current_speed2 = 0;
+	hControl.hMotors.mode_mot1 = STANDBY_MODE;
+	hControl.hMotors.mode_mot2 = STANDBY_MODE;
+	Motor_SetMode(&hControl.hMotors);
 
 
 	/* ======================== CREATION TACHES ========================== */
@@ -409,98 +474,98 @@ int main(void)
 
 
 	vTaskStartScheduler();
-	/* USER CODE END 2 */
+  /* USER CODE END 2 */
 
-	/* Call init function for freertos objects (in cmsis_os2.c) */
-	MX_FREERTOS_Init();
+  /* Call init function for freertos objects (in cmsis_os2.c) */
+  MX_FREERTOS_Init();
 
-	/* Start scheduler */
-	osKernelStart();
+  /* Start scheduler */
+  osKernelStart();
 
-	/* We should never get here as control is now taken by the scheduler */
+  /* We should never get here as control is now taken by the scheduler */
 
-	/* Infinite loop */
-	/* USER CODE BEGIN WHILE */
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		/* USER CODE END WHILE */
+    /* USER CODE END WHILE */
 
-		/* USER CODE BEGIN 3 */
+    /* USER CODE BEGIN 3 */
 
 	}
-	/* USER CODE END 3 */
+  /* USER CODE END 3 */
 }
 
 /**
- * @brief System Clock Configuration
- * @retval None
- */
+  * @brief System Clock Configuration
+  * @retval None
+  */
 void SystemClock_Config(void)
 {
-	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-	/** Configure the main internal regulator output voltage
-	 */
-	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-	/** Initializes the RCC Oscillators according to the specified parameters
-	 * in the RCC_OscInitTypeDef structure.
-	 */
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-	RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
-	RCC_OscInitStruct.PLL.PLLN = 8;
-	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-	{
-		Error_Handler();
-	}
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
+  RCC_OscInitStruct.PLL.PLLN = 8;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
-	/** Configure the SYSCLKSource, HCLK, PCLK1 and PCLK2 clocks dividers
-	 */
-	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK4|RCC_CLOCKTYPE_HCLK2
-			|RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-			|RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-	RCC_ClkInitStruct.AHBCLK2Divider = RCC_SYSCLK_DIV2;
-	RCC_ClkInitStruct.AHBCLK4Divider = RCC_SYSCLK_DIV1;
+  /** Configure the SYSCLKSource, HCLK, PCLK1 and PCLK2 clocks dividers
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK4|RCC_CLOCKTYPE_HCLK2
+                              |RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.AHBCLK2Divider = RCC_SYSCLK_DIV2;
+  RCC_ClkInitStruct.AHBCLK4Divider = RCC_SYSCLK_DIV1;
 
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
-	{
-		Error_Handler();
-	}
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
 }
 
 /**
- * @brief Peripherals Common Clock Configuration
- * @retval None
- */
+  * @brief Peripherals Common Clock Configuration
+  * @retval None
+  */
 void PeriphCommonClock_Config(void)
 {
-	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
-	/** Initializes the peripherals clock
-	 */
-	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS;
-	PeriphClkInitStruct.SmpsClockSelection = RCC_SMPSCLKSOURCE_HSI;
-	PeriphClkInitStruct.SmpsDivSelection = RCC_SMPSCLKDIV_RANGE1;
+  /** Initializes the peripherals clock
+  */
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS;
+  PeriphClkInitStruct.SmpsClockSelection = RCC_SMPSCLKSOURCE_HSI;
+  PeriphClkInitStruct.SmpsDivSelection = RCC_SMPSCLKDIV_RANGE1;
 
-	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-	{
-		Error_Handler();
-	}
-	/* USER CODE BEGIN Smps */
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN Smps */
 
-	/* USER CODE END Smps */
+  /* USER CODE END Smps */
 }
 
 /* USER CODE BEGIN 4 */
@@ -508,23 +573,23 @@ void PeriphCommonClock_Config(void)
 /* USER CODE END 4 */
 
 /**
- * @brief  Period elapsed callback in non blocking mode
- * @note   This function is called  when TIM16 interrupt took place, inside
- * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
- * a global variable "uwTick" used as application time base.
- * @param  htim : TIM handle
- * @retval None
- */
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM16 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	/* USER CODE BEGIN Callback 0 */
+  /* USER CODE BEGIN Callback 0 */
 
-	/* USER CODE END Callback 0 */
-	if (htim->Instance == TIM16)
-	{
-		HAL_IncTick();
-	}
-	/* USER CODE BEGIN Callback 1 */
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM16)
+  {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
 	else if (htim->Instance == TIM17)
 	{
 		if (sem_TOF != NULL)
@@ -534,36 +599,36 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			portYIELD_FROM_ISR(hpw);
 		}
 	}
-	/* USER CODE END Callback 1 */
+  /* USER CODE END Callback 1 */
 }
 
 /**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
 void Error_Handler(void)
 {
-	/* USER CODE BEGIN Error_Handler_Debug */
+  /* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1)
 	{
 	}
-	/* USER CODE END Error_Handler_Debug */
+  /* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT
 /**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-	/* USER CODE BEGIN 6 */
+  /* USER CODE BEGIN 6 */
 	/* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-	/* USER CODE END 6 */
+  /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

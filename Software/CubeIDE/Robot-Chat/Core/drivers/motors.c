@@ -138,7 +138,7 @@ static inline float vel_to_pwm_target(float v)
 
 static inline int pwm_near_zero(float pwm)
 {
-    return (pwm < 2.0f); // seuil à ajuster (counts PWM)
+    return (pwm < 100.0f); // seuil à ajuster (counts PWM)
 }
 
 static inline float pwm_to_percent(h_Motor_t *m, float pwm)
@@ -148,100 +148,44 @@ static inline float pwm_to_percent(h_Motor_t *m, float pwm)
     return (pwm / ARR) * 100.0f;
 }
 
-// ---------------------------------------------------------------------------
-// Commande vitesses gauche/droite (m/s) avec rampe + inversion douce
-//  - si inversion demandée : rampe à 0, puis switch de sens, puis rampe vers cible
-//  - la rampe réelle est appliquée dans Motor_UpdateSpeed()
-// ---------------------------------------------------------------------------
 void Motor_CommandVelLR(h_Motor_t *m, float v_left, float v_right)
 {
-    // Saturation physique
+    // 1. Saturation
     v_left  = clampf(v_left,  -ROBOT_V_MAX, ROBOT_V_MAX);
     v_right = clampf(v_right, -ROBOT_V_MAX, ROBOT_V_MAX);
 
-    // Sens désiré par roue
-    MotorMode desired1 = (v_left  > 0.0f) ? FORWARD_MODE :
-                         (v_left  < 0.0f) ? REVERSE_MODE : STANDBY_MODE;
+    // 2. Déterminer les modes cibles selon le signe de la vitesse demandée
+    MotorMode target_mode1 = (v_left > 0.01f)  ? FORWARD_MODE : (v_left < -0.01f) ? REVERSE_MODE : STANDBY_MODE;
+    MotorMode target_mode2 = (v_right > 0.01f) ? FORWARD_MODE : (v_right < -0.01f) ? REVERSE_MODE : STANDBY_MODE;
 
-    MotorMode desired2 = (v_right > 0.0f) ? FORWARD_MODE :
-                         (v_right < 0.0f) ? REVERSE_MODE : STANDBY_MODE;
+    uint32_t ARR = m->htim_pwm->Init.Period;
 
-    // PWM cible (en %)
-    float duty1 = vel_to_pwm_target(v_left);
-    float duty2 = vel_to_pwm_target(v_right);
-
-    // On veut éviter d'écraser la target de l'autre moteur car Motor_SetSpeed_percent()
-    // modifie les 2 en même temps => on "préserve" l'autre par conversion pwm->%
-    float keep2 = pwm_to_percent(m, m->target_speed2);
-    float keep1 = pwm_to_percent(m, m->target_speed1);
-
-    // --- Gestion inversion moteur 1 ---
-    if (desired1 != STANDBY_MODE && m->mode_mot1 != desired1)
-    {
-        // rampe vers 0 avant inversion (on garde la consigne de M2)
-        Motor_SetSpeed_percent(m, 0.0f, keep2);
-
-        if (pwm_near_zero(m->current_speed1))
-        {
-            m->mode_mot1 = desired1;
-            Motor_SetMode(m);
-
-            // puis appliquer la nouvelle consigne de M1
-            Motor_SetSpeed_percent(m, duty1, keep2);
+    // --- GESTION MOTEUR 1 ---
+    if (m->mode_mot1 != target_mode1) {
+        // On veut changer de sens ou s'arrêter : on met la cible PWM à 0
+        m->target_speed1 = 0.0f;
+        // On ne change le mode QUE si le moteur est pratiquement arrêté
+        if (m->current_speed1 < 100.0f) {
+            m->mode_mot1 = target_mode1;
+            Motor_SetMode(m); // Applique physiquement le nouveau sens
         }
-    }
-    else
-    {
-        // pas d'inversion : appliquer target PWM (si STANDBY -> duty=0)
-        if (desired1 == STANDBY_MODE && pwm_near_zero(m->current_speed1))
-        {
-            m->mode_mot1 = STANDBY_MODE;
-            Motor_SetMode(m);
-        }
-        else if (desired1 != STANDBY_MODE)
-        {
-            m->mode_mot1 = desired1;
-            Motor_SetMode(m);
-        }
-
-        Motor_SetSpeed_percent(m, duty1, keep2);
+    } else {
+        // On est déjà dans le bon sens, on applique la consigne de vitesse
+        m->target_speed1 = fabsf(v_left) / ROBOT_V_MAX * ARR;
     }
 
-    // Recalculer keep1 après éventuelle modif
-    keep1 = pwm_to_percent(m, m->target_speed1);
-
-    // --- Gestion inversion moteur 2 ---
-    if (desired2 != STANDBY_MODE && m->mode_mot2 != desired2)
-    {
-        // rampe vers 0 avant inversion (on garde la consigne de M1)
-        Motor_SetSpeed_percent(m, keep1, 0.0f);
-
-        if (pwm_near_zero(m->current_speed2))
-        {
-            m->mode_mot2 = desired2;
-            Motor_SetMode(m);
-
-            // puis appliquer la nouvelle consigne de M2
-            Motor_SetSpeed_percent(m, keep1, duty2);
-        }
-    }
-    else
-    {
-        if (desired2 == STANDBY_MODE && pwm_near_zero(m->current_speed2))
-        {
-            m->mode_mot2 = STANDBY_MODE;
+    // --- GESTION MOTEUR 2 ---
+    if (m->mode_mot2 != target_mode2) {
+        m->target_speed2 = 0.0f;
+        if (m->current_speed2 < 100.0f) {
+            m->mode_mot2 = target_mode2;
             Motor_SetMode(m);
         }
-        else if (desired2 != STANDBY_MODE)
-        {
-            m->mode_mot2 = desired2;
-            Motor_SetMode(m);
-        }
-
-        Motor_SetSpeed_percent(m, keep1, duty2);
+    } else {
+        m->target_speed2 = fabsf(v_right) / ROBOT_V_MAX * ARR;
     }
 
-    // garder la consigne physique (optionnel)
+    // Sauvegarde des consignes pour l'asservissement
     m->target_vel_left  = v_left;
     m->target_vel_right = v_right;
 }
