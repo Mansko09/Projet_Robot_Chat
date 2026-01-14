@@ -102,6 +102,9 @@ ADXL_InitTypeDef adxl ={
 		.LinkMode = LINKMODEOFF
 };
 
+
+extern i2c_mux_t mux;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -178,50 +181,70 @@ void taskAccelDetection(void * unused){
 /* ============================= */
 void taskTOFDetection(void *unused)
 {
-	printf("[TOF] start\r\n");
+    printf("[TOF] Task Loop Start\r\n");
 
-    if (TOF_Init() != 1) {
-        printf("[TOF] INIT FAIL -> forcing vide=0\r\n");
-        for (;;) {
-            if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE) {
-                hControl.vide = 0;
-                xSemaphoreGive(controlMutex);
-            }
-            vTaskDelay(pdMS_TO_TICKS(100));
+    // Le démarrage du timer ici est correct car TOF_Init est déjà fait
+    if (HAL_TIM_Base_Start_IT(&htim17) != HAL_OK)
+        printf("[TOF] Erreur Timer 17\r\n");
+
+    // Libération initiale au cas où le sémaphore est bloqué
+    xSemaphoreGive(sem_TOF);
+
+    for (;;)
+    {
+        // On attend le top du Timer 17 (20ms)
+        if (xSemaphoreTake(sem_TOF, portMAX_DELAY) != pdTRUE)
+        {
+            printf("[TOF] timeout sem_TOF\r\n");
+            continue;
         }
+
+        int new_vide = 0;
+
+        // Lecture séquentielle avec priorité :
+        // Si un capteur avant (0, 1, 2) voit du vide, on s'arrête en priorité.
+
+        // Canal 0 : Gauche
+        if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, 0) == 1) {
+            new_vide = 1;
+        }
+        // Canal 1 : Centre / Avant
+        else if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, 1) == 1) {
+            new_vide = 2;
+        }
+        // Canal 2 : Droite
+        else if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, 2) == 1) {
+            new_vide = 3;
+        }
+        // Canal 3 : Arrière (On ne le lit que si l'avant est "safe")
+        else if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, 3) == 1) {
+            new_vide = 4;
+        }
+
+        if (new_vide != 0) {
+            // PRIORITÉ ABSOLUE : Si on voit du vide, on coupe les moteurs DIRECTEMENT
+            // Cela gagne les 20ms de latence de la Task_Control
+            xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5));
+            Motor_CommandVelLR(&hControl.hMotors, 0.0f, 0.0f);
+            hControl.vide = new_vide;
+            xSemaphoreGive(controlMutex);
+        } else {
+            // On ne remet à zéro hControl.vide QUE si aucun capteur ne voit de vide
+            xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5));
+            hControl.vide = 0;
+            xSemaphoreGive(controlMutex);
+        }
+//
+//        // --- SECTION CRITIQUE : Mise à jour de hControl ---
+//        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
+//        {
+//            hControl.vide = new_vide;
+//            xSemaphoreGive(controlMutex);
+//        }
+
+        // --- DEBUG : Décommente la ligne ci-dessous pour voir les détections en temps réel ---
+        // if(new_vide != 0) printf("[TOF] Detection Vide sur Canal : %d\r\n", new_vide);
     }
-
-
-	if (HAL_TIM_Base_Start_IT(&htim17) != HAL_OK)
-		printf("[TOF] Erreur Timer 17\r\n");
-
-	// Debug : débloque une première fois
-	xSemaphoreGive(sem_TOF);
-
-	for (;;)
-	{
-		if (xSemaphoreTake(sem_TOF, portMAX_DELAY) != pdTRUE)
-		{
-			printf("[TOF] timeout sem_TOF (timer?)\r\n");
-			continue;
-		}
-
-		int new_vide = 0;
-
-		if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_0) == 1) new_vide = 1;
-		if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_1) == 1) new_vide = 2;
-		if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_2) == 1) new_vide = 3;
-		if (new_vide == 0 && data_read_TOF(VL53L0X_DEFAULT_ADDRESS, CHANNEL_3) == 1) new_vide = 4;
-		// Dans taskTOFDetection, juste après les 4 data_read_TOF
-
-		if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
-		{
-			hControl.vide = new_vide;
-			xSemaphoreGive(controlMutex);
-		}
-
-		//printf("[TOF] vide=%d\r\n", new_vide);
-	}
 }
 
 /* ============================= */
@@ -311,12 +334,18 @@ void Task_Motor(void *argument)
 void Task_Control(void *unused)
 {
     printf("[CTRL] start\r\n");
-    const float V_FWD  = 0.15f;
+    const float V_FWD  = 0.12f;
+    const float V_BACK = -0.12f;
     const float V_TURN = 0.12f;
 
-    int escape_ticks = 0;
-    int last_vide = 0;
-    int prev_vide_sent = -1; // Pour n'afficher que lors d'un changement
+    typedef enum { MOVE_FWD, MOVE_BRAKE, MOVE_BACKWARD, MOVE_TURN } state_t;
+    state_t current_state = MOVE_FWD;
+
+    int timer_state = 0;
+    int side_memory = 0;
+    int prev_vide_sent = -1;
+    float current_v_brake = 0.0f;
+    int last_turn_dir = 0;
 
     for (;;)
     {
@@ -328,40 +357,92 @@ void Task_Control(void *unused)
         vide = hControl.vide;
         xSemaphoreGive(controlMutex);
 
-        // --- DEBUG : Affiche seulement si le vide change ---
         if (vide != prev_vide_sent) {
             printf("[CTRL] Etat vide : %d\r\n", vide);
             prev_vide_sent = vide;
         }
 
-        if (vide != 0) {
-            escape_ticks = 20; // On augmente un peu le temps de réaction (1 seconde)
-            last_vide = vide;
-        }
+        switch (current_state)
+        {
+            case MOVE_FWD:
+                if (vide != 0) {
+                    side_memory = vide;
+                    current_state = MOVE_BRAKE;
+                    timer_state = 5; // Freinage très sec (100ms)
+                    current_v_brake = V_FWD;
+                    printf("[CTRL] DANGER %d -> Freinage\r\n", side_memory);
+                } else {
+                    vL = V_FWD; vR = V_FWD;
+                }
+                break;
 
-        if (escape_ticks > 0) {
-            // Force la manoeuvre d'évitement
-            if (last_vide == 1 || last_vide == 2) { // Gauche ou Devant
-                vL = V_TURN;  vR = -V_TURN;
-            } else if (last_vide == 3) { // Droite
-                vL = -V_TURN; vR = V_TURN;
-            } else if (last_vide == 4) { // Arrière (si CHANNEL_3 est l'arrière)
-                vL = V_FWD; vR = V_FWD;
-            }
-            escape_ticks--;
-        }
-        else {
-            vL = V_FWD;
-            vR = V_FWD;
+            case MOVE_BRAKE:
+                timer_state--;
+                current_v_brake -= (V_FWD / 5.0f);
+                if (current_v_brake < 0) current_v_brake = 0;
+                vL = current_v_brake; vR = current_v_brake;
+
+                if (timer_state <= 0) {
+                    current_state = MOVE_BACKWARD;
+                    // --- AUGMENTATION DU RECUL ---
+                    // On recule pendant 1 seconde (50 itérations * 20ms)
+                    // pour bien éloigner les roues du bord avant de pivoter
+                    timer_state = 50;
+                    printf("[CTRL] Recul de securite (1s)\r\n");
+                }
+                break;
+
+            case MOVE_BACKWARD:
+                vL = V_BACK; vR = V_BACK;
+                timer_state--;
+                if (timer_state <= 0) {
+                    current_state = MOVE_TURN;
+                    timer_state = 45; // Rotation d'environ 90-100 degres
+                    printf("[CTRL] Debut Rotation\r\n");
+                }
+                break;
+
+            case MOVE_TURN:
+                // --- SECURITÉ PENDANT LA ROTATION ---
+                // Si pendant qu'on tourne, un autre capteur (ou le même) voit du vide
+                if (vide != 0) {
+                    printf("[CTRL] Vide detecte PENDANT rotation ! Nouvel essai...\r\n");
+                    side_memory = vide;
+                    current_state = MOVE_BACKWARD; // On repart sur un recul
+                    timer_state = 30;              // Recul additionnel
+                    break;
+                }
+
+                if (side_memory == 1) { // Vide Gauche -> Tourne Droite
+                    vL = V_TURN; vR = -V_TURN;
+                    last_turn_dir = 2;
+                }
+                else if (side_memory == 3) { // Vide Droite -> Tourne Gauche
+                    vL = -V_TURN; vR = V_TURN;
+                    last_turn_dir = 1;
+                }
+                else { // Centre ou Autre -> Utilise memoire
+                    if (last_turn_dir == 1) { vL = -V_TURN; vR = V_TURN; }
+                    else { vL = V_TURN; vR = -V_TURN; }
+                }
+
+                timer_state--;
+                if (timer_state <= 0) {
+                    current_state = MOVE_FWD;
+                    side_memory = 0;
+                    printf("[CTRL] Reprise FWD\r\n");
+                }
+                break;
         }
 
         xSemaphoreTake(controlMutex, portMAX_DELAY);
         Motor_CommandVelLR(&hControl.hMotors, vL, vR);
         xSemaphoreGive(controlMutex);
 
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -406,12 +487,26 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	printf(" ------ FELIX READY ------\r\n ");
 	/* ======================== INIT ========================= */
+	/* 1. RESET LOGICIEL I2C (Pour débloquer le bus si gelé) */
+	__HAL_I2C_DISABLE(&hi2c3);
+	HAL_Delay(10);
+	__HAL_I2C_ENABLE(&hi2c3);
+
+	//initialisation lidar
+
+	//intialisation TOFS
+
+	if (TOF_Init() != 1) {
+	    printf("[TOF] FATAL ERROR: Panne materielle I2C\r\n");
+	    // On ne bloque pas tout le robot, mais on met un flag d'erreur
+	    hControl.vide = -1;
+	} else {
+	    printf("[TOF] Initialisation reussie !\r\n");
+	}
 
 	controlMutex = xSemaphoreCreateMutex();
 	sem_TOF  = xSemaphoreCreateBinary();
 	sem_ADXL = xSemaphoreCreateBinary();
-
-	//initialisation lidar
 
 	//Initialisation moteurs
 	hControl.hMotors.m1_forward_channel = TIM_CHANNEL_1;
@@ -452,25 +547,24 @@ int main(void)
 	hControl.hMotors.mode_mot2 = STANDBY_MODE;
 	Motor_SetMode(&hControl.hMotors);
 
-
 	/* ======================== CREATION TACHES ========================== */
-//		if(xTaskCreate(taskTOFDetection,   "TOF",  1024, NULL, 2, NULL) != pdPASS){
-//					  printf("Error creating task detection\r\n");
-//					  Error_Handler();
-//		}
-//		if(xTaskCreate(taskAccelDetection, "ACC",   512, NULL, 1, NULL)!= pdPASS){
-//			  printf("Error creating task accel\r\n");
-//			  Error_Handler();
-//	}
-//
-//		if(xTaskCreate(Task_Control, "CTRL", 1024, NULL, 3, NULL)!= pdPASS){
-//			  printf("Error creating task ctrl\r\n");
-//			  Error_Handler();
-//	}
-//		if(xTaskCreate(Task_Motor, "Task_Motor", 1024, NULL, 4, NULL)!= pdPASS){
-//			  printf("Error creating task motor\r\n");
-//			  Error_Handler();
-//	}
+		if(xTaskCreate(taskTOFDetection,   "TOF",  1024, NULL, 2, NULL) != pdPASS){
+					  printf("Error creating task detection\r\n");
+					  Error_Handler();
+		}
+		if(xTaskCreate(taskAccelDetection, "ACC",   512, NULL, 1, NULL)!= pdPASS){
+			  printf("Error creating task accel\r\n");
+			  Error_Handler();
+	}
+
+		if(xTaskCreate(Task_Control, "CTRL", 1024, NULL, 3, NULL)!= pdPASS){
+			  printf("Error creating task ctrl\r\n");
+			  Error_Handler();
+	}
+		if(xTaskCreate(Task_Motor, "Task_Motor", 1024, NULL, 4, NULL)!= pdPASS){
+			  printf("Error creating task motor\r\n");
+			  Error_Handler();
+	}
 
 
 	vTaskStartScheduler();

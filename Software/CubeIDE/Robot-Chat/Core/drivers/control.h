@@ -17,6 +17,8 @@
 #define CTRL_PERIOD_MS  10
 #define CTRL_DT         0.01f   // 10 ms
 
+
+
 //Controle central FREERTOS
 typedef struct {
 	h_Motor_t hMotors;

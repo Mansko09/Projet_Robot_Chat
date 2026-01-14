@@ -61,7 +61,6 @@ void configure_TOF(uint8_t addr){
 }
 
 
-
 //int TOF_Init(){
 //    VL53L0X_Error status;
 //	dev.I2cHandle = &hi2c3;
@@ -127,32 +126,68 @@ int TOF_Init() {
     VL53L0X_Error status;
     uint8_t channels[4] = {CHANNEL_0, CHANNEL_1, CHANNEL_2, CHANNEL_3};
 
+    printf("[TOF] --- Debut de l'initialisation sequencelle ---\r\n");
+
     for (int i = 0; i < 4; i++) {
-        // Configuration de l'instance i
-        dev_list[i].I2cHandle = &hi2c3;
-        dev_list[i].I2cDevAddr = (uint8_t)(VL53L0X_DEFAULT_ADDRESS << 1);
-        dev_list[i].comms_type = 1;
-        dev_list[i].comms_speed_khz = 400;
+    	printf("[TOF] Configuration Capteur %d (Mux Channel: 0x%02X)...\r\n", i, channels[i]);
 
-        // Sélection physique via le MUX
-        i2c_mux_select_multi(&mux, channels[i]);
-        HAL_Delay(10); // Laisse le temps au bus de se stabiliser
+    	    // 1. FERMER TOUS LES CANAUX d'abord pour éviter les collisions d'adresse 0x52
+    	    i2c_mux_select_multi(&mux, 0);
+    	    HAL_Delay(5);
 
-        // Initialisation spécifique à CE capteur
-        status = VL53L0X_DataInit(&dev_list[i]);
-        if (status != VL53L0X_ERROR_NONE) return 0;
+    	    // 2. OUVRIR LE CANAL CIBLE
+    	    i2c_mux_select_multi(&mux, channels[i]);
+    	    HAL_Delay(15); // Laisser le bus se stabiliser physiquement
 
+    	    // 3. INITIALISATION
+    	    dev_list[i].I2cHandle = &hi2c3;
+    	    dev_list[i].I2cDevAddr = (uint8_t)(VL53L0X_DEFAULT_ADDRESS << 1);
+    	    dev_list[i].comms_type = 1;
+    	    dev_list[i].comms_speed_khz = 400;
+
+    	    printf("[TOF]  -> DataInit %d... ", i);
+    	    status = VL53L0X_DataInit(&dev_list[i]);
+    	    if (status != VL53L0X_ERROR_NONE) {
+    	        // TENTATIVE DE RECOUVREMENT : On réessaie une fois après un délai
+    	    	HAL_Delay(10);
+    	        status = VL53L0X_DataInit(&dev_list[i]);
+    	        if (status != VL53L0X_ERROR_NONE) {
+    	            printf("ECHEC PERSISTANT (Code: %d)\r\n", status);
+    	            return 0;
+    	        }
+    	    }
+    	    printf("OK\r\n");
+
+        // 3. StaticInit : Prepare le capteur (chargement du firmware interne)
+        printf("[TOF]  -> StaticInit %d... ", i);
         status = VL53L0X_StaticInit(&dev_list[i]);
-        if (status != VL53L0X_ERROR_NONE) return 0;
+        if (status != VL53L0X_ERROR_NONE) {
+            printf("ECHEC (Code: %d)\r\n", status);
+            return 0;
+        }
+        printf("OK\r\n");
 
-        // Configuration du mode (Continuous)
-        VL53L0X_SetDeviceMode(&dev_list[i], VL53L0X_DEVICEMODE_CONTINUOUS_RANGING);
-        VL53L0X_StartMeasurement(&dev_list[i]);
+        // 4. Configuration du mode
+        status = VL53L0X_SetDeviceMode(&dev_list[i], VL53L0X_DEVICEMODE_CONTINUOUS_RANGING);
+        if (status != VL53L0X_ERROR_NONE) {
+            printf("[TOF]  -> Erreur SetDeviceMode %d\r\n", i);
+            return 0;
+        }
 
-        printf("[TOF] Capteur %d pret\r\n", i);
+        // 5. Demarrage de la mesure
+        status = VL53L0X_StartMeasurement(&dev_list[i]);
+        if (status != VL53L0X_ERROR_NONE) {
+            printf("[TOF]  -> Erreur StartMeasurement %d\r\n", i);
+            return 0;
+        }
+
+        printf("[TOF] Capteur %d initialise et pret.\r\n", i);
     }
 
-    i2c_mux_select_multi(&mux, 0); // Déconnecter tout après init
+    // Deselection de tous les canaux du MUX pour eviter les conflits futurs
+    i2c_mux_select_multi(&mux, 0);
+    printf("[TOF] --- Initialisation terminee avec succes ---\r\n");
+
     return 1;
 }
 
