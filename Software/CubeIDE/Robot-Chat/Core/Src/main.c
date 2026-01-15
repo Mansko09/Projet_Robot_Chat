@@ -183,26 +183,6 @@ void taskTOFDetection(void *unused)
 		}
 
 		int new_vide = 0;
-
-		// Lecture séquentielle avec priorité :
-		// Si un capteur avant (0, 1, 2) voit du vide, on s'arrête en priorité.
-
-		//		// Canal 0 : Gauche
-		//		if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, 0) == 1) {
-		//			new_vide = 1;
-		//		}
-		//		// Canal 1 : Centre / Avant
-		//		else if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, 1) == 1) {
-		//			new_vide = 2;
-		//		}
-		//		// Canal 2 : Droite
-		//		else if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, 2) == 1) {
-		//			new_vide = 3;
-		//		}
-		//		// Canal 3 : Arrière (On ne le lit que si l'avant est "safe")
-		//		else if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, 3) == 1) {
-		//			new_vide = 4;
-		//		}
 		// Canal 0 : Gauche
 		if (data_read_TOF(VL53L0X_DEFAULT_ADDRESS, 0) == 1) {
 			new_vide |= 1;
@@ -223,7 +203,7 @@ void taskTOFDetection(void *unused)
 		if (new_vide != 0) {
 			// PRIORITÉ ABSOLUE : Si on voit du vide, on coupe les moteurs DIRECTEMENT
 			// Cela gagne les 20ms de latence de la Task_Control
-			Motor_CommandVelLR(&hControl.hMotors, -0.1f, -0.1f); // Petite pichenette arrière parce que sinon il prend trop de temps à s'arrêter
+			//Motor_CommandVelLR(&hControl.hMotors, -0.1f, -0.1f); // Petite pichenette arrière parce que sinon il prend trop de temps à s'arrêter
 			hControl.vide = new_vide;
 		}
 		else {
@@ -250,7 +230,7 @@ void Task_Motor(void *argument)
 		hControl.odom=odom_local;
 		//printf("Position : x=%f,y=%f, theta=%f degres \r\n",hControl.odom.x,hControl.odom.y, hControl.odom.theta * 180.0f / M_PI);
 		Motor_UpdateSpeed(&hControl.hMotors);
-		vTaskDelay(pdMS_TO_TICKS(20));
+		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }
 
@@ -259,35 +239,26 @@ void Task_Motor(void *argument)
 void Task_Control(void *unused)
 {
 	printf("[CTRL] start\r\n");
-
 	// Vitesses augmentées
-	const float V_FWD  = 0.16f;
+	const float V_FWD  = 0.18f;
 	const float V_BACK = -0.14f;
 	const float V_TURN = 0.14f;
-
 	typedef enum { MOVE_FWD, MOVE_BRAKE, MOVE_BACKWARD, MOVE_TURN } state_t;
 	state_t current_state = MOVE_FWD;
-
 	int robot_active = 0;    // Le robot commence arrêté
 	int last_acc_val = 0;    // Pour détecter le changement (front montant) sur AccData
-
 	int timer_state = 0;
 	int side_memory = 0;
 	int last_turn_dir = 0;
-		int prev_vide_sent = -1;
-		float current_v_brake = 0.0f;
-
 	for (;;)
 	{
 		int vide;
 		int current_acc;
 		float vL = 0.0f;
 		float vR = 0.0f;
-
 		//lecture données
 		vide = hControl.vide;
 		current_acc = hControl.AccData; // Supposons que AccData passe à 1 lors d'un choc
-
 		// --- LOGIQUE START/STOP (ACCÉLÉRO) ---
 		// Détection d'un front montant sur l'accéléromètre (le "tap")
 		if (current_acc == 1 && last_acc_val == 0) {
@@ -310,27 +281,28 @@ void Task_Control(void *unused)
 					side_memory = vide;
 					current_state = MOVE_BRAKE;
 					timer_state = 1; // Freinage immédiat
-					current_v_brake = V_FWD;
 					printf("[CTRL] DANGER (%d) -> STOP\r\n", vide);
 				} else {
 					vL = V_FWD; vR = V_FWD;
 				}
 				break;
-
 			case MOVE_BRAKE:
-				vL = 0.0f; vR = 0.0f; // On coupe net
-				timer_state--;
-				if (timer_state <= 0) {
-					current_state = MOVE_BACKWARD;
-					timer_state = 60; // Recul plus court (1.2s) mais plus rapide
-					printf("[CTRL] Recul rapide\r\n");
-				}
-				break;
+			    // Envoie juste une commande de vitesse nulle.
+			    vL = 0.0f;
+			    vR = 0.0f;
 
+			    timer_state--;
+			    if (timer_state <= 0) {
+			        current_state = MOVE_BACKWARD;
+			        timer_state = 60;
+			        printf("[CTRL] Debut Recul 1.2s\r\n");
+			    }
+			    break;
 			case MOVE_BACKWARD:
 				if (vide & 8) { // Sécurité Arrière
 					vL = 0.0f; vR = 0.0f;
 					current_state = MOVE_TURN;
+					printf("[CTRL] DANGER (%d) -> STOP\r\n", vide);
 					timer_state = 30; // Rotation plus rapide
 				} else {
 					vL = V_BACK; vR = V_BACK;
@@ -341,7 +313,6 @@ void Task_Control(void *unused)
 					}
 				}
 				break;
-
 			case MOVE_TURN:
 				// Si vide détecté pendant rotation, on repart en arrière
 				if (((vide & 1) || (vide & 2) || (vide & 4)) && ((vide & 8) == 0)) {
@@ -372,7 +343,6 @@ void Task_Control(void *unused)
 			// Robot inactif : moteurs à l'arrêt
 			vL = 0.0f; vR = 0.0f;
 		}
-
 		// --- ENVOI COMMANDES ---
 		Motor_CommandVelLR(&hControl.hMotors, vL, vR);
 		vTaskDelay(pdMS_TO_TICKS(20));
@@ -448,6 +418,9 @@ int main(void)
 	hControl.hMotors.m2_forward_channel = TIM_CHANNEL_4; //J'ai échangé 3 et 4 pour que quand on veuille être en mode fwd, les deux roues sont dans le mm sens
 	hControl.hMotors.m2_reverse_channel = TIM_CHANNEL_3;
 	Motor_Init(&hControl.hMotors, &htim1);
+
+	hControl.hMotors.speed_ramp1 = 1500; // 3200 / 1500 => ~2 itérations pour l'arrêt
+	hControl.hMotors.speed_ramp2 = 1500;
 
 	//initialisation encodeurs - odométrie
 	ControlData_Init();
