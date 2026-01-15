@@ -1,2 +1,0 @@
-../Core/drivers/odometry.c:11:6:Odom_Init	16	static
-../Core/drivers/odometry.c:18:6:Odom_Update	56	static

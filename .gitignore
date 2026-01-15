@@ -1,0 +1,15 @@
+
+# --- CubeIDE / Eclipse generated ---
+Software/CubeIDE/.metadata/
+Software/CubeIDE/Robot-Chat/Debug/
+Software/CubeIDE/Robot-Chat/.settings/
+**/*.o
+**/*.d
+**/*.su
+**/*.cyclo
+**/*.elf
+**/*.map
+**/*.list
+**/*.mk
+**/makefile
+**/sources.mk
