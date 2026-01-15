@@ -1,0 +1,15 @@
+
+# --- CubeIDE / Eclipse generated ---
+Software/CubeIDE/.metadata/
+**/Debug/
+**/*.log
+**/*.pdom
+**/*.mk
+**/makefile
+**/sources.mk
+
+# --- Hardware tool backups (KiCad etc.) ---
+Hardware/**/PCB_robot_chat-backups/
+
+# --- Local backups ---
+backup_core/
