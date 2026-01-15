@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
-#include "control.h"
+#include "../drivers/control.h"
 #include "semphr.h"
 
 /* USER CODE END Includes */
@@ -73,7 +73,8 @@ PID_t pid_right;
 
 h_control_t hControl;
 //FREERTOS
-SemaphoreHandle_t sem_Control; //semaphore créé pour que dès qu'une tâche a nouvelle information, elle le donne à la tache Control
+SemaphoreHandle_t sem_TimerTOF;
+SemaphoreHandle_t sem_ADXL;
 
 //task handles
 TaskHandle_t xTaskControlHandle = NULL;
@@ -137,7 +138,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		printf("x : %d, y : %d, z : %d\r\n",(int)acc[0],(int)acc[1],(int)acc[2]);
 		ADXL_disableSingleTap();
 		BaseType_t higher_priority_task_woken = pdFALSE;
-		xSemaphoreGiveFromISR(sem_Control, &higher_priority_task_woken);
+		xSemaphoreGiveFromISR(sem_ADXL, &higher_priority_task_woken);
 		portYIELD_FROM_ISR(higher_priority_task_woken);
 	}
 }
@@ -155,20 +156,9 @@ void taskAccelDetection(void * unused){
 
 	for (;;){
 		ADXL_enableSingleTap(INT2, mesured_axes,duration_choc, threshold_choc);
-		if (xSemaphoreTake(sem_Control,portMAX_DELAY) == pdTRUE)
-		{
-			hControl.AccData = 1;
-			xSemaphoreGive(sem_Control);
-		}
-
-		vTaskDelay(pdMS_TO_TICKS(200));
-
-		if (xSemaphoreTake(sem_Control, portMAX_DELAY) == pdTRUE)
-		{
-			hControl.AccData = 0;
-			xSemaphoreGive(sem_Control);
-		}
-		printf("Choc \r\n");
+		xSemaphoreTake(sem_ADXL,portMAX_DELAY);
+		hControl.AccData=!hControl.AccData;
+		//printf("Choc \r\n");
 		vTaskDelay(500);
 	}
 }
@@ -183,16 +173,12 @@ void taskTOFDetection(void *unused)
 	// Le démarrage du timer ici est correct car TOF_Init est déjà fait
 	if (HAL_TIM_Base_Start_IT(&htim17) != HAL_OK)
 		printf("[TOF] Erreur Timer 17\r\n");
-
-	// Libération initiale au cas où le sémaphore est bloqué
-	xSemaphoreGive(sem_Control);
-
 	for (;;)
 	{
 		// On attend le top du Timer 17 (20ms)
-		if (xSemaphoreTake(sem_Control, portMAX_DELAY) != pdTRUE)
+		if (xSemaphoreTake(sem_TimerTOF, portMAX_DELAY) != pdTRUE)
 		{
-			printf("[TOF] timeout sem_Control\r\n");
+			printf("[TOF] timeout sem_TimerTOF\r\n");
 			continue;
 		}
 
@@ -237,22 +223,13 @@ void taskTOFDetection(void *unused)
 		if (new_vide != 0) {
 			// PRIORITÉ ABSOLUE : Si on voit du vide, on coupe les moteurs DIRECTEMENT
 			// Cela gagne les 20ms de latence de la Task_Control
-			xSemaphoreTake(sem_Control,portMAX_DELAY);
+			Motor_CommandVelLR(&hControl.hMotors, -0.1f, -0.1f); // Petite pichenette arrière parce que sinon il prend trop de temps à s'arrêter
 			hControl.vide = new_vide;
-			xSemaphoreGive(sem_Control);
-		} else {
-			// On ne remet à zéro hControl.vide QUE si aucun capteur ne voit de vide
-			xSemaphoreTake(sem_Control,portMAX_DELAY);
-			hControl.vide = 0;
-			xSemaphoreGive(sem_Control);
 		}
-		//
-		//        // --- SECTION CRITIQUE : Mise à jour de hControl ---
-		//        if (xSemaphoreTake(controlMutex, pdMS_TO_TICKS(5)) == pdTRUE)
-		//        {
-		//            hControl.vide = new_vide;
-		//            xSemaphoreGive(controlMutex);
-		//        }
+		else {
+			// On ne remet à zéro hControl.vide QUE si aucun capteur ne voit de vide
+			hControl.vide = 0;
+		}
 
 		// --- DEBUG : Décommente la ligne ci-dessous pour voir les détections en temps réel ---
 		// if(new_vide != 0) printf("[TOF] Detection Vide sur Canal : %d\r\n", new_vide);
@@ -265,161 +242,142 @@ void taskTOFDetection(void *unused)
 void Task_Motor(void *argument)
 {
 	Odom_t odom_local;
-	xSemaphoreTake(sem_Control,portMAX_DELAY);
 	odom_local=hControl.odom;
-	xSemaphoreGive(sem_Control);
 	for(;;)
 	{
 		Encodeur_Read(&enc);//lecture encodeurs
 		Odom_Update(&odom_local,&enc,&odom_params);//mise à jour odométrie
-		xSemaphoreTake(sem_Control,portMAX_DELAY);//copie dans la structure partagée
 		hControl.odom=odom_local;
 		//printf("Position : x=%f,y=%f, theta=%f degres \r\n",hControl.odom.x,hControl.odom.y, hControl.odom.theta * 180.0f / M_PI);
 		Motor_UpdateSpeed(&hControl.hMotors);
-		xSemaphoreGive(sem_Control);
 		vTaskDelay(pdMS_TO_TICKS(20));
 	}
 }
+
 
 
 void Task_Control(void *unused)
 {
 	printf("[CTRL] start\r\n");
 
-	const float V_FWD = 0.12f;
-	const float V_BACK = -0.12f;
-	const float V_TURN = 0.12f;
+	// Vitesses augmentées
+	const float V_FWD  = 0.16f;
+	const float V_BACK = -0.14f;
+	const float V_TURN = 0.14f;
 
 	typedef enum { MOVE_FWD, MOVE_BRAKE, MOVE_BACKWARD, MOVE_TURN } state_t;
 	state_t current_state = MOVE_FWD;
 
+	int robot_active = 0;    // Le robot commence arrêté
+	int last_acc_val = 0;    // Pour détecter le changement (front montant) sur AccData
+
 	int timer_state = 0;
 	int side_memory = 0;
-	int prev_vide_sent = -1;
-	float current_v_brake = 0.0f;
 	int last_turn_dir = 0;
+		int prev_vide_sent = -1;
+		float current_v_brake = 0.0f;
 
 	for (;;)
 	{
 		int vide;
+		int current_acc;
 		float vL = 0.0f;
 		float vR = 0.0f;
 
-		xSemaphoreTake(sem_Control, portMAX_DELAY);
+		//lecture données
 		vide = hControl.vide;
-		xSemaphoreGive(sem_Control);
+		current_acc = hControl.AccData; // Supposons que AccData passe à 1 lors d'un choc
 
-		if (vide != prev_vide_sent) {
-			printf("[CTRL] Etat vide : %d\r\n", vide);
-			prev_vide_sent = vide;
+		// --- LOGIQUE START/STOP (ACCÉLÉRO) ---
+		// Détection d'un front montant sur l'accéléromètre (le "tap")
+		if (current_acc == 1 && last_acc_val == 0) {
+			robot_active = !robot_active; // Inverse l'état (Toggle)
+			printf("[CTRL] ACC CHOC ! Robot %s\n", robot_active ? "START" : "STOP");
+
+			if (!robot_active) {
+				current_state = MOVE_BRAKE; // On force l'arrêt si on stoppe
+				timer_state = 1;
+			}
 		}
+		last_acc_val = current_acc;
 
-		switch (current_state)
-		{
-		case MOVE_FWD:
-			// On ne déclenche la manoeuvre que si on est en marche avant "normale"
-			if ((vide & 1) || (vide & 2) || (vide & 4)) {
-				side_memory = vide;
-				current_state = MOVE_BRAKE;
-				timer_state = 2;
-				current_v_brake = V_FWD;
-				Motor_CommandVelLR(&hControl.hMotors, 0.0f, 0.0f);
-				printf("[CTRL] DANGER AVANT (%d) -> Arret progressif\r\n", vide);
-			}
-			//			else if (vide == 4) {
-			//				side_memory = vide;
-			//				current_state = MOVE_BRAKE;
-			//				timer_state = 2;
-			//				current_v_brake = V_FWD;
-			//			}
-			else {
-				vL = V_FWD; vR = V_FWD;
-			}
-			break;
-
-		case MOVE_BRAKE:
-			// PENDANT LE FREINAGE : On ignore les nouvelles détections pour ne pas boucler ici
-			timer_state--;
-			current_v_brake -= (V_FWD / 2.0f);
-			if (current_v_brake < 0) current_v_brake = 0;
-			vL = current_v_brake; vR = current_v_brake;
-
-			if (timer_state <= 0) {
-				current_state = MOVE_BACKWARD;
-				timer_state = 150; // 3 secondes (150 * 20ms)
-				printf("[CTRL] Debut Recul 3s\r\n");
-			}
-			break;
-
-		case MOVE_BACKWARD:
-			// --- SÉCURITÉ ARRIÈRE ACTIVE ---
-			if (vide & 8) {
-				// OH ! Le robot allait reculer dans le vide.
-				printf("[CTRL] ALERTE : Vide arriere détecté ! Arrêt du recul.\r\n");
-
-				// On force l'arrêt des moteurs
-				vL = 0.0f;
-				vR = 0.0f;
-
-				// On passe directement à la rotation pour changer de zone
-				current_state = MOVE_TURN;
-				timer_state = 45;
-			}
-			else {
-				// Sinon, on recule normalement
-				vL = V_BACK;
-				vR = V_BACK;
-				timer_state--;
-
-				if (timer_state <= 0) {
-					current_state = MOVE_TURN;
-					timer_state = 45;
-					printf("[CTRL] Fin recul 3s -> Debut Rotation\r\n");
+		// --- MACHINE À ÉTATS ---
+		if (robot_active) {
+			switch (current_state)
+			{
+			case MOVE_FWD:
+				if ((vide & 1) || (vide & 2) || (vide & 4)) {
+					side_memory = vide;
+					current_state = MOVE_BRAKE;
+					timer_state = 1; // Freinage immédiat
+					current_v_brake = V_FWD;
+					printf("[CTRL] DANGER (%d) -> STOP\r\n", vide);
+				} else {
+					vL = V_FWD; vR = V_FWD;
 				}
-			}
-			break;
+				break;
 
-		case MOVE_TURN:
-			// Si on voit du vide pendant qu'on tourne (danger immédiat sous une roue)
-			if (((vide & 1) || (vide & 2) || (vide & 4)) && ((vide & 8) == 0)) {
-				printf("[CTRL] Nouveau vide detectE pendant rotation !\r\n");
-				side_memory = vide;
-				current_state = MOVE_BRAKE;
-				timer_state = 2;
+			case MOVE_BRAKE:
+				vL = 0.0f; vR = 0.0f; // On coupe net
+				timer_state--;
+				if (timer_state <= 0) {
+					current_state = MOVE_BACKWARD;
+					timer_state = 60; // Recul plus court (1.2s) mais plus rapide
+					printf("[CTRL] Recul rapide\r\n");
+				}
+				break;
+
+			case MOVE_BACKWARD:
+				if (vide & 8) { // Sécurité Arrière
+					vL = 0.0f; vR = 0.0f;
+					current_state = MOVE_TURN;
+					timer_state = 30; // Rotation plus rapide
+				} else {
+					vL = V_BACK; vR = V_BACK;
+					timer_state--;
+					if (timer_state <= 0) {
+						current_state = MOVE_TURN;
+						timer_state = 35; // Environ 90° à 0.15f
+					}
+				}
+				break;
+
+			case MOVE_TURN:
+				// Si vide détecté pendant rotation, on repart en arrière
+				if (((vide & 1) || (vide & 2) || (vide & 4)) && ((vide & 8) == 0)) {
+					current_state = MOVE_BRAKE;
+					timer_state = 1;
+					break;
+				}
+
+				if (side_memory & 1 || side_memory & 2) { // Gauche ou Centre -> Droite
+					vL = V_TURN; vR = -V_TURN;
+					last_turn_dir = 2;
+				} else if (side_memory & 4) { // Droite -> Gauche
+					vL = -V_TURN; vR = V_TURN;
+					last_turn_dir = 1;
+				} else {
+					if (last_turn_dir == 1) { vL = -V_TURN; vR = V_TURN; }
+					else { vL = V_TURN; vR = -V_TURN; }
+				}
+
+				timer_state--;
+				if (timer_state <= 0) {
+					current_state = MOVE_FWD;
+					side_memory = 0;
+				}
 				break;
 			}
-
-			// Choix de direction simplifié selon ta demande précédente :
-			// Gauche (1) ou Centre (2) -> Droite | Droite (3) -> Gauche
-			if (side_memory == 1 || side_memory == 2) {
-				vL = V_TURN; vR = -V_TURN;
-				last_turn_dir = 2;
-			}
-			else if (side_memory == 3) {
-				vL = -V_TURN; vR = V_TURN;
-				last_turn_dir = 1;
-			}
-			else {
-				if (last_turn_dir == 1) { vL = -V_TURN; vR = V_TURN; }
-				else { vL = V_TURN; vR = -V_TURN; }
-			}
-
-			timer_state--;
-			if (timer_state <= 0) {
-				current_state = MOVE_FWD;
-				side_memory = 0;
-				printf("[CTRL] Reprise FWD\r\n");
-			}
-			break;
+		} else {
+			// Robot inactif : moteurs à l'arrêt
+			vL = 0.0f; vR = 0.0f;
 		}
 
-		xSemaphoreTake(sem_Control, portMAX_DELAY);
+		// --- ENVOI COMMANDES ---
 		Motor_CommandVelLR(&hControl.hMotors, vL, vR);
-		xSemaphoreGive(sem_Control);
 		vTaskDelay(pdMS_TO_TICKS(20));
 	}
 }
-
 /* USER CODE END 0 */
 
 /**
@@ -481,7 +439,8 @@ int main(void)
 		printf("[TOF] Initialisation reussie !\r\n");
 	}
 
-	sem_Control=xSemaphoreCreateBinary();
+	sem_TimerTOF = xSemaphoreCreateBinary();
+	sem_ADXL = xSemaphoreCreateBinary();
 
 	//Initialisation moteurs
 	hControl.hMotors.m1_forward_channel = TIM_CHANNEL_1;
@@ -494,6 +453,7 @@ int main(void)
 	ControlData_Init();
 	Encodeur_Init();
 	//initialisation accelero
+	hControl.AccData=0;
 	ADXL_Init(&adxl);
 	ADXL_SetOffset(2,0,-63);
 	ADXL_Measure(ON);
@@ -586,8 +546,8 @@ void SystemClock_Config(void)
 	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
 	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-	RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
-	RCC_OscInitStruct.PLL.PLLN = 8;
+	RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV2;
+	RCC_OscInitStruct.PLL.PLLN = 16;
 	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
 	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
 	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
@@ -661,10 +621,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	/* USER CODE BEGIN Callback 1 */
 	else if (htim->Instance == TIM17)
 	{
-		if (sem_Control != NULL)
+		if (sem_TimerTOF != NULL)
 		{
 			BaseType_t hpw = pdFALSE;
-			xSemaphoreGiveFromISR(sem_Control, &hpw);
+			xSemaphoreGiveFromISR(sem_TimerTOF, &hpw);
 			portYIELD_FROM_ISR(hpw);
 		}
 	}
