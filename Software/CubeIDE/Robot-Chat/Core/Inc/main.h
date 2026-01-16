@@ -61,6 +61,10 @@ void Error_Handler(void);
 #define Enc2A_GPIO_Port GPIOA
 #define Enc2B_Pin GPIO_PIN_1
 #define Enc2B_GPIO_Port GPIOA
+#define LED_ROUGE_Pin GPIO_PIN_4
+#define LED_ROUGE_GPIO_Port GPIOA
+#define LED_VERTE_Pin GPIO_PIN_5
+#define LED_VERTE_GPIO_Port GPIOA
 #define M1_FWD_Pin GPIO_PIN_8
 #define M1_FWD_GPIO_Port GPIOA
 #define M1_REV_Pin GPIO_PIN_9

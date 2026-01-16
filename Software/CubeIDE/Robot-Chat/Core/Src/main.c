@@ -159,7 +159,7 @@ void taskAccelDetection(void * unused){
 		xSemaphoreTake(sem_ADXL,portMAX_DELAY);
 		hControl.AccData=!hControl.AccData;
 		//printf("Choc \r\n");
-		vTaskDelay(500);
+		vTaskDelay(50);
 	}
 }
 
@@ -203,7 +203,7 @@ void taskTOFDetection(void *unused)
 		if (new_vide != 0) {
 			// PRIORITÉ ABSOLUE : Si on voit du vide, on coupe les moteurs DIRECTEMENT
 			// Cela gagne les 20ms de latence de la Task_Control
-			//Motor_CommandVelLR(&hControl.hMotors, -0.1f, -0.1f); // Petite pichenette arrière parce que sinon il prend trop de temps à s'arrêter
+			Motor_CommandVelLR(&hControl.hMotors, -0.1f, -0.1f); // Petite pichenette arrière parce que sinon il prend trop de temps à s'arrêter
 			hControl.vide = new_vide;
 		}
 		else {
@@ -239,6 +239,10 @@ void Task_Motor(void *argument)
 void Task_Control(void *unused)
 {
 	printf("[CTRL] start\r\n");
+	// --- INITIALISATION DES LEDS ---
+	// Au démarrage, le robot est inactif (Rouge allumé, Vert éteint)
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);   // Rouge ON
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); // Vert OFF
 	// Vitesses augmentées
 	const float V_FWD  = 0.18f;
 	const float V_BACK = -0.14f;
@@ -260,18 +264,26 @@ void Task_Control(void *unused)
 		vide = hControl.vide;
 		current_acc = hControl.AccData; // Supposons que AccData passe à 1 lors d'un choc
 		// --- LOGIQUE START/STOP (ACCÉLÉRO) ---
-		// Détection d'un front montant sur l'accéléromètre (le "tap")
 		if (current_acc == 1 && last_acc_val == 0) {
-			robot_active = !robot_active; // Inverse l'état (Toggle)
+			robot_active = !robot_active;
 			printf("[CTRL] ACC CHOC ! Robot %s\n", robot_active ? "START" : "STOP");
 
-			if (!robot_active) {
-				current_state = MOVE_BRAKE; // On force l'arrêt si on stoppe
+			if (robot_active) {
+				// PASSAGE EN MARCHE : Vert ON, Rouge OFF
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);   // Vert
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET); // Rouge
+
+				current_state = MOVE_FWD;
+			} else {
+				// PASSAGE EN ARRÊT : Rouge ON, Vert OFF
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);   // Rouge
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); // Vert
+
+				current_state = MOVE_BRAKE;
 				timer_state = 1;
 			}
 		}
 		last_acc_val = current_acc;
-
 		// --- MACHINE À ÉTATS ---
 		if (robot_active) {
 			switch (current_state)
@@ -287,17 +299,17 @@ void Task_Control(void *unused)
 				}
 				break;
 			case MOVE_BRAKE:
-			    // Envoie juste une commande de vitesse nulle.
-			    vL = 0.0f;
-			    vR = 0.0f;
+				// Envoie juste une commande de vitesse nulle.
+				vL = 0.0f;
+				vR = 0.0f;
 
-			    timer_state--;
-			    if (timer_state <= 0) {
-			        current_state = MOVE_BACKWARD;
-			        timer_state = 60;
-			        printf("[CTRL] Debut Recul 1.2s\r\n");
-			    }
-			    break;
+				timer_state--;
+				if (timer_state <= 0) {
+					current_state = MOVE_BACKWARD;
+					timer_state = 60;
+					printf("[CTRL] Debut Recul 1.2s\r\n");
+				}
+				break;
 			case MOVE_BACKWARD:
 				if (vide & 8) { // Sécurité Arrière
 					vL = 0.0f; vR = 0.0f;
@@ -454,6 +466,7 @@ int main(void)
 	hControl.hMotors.mode_mot1 = STANDBY_MODE;
 	hControl.hMotors.mode_mot2 = STANDBY_MODE;
 	Motor_SetMode(&hControl.hMotors);
+
 
 	/* ======================== CREATION TACHES ========================== */
 	if(xTaskCreate(taskTOFDetection,   "TOF",  1024, NULL, 2, NULL) != pdPASS){

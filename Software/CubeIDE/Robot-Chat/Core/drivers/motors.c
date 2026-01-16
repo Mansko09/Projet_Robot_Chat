@@ -17,8 +17,8 @@ void Motor_Init(h_Motor_t *hMotors, TIM_HandleTypeDef *htim)
 	hMotors->htim_pwm = htim;
 
 	// Ramp settings
-	hMotors->speed_ramp1 = 20;
-	hMotors->speed_ramp2 = 20;
+	hMotors->speed_ramp1 = 1500;// 3200 / 1500 => ~2 itérations pour l'arrêt
+	hMotors->speed_ramp2 = 1500;
 
 	hMotors->current_speed1 = 0.0f;
 	hMotors->current_speed2 = 0.0f;
