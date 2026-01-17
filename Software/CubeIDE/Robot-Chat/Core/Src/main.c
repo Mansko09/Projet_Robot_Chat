@@ -135,7 +135,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		ADXL_IntProto();
 		int16_t acc[3] = {0,0,0};
 		ADXL_getAccel(acc ,OUTPUT_SIGNED);
-		printf("x : %d, y : %d, z : %d\r\n",(int)acc[0],(int)acc[1],(int)acc[2]);
+		//printf("x : %d, y : %d, z : %d\r\n",(int)acc[0],(int)acc[1],(int)acc[2]);
 		ADXL_disableSingleTap();
 		BaseType_t higher_priority_task_woken = pdFALSE;
 		xSemaphoreGiveFromISR(sem_ADXL, &higher_priority_task_woken);
@@ -151,7 +151,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void taskAccelDetection(void * unused){
 	printf("[ACC] Start \r\n");
 	uint8_t mesured_axes = X_axes | Y_axes;
-	uint8_t duration_choc = 0x1B;
+	uint8_t duration_choc =0x1B;
 	uint8_t threshold_choc = 0x21;
 
 	for (;;){
@@ -203,7 +203,7 @@ void taskTOFDetection(void *unused)
 		if (new_vide != 0) {
 			// PRIORITÉ ABSOLUE : Si on voit du vide, on coupe les moteurs DIRECTEMENT
 			// Cela gagne les 20ms de latence de la Task_Control
-			Motor_CommandVelLR(&hControl.hMotors, -0.1f, -0.1f); // Petite pichenette arrière parce que sinon il prend trop de temps à s'arrêter
+			//Motor_CommandVelLR(&hControl.hMotors, -0.1f, -0.1f); // Petite pichenette arrière parce que sinon il prend trop de temps à s'arrêter
 			hControl.vide = new_vide;
 		}
 		else {
@@ -300,8 +300,8 @@ void Task_Control(void *unused)
 				break;
 			case MOVE_BRAKE:
 				// Envoie juste une commande de vitesse nulle.
-				vL = 0.0f;
-				vR = 0.0f;
+				vL = -0.05f;
+				vR = -0.05f;
 
 				timer_state--;
 				if (timer_state <= 0) {
@@ -352,8 +352,11 @@ void Task_Control(void *unused)
 				break;
 			}
 		} else {
-			// Robot inactif : moteurs à l'arrêt
-			vL = 0.0f; vR = 0.0f;
+		    // Robot inactif : On coupe tout pour le silence et la batterie
+		    vL = 0.0f; vR = 0.0f;
+		    hControl.hMotors.mode_mot1 = STANDBY_MODE;
+		    hControl.hMotors.mode_mot2 = STANDBY_MODE;
+		    Motor_SetMode(&hControl.hMotors);
 		}
 		// --- ENVOI COMMANDES ---
 		Motor_CommandVelLR(&hControl.hMotors, vL, vR);
@@ -431,8 +434,8 @@ int main(void)
 	hControl.hMotors.m2_reverse_channel = TIM_CHANNEL_3;
 	Motor_Init(&hControl.hMotors, &htim1);
 
-	hControl.hMotors.speed_ramp1 = 1500; // 3200 / 1500 => ~2 itérations pour l'arrêt
-	hControl.hMotors.speed_ramp2 = 1500;
+//	hControl.hMotors.speed_ramp1 = 1500; // 3200 / 1500 => ~2 itérations pour l'arrêt
+//	hControl.hMotors.speed_ramp2 = 1500;
 
 	//initialisation encodeurs - odométrie
 	ControlData_Init();
@@ -459,13 +462,13 @@ int main(void)
 
 	/* ======================== CONFIGURATION INITIALE MOUVEMENT ========================= */
 
-	hControl.hMotors.target_speed1 = 0;
-	hControl.hMotors.target_speed2 = 0;
-	hControl.hMotors.current_speed1 = 0;
-	hControl.hMotors.current_speed2 = 0;
-	hControl.hMotors.mode_mot1 = STANDBY_MODE;
-	hControl.hMotors.mode_mot2 = STANDBY_MODE;
-	Motor_SetMode(&hControl.hMotors);
+//	hControl.hMotors.target_speed1 = 0;
+//	hControl.hMotors.target_speed2 = 0;
+//	hControl.hMotors.current_speed1 = 0;
+//	hControl.hMotors.current_speed2 = 0;
+//	hControl.hMotors.mode_mot1 = STANDBY_MODE;
+//	hControl.hMotors.mode_mot2 = STANDBY_MODE;
+//	Motor_SetMode(&hControl.hMotors);
 
 
 	/* ======================== CREATION TACHES ========================== */
