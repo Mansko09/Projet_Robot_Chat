@@ -174,7 +174,7 @@ Le robot ne doit jamais tomber, même lorsqu’il exécute d’autres calculs.
 - **Solution** : architecture préemptive avec une priorité plus élevée pour la tâche ToF. En cas de détection de bord, elle interrompt la logique de contrôle pour forcer l’arrêt immédiat.
 
 #### b. Passage du “tout ou rien” aux rampes (inertie)
-- **Problème** : arrêts trop brutaux provoquant glissements ou contraintes mécaniques (robot trop lourd à l'avant).
+- **Problème** : arrêts trop brutaux/lents provoquant des contraintes mécaniques (robot trop lourd à l'avant) ou un arrêt avec une roue en dehors de la table.
 - **Solution** : implémentation de rampes asymétriques dans `Motor_UpdateSpeed` :
   - accélération douce (100 unités) ;
   - freinage très rapide (1000 unités).
