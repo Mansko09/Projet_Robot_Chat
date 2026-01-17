@@ -186,6 +186,12 @@ Ce compromis entre protection mécanique et réactivité a nécessité de nombre
 - **Solution** : FSM rigoureuse avec des conditions de sortie strictes pour chaque état  
   (MOVE_FWD, MOVE_BRAKE, MOVE_BACKWARD, MOVE_TURN), garantissant un comportement déterministe et robuste.
 
+
+
+https://github.com/user-attachments/assets/55dbaec2-2ef9-4583-8b24-4435a5f01540
+
+
+
 ## Conclusion
 
 Ce projet a permis de mettre en pratique l’ensemble de la chaîne de conception d’un système embarqué autonome, depuis le routage d’un PCB jusqu’à la programmation temps réel sous FreeRTOS.  
