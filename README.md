@@ -2,7 +2,12 @@
 
 **ESE – Projet de groupe**
 
-Ce projet consiste à concevoir et réaliser un **robot mobile à deux roues motrices** capable de participer à un jeu de **chat et souris** contre les robots de nos camarades.
+## Introduction
+
+Dans le cadre du cursus ESE, ce projet a pour objectif la conception complète d’un **robot mobile autonome à deux roues motrices**, destiné à participer à un jeu de type **chat et souris** face aux robots des autres groupes. Ce projet a été réalisé par Florian, David, Danilo et Mantou.
+Au-delà de l’aspect ludique, ce projet mobilise des compétences variées en **électronique**, **mécanique** et **logiciel embarqué temps réel**, avec des contraintes fortes de sécurité (anti-chute), de réactivité et de robustesse matérielle.
+
+Le robot, nommé **Félix**, doit être capable de se déplacer de manière autonome, de détecter son environnement, de réagir à des événements physiques (vide, chocs) et d’adapter dynamiquement son comportement.
 
 ---
 
@@ -30,7 +35,7 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
 
 5. **Communication**
 
-   * Liaison **Bluetooth** avec le PC (STM32WB55CEU6)
+   * Liaison **Bluetooth** (STM32WB55CEU6)
 
 6. **Alimentation**
 
@@ -64,7 +69,7 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
 
 ---
 
-## Conception à réaliser
+## Conception réalisée
 
 1. **Électronique**
 
@@ -78,10 +83,15 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
 
 3. **Logiciel embarqué**
 
-   * Programmation STM32 (CubeIDE)
-   * Gestion des rôles (chat/souris)
-   * Contrôle moteurs, capteurs et communication Bluetooth
+   * Contrôle moteurs et capteurs
 
+## Avancement du projet
+
+* [x] Choix des composants et architecture générale
+* [x] Schéma et routage PCB
+* [x] Impression 3D du robot
+* [x] Développement logiciel de base
+* [ ] Intégration LIDAR et logique “chat/souris”
 
 ## Architecture générale 
 
@@ -129,11 +139,54 @@ Nous avons retenu le microcontrôleur **STM32WB55CEU6**, un choix motivé par de
 - **Détection de choc**  
   L’accéléromètre **ADXL343** est configuré en mode *Single Tap*. Un choc mécanique déclenche une interruption matérielle (EXTI) provoquant l’arrêt immédiat du robot et l’allumage de la LED rouge. Un second choc relance le système et active la LED verte.
 
-## Avancement du projet
+## Ce qui fonctionne
 
-* [x] Choix des composants et architecture générale
-* [x] Schéma et routage PCB
-* [x] Impression 3D du robot
-* [x] Développement logiciel de base
-* [ ] Intégration LIDAR et logique “chat/souris”
+- Déplacement fluide à une vitesse donnée du robot
+- Détection de vide par les capteurs **ToF**
+- Détection de choc par l’**accéléromètre**
+- Gestion des LED d’état
+- Changement de comportement en fonction :
+  - de la détection de vide ;
+  - de la détection de choc (Start / Stop)
+ 
+## Ce qui ne fonctionne pas / partiellement
 
+- **Bluetooth** : dysfonctionnement lié à un problème de quartz, empêchant la communication BLE
+- **LIDAR** : matériel fonctionnel, mais logique logicielle incomplète
+- **Asservissement** : implémenté mais non testé
+
+## Challenges techniques rencontrés
+
+### 1. Routage du PCB
+Le premier défi a été le routage de la carte électronique :
+- placement optimal des composants dans un espace réduit ;
+- maintien des condensateurs de découplage au plus près du microcontrôleur ;
+- isolation stricte de l’antenne Bluetooth ;
+- optimisation des plans de masse ;
+- éviter toute structure pouvant agir comme une antenne parasite.
+
+### 2. Programmation du comportement du robot
+Coder le comportement de Félix a été un défi majeur, non pas par la complexité de chaque fonction, mais par la nécessité de synchroniser une **logique** avec des **contraintes physiques réelles**.
+
+#### a. Gestion du temps réel (priorités FreeRTOS)
+Le robot ne doit jamais tomber, même lorsqu’il exécute d’autres calculs.
+- **Problème** : la lecture des ToF via I²C est lente, alors que les moteurs nécessitent des mises à jour très fréquentes.
+- **Solution** : architecture préemptive avec une priorité plus élevée pour la tâche ToF. En cas de détection de bord, elle interrompt la logique de contrôle pour forcer l’arrêt immédiat.
+
+#### b. Passage du “tout ou rien” aux rampes (inertie)
+- **Problème** : arrêts trop brutaux provoquant glissements ou contraintes mécaniques (robot trop lourd à l'avant).
+- **Solution** : implémentation de rampes asymétriques dans `Motor_UpdateSpeed` :
+  - accélération douce (100 unités) ;
+  - freinage très rapide (1000 unités).
+
+Ce compromis entre protection mécanique et réactivité a nécessité de nombreux réglages.
+
+#### c. Machine à États
+- **Problème** : risque de blocage dans des situations critiques (coin de table, détections multiples).
+- **Solution** : FSM rigoureuse avec des conditions de sortie strictes pour chaque état  
+  (MOVE_FWD, MOVE_BRAKE, MOVE_BACKWARD, MOVE_TURN), garantissant un comportement déterministe et robuste.
+
+## Conclusion
+
+Ce projet a permis de mettre en pratique l’ensemble de la chaîne de conception d’un système embarqué autonome, depuis le routage d’un PCB jusqu’à la programmation temps réel sous FreeRTOS.  
+Malgré certaines fonctionnalités incomplètes (Bluetooth, LIDAR), le robot démontre un comportement fiable et sécurisé face aux événements critiques. Les défis rencontrés ont été formateurs et ont mis en évidence l’importance de l’architecture logicielle et des choix matériels en amont dans un système embarqué réel.
