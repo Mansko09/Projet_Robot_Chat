@@ -88,7 +88,9 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
 <img width="851" height="541" alt="image" src="https://github.com/user-attachments/assets/b1c18867-8e34-47c1-b6d0-efc3a15b8947" />
 
 ## Structure du Code
-<img width="805" height="550" alt="image" src="https://github.com/user-attachments/assets/20937b1e-2baa-4d7b-9609-9d910529d608" />
+
+<img width="931" height="437" alt="image" src="https://github.com/user-attachments/assets/beefe881-a0c7-453a-90d6-29a493705993" />
+
 
 ### 1. Cerveau et Communication
 
