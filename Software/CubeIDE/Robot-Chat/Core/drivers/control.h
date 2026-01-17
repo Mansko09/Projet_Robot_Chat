@@ -34,7 +34,7 @@ typedef struct {
     float w_ref;          // commande vitesse angulaire (rad/s)
 
 	int AccData;//pour l'accéléromètre, égal à 0 ou 1 si choc
-	int vide; //variable qui contient 0 (si pas vide), 1, 2, 3 ou 4 qui correspondent au numéro du tof impliqué
+	int vide; //variable qui contient 0 (si pas vide) sinon numéro qui correspond au numéro du tof impliqué
 
 }h_control_t;
 void Control_RunPID(h_control_t *c, float dt,float wheel_base);

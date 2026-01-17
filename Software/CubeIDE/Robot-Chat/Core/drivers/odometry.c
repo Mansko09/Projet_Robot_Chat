@@ -15,6 +15,9 @@ void Odom_Init(Odom_t *odom)
     odom->theta = 0.0f;
 }
 
+/*
+ * calcul de la position du robot grâce aux encodeurs
+ */
 void Odom_Update(Odom_t *odom, const Encodeur_t *enc, const Odom_Params_t *p)
 {
     // Convertir ticks -> distance par roue

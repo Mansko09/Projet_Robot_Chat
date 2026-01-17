@@ -61,67 +61,6 @@ void configure_TOF(uint8_t addr){
 }
 
 
-//int TOF_Init(){
-//    VL53L0X_Error status;
-//	dev.I2cHandle = &hi2c3;
-//	dev.I2cDevAddr = (uint8_t)(VL53L0X_DEFAULT_ADDRESS << 1); // HAL wants 8-bit addr
-//	dev.comms_type = 1;
-//	dev.comms_speed_khz = 400;
-//
-//	i2c_mux_select_multi(&mux,CHANNEL_0);
-//	HAL_Delay(5);
-//	status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
-//	while (status != VL53L0X_ERROR_NONE) {
-//	    printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
-//	    i2c_mux_select_multi(&mux, 0);
-//	    vTaskDelay(50);
-//	    //return 0;
-//	}
-//	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
-//
-//	i2c_mux_select_multi(&mux,CHANNEL_1);
-//	HAL_Delay(5);
-//		status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
-//		while (status != VL53L0X_ERROR_NONE) {
-//		    printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
-//		    i2c_mux_select_multi(&mux, 0);
-//		    vTaskDelay(50);
-//		    //return 0;
-//	}
-//	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
-//
-//	i2c_mux_select_multi(&mux,CHANNEL_2);
-//	HAL_Delay(5);
-//		status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
-//		while (status != VL53L0X_ERROR_NONE) {
-//			printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
-//			i2c_mux_select_multi(&mux, 0);
-//			vTaskDelay(50);
-//			//return 0;
-//	}
-//	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
-//
-//	i2c_mux_select_multi(&mux,CHANNEL_3);
-//	HAL_Delay(5);
-//		status = VL53L0X_GetDeviceInfo(&dev, &DeviceInfo);
-//		while (status != VL53L0X_ERROR_NONE) {
-//		    printf("VL53L0X_GetDeviceInfo failed: %d\r\n", status);
-//		    i2c_mux_select_multi(&mux, 0);
-//		    vTaskDelay(50);
-//		    //return 0;
-//	}
-//	configure_TOF(VL53L0X_DEFAULT_ADDRESS);
-//
-//
-//	printf("ModelID: %s, Name: %s, Type: %s\r\n",
-//	       DeviceInfo.ProductId, DeviceInfo.Name, DeviceInfo.Type);
-//
-//
-//
-//	i2c_mux_select_multi(&mux, 0);
-//	return 1;
-//}
-
 int TOF_Init() {
     VL53L0X_Error status;
     uint8_t channels[4] = {CHANNEL_0, CHANNEL_1, CHANNEL_2, CHANNEL_3};
@@ -137,7 +76,7 @@ int TOF_Init() {
 
     	    // 2. OUVRIR LE CANAL CIBLE
     	    i2c_mux_select_multi(&mux, channels[i]);
-    	    HAL_Delay(15); // Laisser le bus se stabiliser physiquement
+    	    HAL_Delay(15); //on laisse le bus se stabiliser physiquement
 
     	    // 3. INITIALISATION
     	    dev_list[i].I2cHandle = &hi2c3;
@@ -211,21 +150,5 @@ int data_read_TOF(uint8_t addr, int ch_idx) {
     i2c_mux_select_multi(&mux, 0);
     return is_void;
 }
-
-
-//int data_read_TOF(uint8_t addr,int ch){
-//    i2c_mux_select_multi(&mux, ch);
-//    HAL_Delay(2);
-//    int flag = 0;
-//
-//    VL53L0X_GetRangingMeasurementData(&dev, &RangingData);
-//    //printf("Distance = %u mm on channel %d\r\n", RangingData.RangeMilliMeter,ch);
-//    if (RangingData.RangeMilliMeter > 300 || RangingData.RangeStatus != 0 || RangingData.SignalRateRtnMegaCps < (0.5 * 65536)){
-//        //printf("Void detected on channel %d\r\n",ch);
-//        flag = 1;
-//    }
-//    i2c_mux_select_multi(&mux, 0);
-//    return flag;
-//}
 
 

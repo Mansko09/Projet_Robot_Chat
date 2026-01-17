@@ -60,12 +60,10 @@ typedef struct {
 } h_Motor_t;
 
 
-
 // Prototypes
 void Motor_Init(h_Motor_t *hMotors, TIM_HandleTypeDef *htim);
-void Motor_SetMode(h_Motor_t *hMotors);
+void Motor_SetMode(h_Motor_t *hMotors); //
 void Motor_SetSpeed_percent(h_Motor_t *hMotors, float m1_percent, float m2_percent);
-void Motor_Stop(h_Motor_t *hMotors);
 void Motor_UpdateSpeed(h_Motor_t *hMotors);
 void Motor_SetSpeed(h_Motor_t *hMotors, float speed);
 void Motor_CommandVelLR(h_Motor_t *m, float v_left, float v_right);

@@ -10,7 +10,9 @@
 #include <stdio.h>
 
 // ---------------------------------------------------------------------------
-// INIT
+/* INIT : Initialise la structure logicielle,
+ * configure les rampes et démarre physiquement les quatre signaux PWM du timer pour les moteurs.
+ */
 // ---------------------------------------------------------------------------
 void Motor_Init(h_Motor_t *hMotors, TIM_HandleTypeDef *htim)
 {
@@ -38,7 +40,10 @@ void Motor_Init(h_Motor_t *hMotors, TIM_HandleTypeDef *htim)
 }
 
 // ---------------------------------------------------------------------------
-// MOTOR MODE SWITCH
+/* MOTOR MODE SWITCH :
+ * Configure l'état des sorties PWM
+ * (marche avant, arrière, freinage ou roue libre) pour chaque moteur en agissant sur le pont en H.
+ */
 // ---------------------------------------------------------------------------
 void Motor_SetMode(h_Motor_t *hMotors)
 {
@@ -90,6 +95,10 @@ void Motor_SetMode(h_Motor_t *hMotors)
 }
 
 // ---------------------------------------------------------------------------
+/*
+ * Convertit une consigne de vitesse exprimée en pourcentage (0-100%)
+ * en une valeur brute de registre pour le timer (ARR).
+ */
 void Motor_SetSpeed_percent(h_Motor_t *hMotors, float m1_percent, float m2_percent)
 {
 	uint16_t ARR = hMotors->htim_pwm->Init.Period;
@@ -99,6 +108,10 @@ void Motor_SetSpeed_percent(h_Motor_t *hMotors, float m1_percent, float m2_perce
 }
 
 // ---------------------------------------------------------------------------
+/*
+ * Calcule et applique une consigne de vitesse identique pour les deux roues à partir d'une valeur en m/s
+ * en la limitant à la vitesse maximale autorisée.
+ */
 void Motor_SetSpeed(h_Motor_t *hMotors, float speed)
 {
 	if (speed >  ROBOT_V_MAX) speed =  ROBOT_V_MAX;
@@ -148,51 +161,10 @@ static inline float pwm_to_percent(h_Motor_t *m, float pwm)
 	return (pwm / ARR) * 100.0f;
 }
 
-//void Motor_CommandVelLR(h_Motor_t *m, float v_left, float v_right)
-//{
-//	// 1. Saturation
-//	v_left  = clampf(v_left,  -ROBOT_V_MAX, ROBOT_V_MAX);
-//	v_right = clampf(v_right, -ROBOT_V_MAX, ROBOT_V_MAX);
-//
-//	// 2. Déterminer les modes cibles selon le signe de la vitesse demandée
-//	MotorMode target_mode1 = (v_left > 0.01f)  ? FORWARD_MODE : (v_left < -0.01f) ? REVERSE_MODE : STANDBY_MODE;
-//	MotorMode target_mode2 = (v_right > 0.01f) ? FORWARD_MODE : (v_right < -0.01f) ? REVERSE_MODE : STANDBY_MODE;
-//
-//	uint32_t ARR = m->htim_pwm->Init.Period;
-//
-//	// --- GESTION MOTEUR 1 ---
-//	if (m->mode_mot1 != target_mode1) {
-//		// On veut changer de sens ou s'arrêter : on met la cible PWM à 0
-//		m->target_speed1 = 0.0f;
-//		// On ne change le mode QUE si le moteur est pratiquement arrêté
-//		// Autorise le changement de mode dès que la vitesse a suffisamment chuté (ex: 800)
-//		if (m->current_speed1 < 800.0f) {
-//			m->mode_mot1 = target_mode1;
-//			Motor_SetMode(m);
-//
-//		}
-//	} else {
-//		// On est déjà dans le bon sens, on applique la consigne de vitesse
-//		m->target_speed1 = fabsf(v_left) / ROBOT_V_MAX * ARR;
-//	}
-//
-//	// --- GESTION MOTEUR 2 ---
-//	if (m->mode_mot2 != target_mode2) {
-//		m->target_speed2 = 0.0f;
-//		// Autorise le changement de mode dès que la vitesse a suffisamment chuté (ex: 800)
-//		if (m->current_speed1 < 800.0f) {
-//			m->mode_mot1 = target_mode1;
-//			Motor_SetMode(m);
-//		}
-//	} else {
-//		m->target_speed2 = fabsf(v_right) / ROBOT_V_MAX * ARR;
-//	}
-//
-//	// Sauvegarde des consignes pour l'asservissement
-//	m->target_vel_left  = v_left;
-//	m->target_vel_right = v_right;
-//}
-
+/*
+ * Gère indépendamment la direction et la vitesse des roues gauche et droite
+ * tout en sécurisant les inversions de sens brutales.
+ */
 void Motor_CommandVelLR(h_Motor_t *m, float v_left, float v_right)
 {
     v_left  = clampf(v_left,  -ROBOT_V_MAX, ROBOT_V_MAX);
@@ -227,18 +199,10 @@ void Motor_CommandVelLR(h_Motor_t *m, float v_left, float v_right)
 }
 
 // ---------------------------------------------------------------------------
-void Motor_Stop(h_Motor_t *hMotors)
-{
-	hMotors->mode_mot1 = STANDBY_MODE;
-	hMotors->mode_mot2 = STANDBY_MODE;
-
-	hMotors->target_speed1 =  0.0f;
-	hMotors->target_speed2 =  0.0f;
-
-	Motor_SetMode(hMotors);
-}
-
-// ---------------------------------------------------------------------------
+/*
+ * Ajuste progressivement la vitesse actuelle vers la vitesse cible en appliquant des rampes d'accélération
+ * et de freinage asymétriques pour protéger la mécanique.
+ */
 void Motor_UpdateSpeed(h_Motor_t *hMotors)
 {
 	//--- MOTEUR 1 ---

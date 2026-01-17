@@ -11,6 +11,9 @@
 static int32_t last_tim2 = 0;
 static int32_t last_lptim1 = 0;
 
+/*
+ * Initialisation des timers des encodeurs
+ */
 void Encodeur_Init(void)
 {
     // Reset software
@@ -27,7 +30,11 @@ void Encodeur_Init(void)
     HAL_LPTIM_Encoder_Start(&hlptim1, 0xFFFF);
 }
 
-
+/*
+ * mesure la variation des ticks depuis la dernière lecture pour chaque roue,
+ * gère les débordements des compteurs
+ * et accumule la distance totale parcourue en corrigeant l'inversion de sens d'un des deux encodeurs.
+ */
 void Encodeur_Read(Encodeur_t *enc)
 {
     uint16_t now_1 = (uint16_t)__HAL_TIM_GET_COUNTER(&htim2);

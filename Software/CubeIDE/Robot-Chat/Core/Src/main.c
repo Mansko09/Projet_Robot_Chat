@@ -128,9 +128,13 @@ static void ControlData_Init(void)
 	hControl.vide    = 0;
 }
 
+
+/* ============================= */
+/*       TASK   ACCELERO          */
+/* ============================= */
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	//printf("glapitouADXL\r\n");
 	if (GPIO_Pin == GPIO_PIN_0 || GPIO_Pin == GPIO_PIN_1){
 		ADXL_IntProto();
 		int16_t acc[3] = {0,0,0};
@@ -143,11 +147,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 }
 
-
-
-/* ============================= */
-/*       TASK   ACCELERO          */
-/* ============================= */
 void taskAccelDetection(void * unused){
 	printf("[ACC] Start \r\n");
 	uint8_t mesured_axes = X_axes | Y_axes;
@@ -201,9 +200,6 @@ void taskTOFDetection(void *unused)
 		}
 
 		if (new_vide != 0) {
-			// PRIORITÉ ABSOLUE : Si on voit du vide, on coupe les moteurs DIRECTEMENT
-			// Cela gagne les 20ms de latence de la Task_Control
-			//Motor_CommandVelLR(&hControl.hMotors, -0.1f, -0.1f); // Petite pichenette arrière parce que sinon il prend trop de temps à s'arrêter
 			hControl.vide = new_vide;
 		}
 		else {
@@ -211,7 +207,7 @@ void taskTOFDetection(void *unused)
 			hControl.vide = 0;
 		}
 
-		// --- DEBUG : Décommente la ligne ci-dessous pour voir les détections en temps réel ---
+		// --- DEBUG ---
 		// if(new_vide != 0) printf("[TOF] Detection Vide sur Canal : %d\r\n", new_vide);
 	}
 }
@@ -234,8 +230,9 @@ void Task_Motor(void *argument)
 	}
 }
 
-
-
+/* ============================= */
+/*       TASK  Control     */
+/* ============================= */
 void Task_Control(void *unused)
 {
 	printf("[CTRL] start\r\n");
@@ -415,7 +412,6 @@ int main(void)
 	//initialisation lidar
 
 	//intialisation TOFS
-
 	if (TOF_Init() != 1) {
 		printf("[TOF] FATAL ERROR: Panne materielle I2C\r\n");
 		// On ne bloque pas tout le robot, mais on met un flag d'erreur
@@ -424,6 +420,7 @@ int main(void)
 		printf("[TOF] Initialisation reussie !\r\n");
 	}
 
+	//création sémaphores
 	sem_TimerTOF = xSemaphoreCreateBinary();
 	sem_ADXL = xSemaphoreCreateBinary();
 
@@ -434,20 +431,20 @@ int main(void)
 	hControl.hMotors.m2_reverse_channel = TIM_CHANNEL_3;
 	Motor_Init(&hControl.hMotors, &htim1);
 
-//	hControl.hMotors.speed_ramp1 = 1500; // 3200 / 1500 => ~2 itérations pour l'arrêt
-//	hControl.hMotors.speed_ramp2 = 1500;
-
-	//initialisation encodeurs - odométrie
+	//initialisation variables tâches
 	ControlData_Init();
-	Encodeur_Init();
+
 	//initialisation accelero
 	hControl.AccData=0;
 	ADXL_Init(&adxl);
 	ADXL_SetOffset(2,0,-63);
 	ADXL_Measure(ON);
 
+	//initialisation odométrie
+	Encodeur_Init();
 	Odom_Init(&hControl.odom);
-	//initialisation asservissement
+
+	//initialisation asservissement (non testé)
 	PID_Init(&pid_left,
 			0.0f,     // Kp
 			0.0f,     // Ki
@@ -459,17 +456,6 @@ int main(void)
 			0.0f,
 			-100.0f,
 			100.0f);
-
-	/* ======================== CONFIGURATION INITIALE MOUVEMENT ========================= */
-
-//	hControl.hMotors.target_speed1 = 0;
-//	hControl.hMotors.target_speed2 = 0;
-//	hControl.hMotors.current_speed1 = 0;
-//	hControl.hMotors.current_speed2 = 0;
-//	hControl.hMotors.mode_mot1 = STANDBY_MODE;
-//	hControl.hMotors.mode_mot2 = STANDBY_MODE;
-//	Motor_SetMode(&hControl.hMotors);
-
 
 	/* ======================== CREATION TACHES ========================== */
 	if(xTaskCreate(taskTOFDetection,   "TOF",  1024, NULL, 2, NULL) != pdPASS){
