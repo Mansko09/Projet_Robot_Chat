@@ -91,7 +91,6 @@ Pour atteindre ce comportement, plusieurs fonctions clés doivent être mises en
 
 <img width="931" height="437" alt="image" src="https://github.com/user-attachments/assets/beefe881-a0c7-453a-90d6-29a493705993" />
 
-
 ### 1. Cerveau et Communication
 
 Nous avons retenu le microcontrôleur **STM32WB55CEU6**, un choix motivé par des considérations de performance, de modularité et de fiabilité.
@@ -107,7 +106,22 @@ Nous avons retenu le microcontrôleur **STM32WB55CEU6**, un choix motivé par de
   Le logiciel est structuré autour de plusieurs tâches concurrentes :
   - **Task_TOF** : mise à jour de la variable `vide` toutes les 20 ms, indiquant l’identifiant du capteur ToF détectant un vide ;
   - **Task_Motor** : gestion de l’odométrie et application des signaux PWM toutes les 10 ms ;
-  - **Task_Control** : implémentation de la machine à états principale du système.
+  - **Task_Control** : tâche décisionnelle principale, exécutée toutes les 20 ms, implémentant une machine à états finis (FSM) pilotant le comportement global du robot.
+
+  **Rôle détaillé de la Task_Control**  
+  La tâche **Task_Control** agit comme le véritable « cerveau » du robot. Elle fonctionne de manière asynchrone par rapport à la commande des moteurs et s’appuie sur une **Machine à États Finis (FSM)** pour orchestrer les actions de Félix en fonction des événements extérieurs.
+
+  1. **Gestion de l’état global (Start / Stop)**  
+     Avant toute logique de déplacement, la tâche surveille le flag `AccData`, mis à jour par l’accéléromètre via une interruption matérielle.  
+     Un choc détecté agit comme un interrupteur logiciel (*toggle*) :
+     - passage à l’état **Inactif** : LED rouge allumée, moteurs coupés ;
+     - passage à l’état **Actif** : LED verte allumée, lancement de la mission.
+
+  2. **Séquençage des déplacements (FSM)**  
+     Lorsque le robot est actif, il suit un cycle comportemental conçu pour la survie et l’exploration :
+     - **MOVE_FWD (marche avant)** : état par défaut. La tâche surveille en continu le registre `vide`. Dès qu’une bordure est détectée par un capteur ToF, une transition immédiate vers l’état de freinage est imposée.
+     - **MOVE_BRAKE (sécurité)** : état intermédiaire déclenchant un arrêt d’urgence, voire une brève impulsion inverse, afin de compenser l’inertie et empêcher le dépassement du bord.
+     - **MOVE_BACKWARD & MOVE_TURN** : une fois le robot immobilisé, une manœuvre de dégagement est engagée. Celle-ci est temporisée par `timer_state` et permet au robot de reculer, de modifier son orientation, puis de revenir automatiquement à l’état **MOVE_FWD**.
 
 - **Perception sensorielle anti-chute**  
   Quatre capteurs **ToF VL53L0X** surveillent en permanence les angles du robot afin de détecter la présence de vide.
