@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Dans le cadre du cursus ESE, ce projet a pour objectif la conception complète d’un **robot mobile autonome à deux roues motrices**, destiné à participer à un jeu de type **chat et souris** face aux robots des autres groupes. Ce projet a été réalisé par Florian, David, Danilo et Mantou.
+Dans le cadre de la spécialité de 3e année ESE à l'ENSEA, ce projet a pour objectif la conception complète d’un **robot mobile autonome à deux roues motrices**, destiné à participer à un jeu de type **chat et souris** face aux robots des autres groupes. Ce projet a été réalisé par Florian, David, Danilo et Mantou.
 Au-delà de l’aspect ludique, ce projet mobilise des compétences variées en **électronique**, **mécanique** et **logiciel embarqué temps réel**, avec des contraintes fortes de sécurité (anti-chute), de réactivité et de robustesse matérielle.
 
 Le robot, nommé **Félix**, doit être capable de se déplacer de manière autonome, de détecter son environnement, de réagir à des événements physiques (vide, chocs) et d’adapter dynamiquement son comportement.
